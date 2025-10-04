@@ -35,6 +35,13 @@ export default function Home() {
       class="min-h-[100dvh] flex flex-col"
       style="background: var(--color-base-gradient, var(--color-base, #0a0e27))"
     >
+      {/* Skip to content link for accessibility */}
+      <a
+        href="#main-content"
+        class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-purple-500 focus:text-white focus:rounded-lg focus:font-bold"
+      >
+        Skip to content
+      </a>
       {/* Check if first visit and show welcome */}
       <WelcomeChecker />
 
@@ -72,7 +79,7 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main class="flex-1 w-full px-4 py-6 md:py-8 flex items-center justify-center overflow-auto">
+      <main id="main-content" class="flex-1 w-full px-4 py-6 md:py-8 flex items-center justify-center overflow-auto">
         <div class="max-w-5xl w-full">
           {selectedSign.value ? (
             <HoroscopeDisplay

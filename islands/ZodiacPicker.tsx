@@ -35,11 +35,17 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
       </div>
 
       {/* Zodiac Grid */}
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6"
+        role="group"
+        aria-label="Select your zodiac sign"
+      >
         {ZODIAC_SIGNS.map((zodiac) => (
           <button
             key={zodiac.name}
             onClick={() => handleSignClick(zodiac.name)}
+            aria-label={`Select ${zodiac.name} (${zodiac.dates})`}
+            aria-pressed={selectedSign.value === zodiac.name}
             class={`
               group relative p-6 rounded-2xl border-4 border-black
               bg-gradient-to-br from-purple-900/40 via-pink-900/40 to-purple-900/40

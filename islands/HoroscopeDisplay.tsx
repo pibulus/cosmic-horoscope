@@ -101,6 +101,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
           <button
             onClick={onChangeSign}
             class="mt-4 px-4 py-2 rounded-lg border-2 border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black transition-colors"
+            aria-label="Change your zodiac sign"
           >
             Change Sign
           </button>
@@ -166,6 +167,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
             <button
               onClick={handleExportPNG}
               class="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-xl border-4 border-black shadow-lg hover:scale-105 transition-transform"
+              aria-label="Download your horoscope as a PNG image"
             >
               💾 Download as PNG
             </button>
