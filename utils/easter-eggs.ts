@@ -19,25 +19,25 @@ export class EasterEggEngine {
 
   // Random messages that appear occasionally
   private vibeMessages = [
-    "Nice pic choice! 🎨",
-    "This one's gonna slap 🔥",
-    "Art mode: ACTIVATED",
-    "You've got good taste",
-    "Terminal approves ✓",
-    "ASCII gods smile upon you",
-    "Converting pixels to poetry...",
-    "Making it rain characters...",
-    "*chef's kiss* Perfect settings",
-    "Dialing up the magic...",
+    "The stars approve ✨",
+    "Cosmic forces align 🌙",
+    "The universe speaks 🔮",
+    "Magic is in the air ✨",
+    "Your energy is radiant 💫",
+    "The cosmos smile upon you",
+    "Channeling celestial vibes...",
+    "Reading the stars...",
+    "*chef's kiss* Perfect alignment",
+    "Tuning into the universe...",
   ];
 
-  // ASCII art signatures that randomly appear
+  // Cosmic signatures that randomly appear
   private signatures = [
-    "░▒▓█ PABLO █▓▒░",
-    "▪▫▪▫ ASCIIFIER ▫▪▫▪",
-    "◢◤◢◤ ART MACHINE ◤◢◤◢",
-    "【P】【A】【B】【L】【O】",
-    "❮❮❮ TEXT WIZARD ❯❯❯",
+    "✨ COSMIC HOROSCOPE ✨",
+    "⭐ BY PABLO ⭐",
+    "🌙 STARLIGHT MAGIC 🌙",
+    "🔮 ORACLE APPROVED 🔮",
+    "💫 CELESTIAL VIBES 💫",
   ];
 
   checkKonami(key: string): boolean {
@@ -84,7 +84,7 @@ export class EasterEggEngine {
     document.head.appendChild(style);
 
     // Show secret message
-    this.showSecretMessage("🎉 SECRET MODE UNLOCKED! 🎉");
+    this.showSecretMessage("✨ COSMIC SECRET UNLOCKED! ✨");
 
     // Reset after 10 seconds
     setTimeout(() => {
