@@ -110,7 +110,6 @@ export function AboutModal() {
               class="text-base sm:text-lg leading-relaxed"
               style="color: var(--color-text, #e0e7ff)"
             >
-              Built by Pablo for that e-girl grind fiction energy.
               Your horoscope shouldn't be boring text in a feed.
               Make it art. Make it yours.
             </p>
