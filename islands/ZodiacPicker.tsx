@@ -27,10 +27,10 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
       {/* Header */}
       <div class="text-center mb-12">
         <h1 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-          ✨ What's Your Sign? ✨
+          What's your sign?
         </h1>
         <p class="text-lg md:text-xl text-gray-300">
-          Choose your zodiac sign to reveal your cosmic reading
+          Pick one. See what the universe has to say.
         </p>
       </div>
 
@@ -82,7 +82,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
 
       {/* Helper text */}
       <div class="text-center mt-8 text-sm text-gray-400">
-        <p>✨ Your sign will be saved for your next visit</p>
+        <p>We'll remember your sign for next time</p>
       </div>
     </div>
   );

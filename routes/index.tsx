@@ -58,13 +58,13 @@ export default function Home() {
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="/" class="group text-center">
               <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                ✨ COSMIC HOROSCOPE ✨
+                COSMIC HOROSCOPE
               </h1>
               <p
                 class="mt-2 text-sm sm:text-base md:text-lg font-mono font-bold"
                 style="color: var(--color-accent, #f0abfc)"
               >
-                Daily readings styled as cosmic art
+                Horoscopes as shareable art
               </p>
             </a>
           </div>

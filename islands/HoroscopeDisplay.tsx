@@ -123,7 +123,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
       {/* Color Effect Selector */}
       <div class="mb-6">
         <MagicDropdown
-          label="Cosmic Vibes"
+          label="Add Gradient"
           options={COLOR_EFFECTS}
           value={colorEffect.value}
           onChange={(val) => colorEffect.value = val}
@@ -134,7 +134,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
       {isLoading.value ? (
         <div class="text-center py-20">
           <div class="text-4xl mb-4 animate-spin">✨</div>
-          <p class="text-gray-400">Consulting the cosmos...</p>
+          <p class="text-gray-400">Reading the stars...</p>
         </div>
       ) : horoscopeData.value ? (
         <div class="mb-8">
@@ -167,7 +167,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
               onClick={handleExportPNG}
               class="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-xl border-4 border-black shadow-lg hover:scale-105 transition-transform"
             >
-              💾 Export as Image
+              💾 Download as PNG
             </button>
           </div>
         </div>
