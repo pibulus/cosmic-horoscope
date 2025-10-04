@@ -1,32 +1,28 @@
-# 🔧 TINKER.md - JUICY-THEMES Quick Reference
+# 🔧 TINKER.md - COSMIC HOROSCOPE Quick Reference
 
-_For when you haven't touched this in 6 months and need to change something NOW_
+*For when you haven't touched this in 6 months and need to change something NOW*
 
-**ADHD MODE**: Jump to [QUICK WINS](#-quick-wins---80-of-what-youll-change) or
-[WHEN SHIT BREAKS](#-when-shit-breaks---top-3-fixes)
+**ADHD MODE**: Jump to [QUICK WINS](#-quick-wins---80-of-what-youll-change) or [WHEN SHIT BREAKS](#-when-shit-breaks---top-3-fixes)
 
 ---
 
 ## 🚀 START HERE - RUN THE DAMN THING
 
 ### Dev Mode
-
 ```bash
 # STACK: DENO/FRESH
-deno task start
-# Opens: http://localhost:8001
+deno task dev
+# Opens: http://localhost:8000
 ```
 
 ### Production Build
-
 ```bash
 deno task build
 ```
 
-### Health Check
-
+### Deploy
 ```bash
-deno task check    # Format, lint, type check
+deployctl deploy --production --token=$DENO_DEPLOY_TOKEN
 ```
 
 ---
@@ -34,259 +30,286 @@ deno task check    # Format, lint, type check
 ## 📁 FILE MAP - WHERE SHIT LIVES
 
 ```
-asciifier-web/
+cosmic-horoscope/
 ├── routes/
-│   ├── index.tsx           # Main page - the beautiful UI
-│   ├── _app.tsx           # App wrapper with themes
+│   ├── index.tsx           # Main page - zodiac picker + horoscope display
+│   ├── _app.tsx           # SEO, PWA meta tags, structured data
 │   └── api/
-│       ├── figlet.ts      # Text → ASCII API (THE MAGIC)
-│       ├── colorize.ts    # Lolcat rainbow effects
-│       └── joke.ts        # Random jokes
+│       └── horoscope.ts   # API proxy with timezone logic
 ├── islands/
-│   ├── Dropzone.tsx       # Drag & drop for images
-│   ├── TextToAscii.tsx    # Text input → ASCII output
-│   ├── ThemeIsland.tsx    # Theme switcher
-│   └── TabsIsland.tsx     # Tab navigation
+│   ├── ZodiacPicker.tsx   # The zodiac grid selector
+│   ├── HoroscopeDisplay.tsx # Display + gradient + export
+│   ├── ThemeIsland.tsx    # Floating theme button
+│   ├── WelcomeModal.tsx   # First-visit modal
+│   └── AboutModal.tsx     # About modal
 ├── utils/
-│   ├── character-sets.ts  # ASCII character mappings
-│   ├── themes.ts         # Color themes & CSS vars
-│   ├── image-processor.ts # Image → ASCII conversion
-│   └── sounds.ts         # UI sound effects
-├── static/
-│   └── styles.css        # Global CSS & theme vars
-└── deno.json            # Dependencies & tasks
+│   ├── zodiac.ts          # Zodiac data + localStorage
+│   ├── themes.ts          # THE THEME SYSTEM (11 cosmic themes)
+│   ├── colorEffects.ts    # Gradient generators
+│   └── analytics.ts       # PostHog tracking
+└── static/
+    ├── styles.css        # Global CSS + theme vars
+    ├── manifest.json     # PWA manifest
+    ├── sw.js            # Service worker
+    └── og-image.jpg     # Social share image (1200x630)
 ```
 
 ### The Files You'll Actually Touch:
-
-1. **routes/index.tsx** - Main page text, taglines, layout
-2. **routes/api/figlet.ts** - Fonts, ASCII generation logic
-3. **utils/themes.ts** - Colors, theme definitions
-4. **static/styles.css** - Global styles, CSS variables
-5. **deno.json** - Port, dependencies, tasks
+1. **utils/themes.ts** - Add/remove themes, change colors
+2. **routes/_app.tsx** - Change page title, meta descriptions
+3. **islands/AboutModal.tsx** - Update about copy
+4. **utils/colorEffects.ts** - Add new gradient effects
+5. **static/styles.css** - Global styles, CSS variables
 
 ---
 
 ## 🎯 QUICK WINS - 80% OF WHAT YOU'LL CHANGE
 
-### 1. Change the Main Text/Copy
-
-```
-File: routes/index.tsx
-Lines: 18-22
-Current: "Turn ANYTHING into text art"
-Change: Update taglines and descriptions
-```
-
-### 2. Add New Figlet Fonts
-
-```
-File: routes/api/figlet.ts
-Look for: font = "standard"
-Available fonts: big, block, bubble, digital, doom, epic, ghost, etc.
-Add to options array for frontend
-```
-
-### 3. Change Colors/Theme
-
+### 1. Add a New Theme
 ```
 File: utils/themes.ts
-Look for: brutalistDark, pastelPunk, retroWave themes
-Current: --color-accent: #FF69B4
-Options: Edit theme objects or create new themes
+Line: ~215 (asciifierThemes array)
+Current: 11 themes (TURQUOISE, CORAL, PURPLE, etc.)
+
+Add new theme:
+{
+  name: "YOUR_THEME",
+  vibe: "your vibe description",
+  base: "#XXXXXX",        // 60% - main background
+  secondary: "#XXXXXX",   // 30% - cards/sections
+  accent: "#XXXXXX",      // 10% - CTAs/highlights
+  text: "#XXXXXX",        // Primary text
+  border: "#XXXXXX",      // Border color
+}
 ```
 
-### 4. Modify Lolcat Effects
-
+### 2. Change Page Title/SEO
 ```
-File: routes/api/colorize.ts
-Look for: effect types
-Current: rainbow, fire, ocean, unicorn, matrix
-Add: New effect names to the enum and switch
+File: routes/_app.tsx
+Line: 21
+Current: "Cosmic Horoscope • Horoscopes That Look As Good As They Read"
+Change: Update <title> tag
+
+Line: 22-24
+Current: Meta description
+Change: Update description for SEO
 ```
 
-### 5. Change Port
-
+### 3. Add New Gradient Effect
 ```
-File: dev.ts and main.ts
-Look for: :8001
-Change to: :YOUR_PORT
+File: utils/colorEffects.ts
+Line: 4 (COLOR_EFFECTS)
+Current: unicorn, fire, cyberpunk, vaporwave, sunset, ocean
+
+Add to array:
+{ value: "your-effect", label: "Your Effect ✨" }
+
+Then add case in applyColorToArt() function (line ~20)
+```
+
+### 4. Change About Modal Copy
+```
+File: islands/AboutModal.tsx
+Line: 109-115
+Current: "Your horoscope as shareable cosmic art..."
+Change: Update the story text
+
+Keep Pablo's voice: confident, warm, not corporate
 ```
 
 ---
 
 ## 🔧 COMMON TWEAKS
 
-### Add a New Color Effect
-
+### Change Port
 ```bash
-# Edit the colorize API
-File: routes/api/colorize.ts
-1. Add effect name to type: 'youreffect'
-2. Add case to switch statement
-3. Update frontend effect options
+File: deno.json
+Look for: "start": "deno run -A --watch=static/,routes/ dev.ts"
+Change dev.ts or add PORT=8002 before command
 ```
 
-### Add New ASCII Character Set
-
-```bash
-File: utils/character-sets.ts
-1. Create new character array (light → dark)
-2. Export with descriptive name
-3. Update frontend dropdown options
-```
-
-### Change Themes
-
+### Remove a Theme
 ```bash
 File: utils/themes.ts
-1. Edit existing theme colors
-2. Or add new theme object
-3. Update theme switcher options
+Line: ~215 (asciifierThemes array)
+Delete the theme object
+Save, refresh - theme gone
 ```
 
-### Modify Main Layout
-
+### Change Default Theme
 ```bash
-File: routes/index.tsx
-- Header: lines 8-30
-- Content tabs: <TabsIsland />
-- Footer: bottom section
+File: utils/themes.ts
+Line: ~41 (ThemeSystem constructor)
+Change: defaultTheme: "THEME_NAME"
+Or line ~349 - change initial random pick
+```
+
+### Add New Zodiac Feature
+```bash
+File: utils/zodiac.ts
+Line: 3-54 (ZODIAC_SIGNS array)
+Add properties like: lucky_color, element_description, etc.
+Then use in HoroscopeDisplay.tsx
+```
+
+### Modify Horoscope API
+```bash
+File: routes/api/horoscope.ts
+Line: 9 (HOROSCOPE_API_BASE)
+Change API endpoint if using different source
+Line: 31-40 (getDayParamForTimezone)
+Adjust timezone logic for your location
 ```
 
 ---
 
 ## 💥 WHEN SHIT BREAKS - TOP 3 FIXES
 
-### 1. Port Already in Use (8001)
-
+### 1. Port Already in Use
 ```bash
 # Find what's using it:
-lsof -i :8001
+lsof -i :8000
 
 # Kill it:
 kill -9 PID_NUMBER
 
-# Or change port in dev.ts
+# Or use different port:
+PORT=8002 deno task dev
 ```
 
-### 2. Fresh Manifest Fucked
-
+### 2. Themes Not Switching
 ```bash
-# Regenerate manifest:
-deno task manifest
+# Clear localStorage:
+# Open DevTools console:
+localStorage.clear()
+location.reload()
 
-# If that fails:
-rm fresh.gen.ts
-deno task start  # Auto-regenerates
+# Or check themes.ts - theme might have invalid CSS
 ```
 
-### 3. Dependencies Broken
-
+### 3. PWA Not Installing
 ```bash
-# Clear cache:
-rm deno.lock
+# Check manifest:
+File: static/manifest.json
+Look for: Valid theme_color, background_color, icons
 
-# Reload dependencies:
-deno cache --reload dev.ts
+# Check service worker:
+File: static/sw.js
+Look for: Cache name, proper registration
 
-# If node_modules issues:
-rm -rf node_modules
+# Clear cache & reload:
+DevTools → Application → Clear storage
 ```
 
 ---
 
 ## 🚦 DEPLOYMENT - SHIP IT
 
-### Deno Deploy (Recommended)
-
+### One-Liner Deploy
 ```bash
-# First deploy (adds project ID to deno.json):
-deployctl deploy --production
-
-# Future deploys:
-deno task build
-deployctl deploy --prod
+deployctl deploy --production --token=$DENO_DEPLOY_TOKEN
 ```
 
 ### Manual Deploy Steps
+1. Test locally: `deno task dev`
+2. Check everything works
+3. Commit changes: `git add -A && git commit -m "fix: whatever"`
+4. Push: `git push origin main`
+5. Deploy: `deployctl deploy --production`
 
-1. Build it: `deno task build`
-2. Test it: `deno task preview` (or check localhost:8001)
-3. Push it: `git push origin main`
-4. Deploy: `deployctl deploy --prod`
-
----
-
-## 🌈 API ENDPOINTS - THE SERVER-SIDE MAGIC
-
-### POST /api/figlet
-
-```json
-{
-  "text": "HELLO",
-  "font": "big",
-  "colorize": true,
-  "effect": "rainbow"
-}
-```
-
-### POST /api/colorize
-
-```json
-{
-  "text": "plain text",
-  "effect": "fire",
-  "animate": false
-}
-```
-
-### GET /api/joke
-
+### First-Time Deno Deploy Setup
 ```bash
-curl http://localhost:8001/api/joke
+# 1. Install deployctl
+deno install -A --no-check -r -f https://deno.land/x/deploy/deployctl.ts
+
+# 2. Get token from https://dash.deno.com/account#access-tokens
+
+# 3. Deploy
+deployctl deploy --project=cosmic-horoscope --production --token=YOUR_TOKEN
+
+# 4. Add to .zshrc for future:
+export DENO_DEPLOY_TOKEN="YOUR_TOKEN"
 ```
 
 ---
 
-## 🎨 ENVIRONMENT VARIABLES
+## 📱 PWA STUFF
 
-### Where They Live
+### Test PWA Installation
+```bash
+# Chrome DevTools:
+1. Open app in Chrome
+2. DevTools → Application → Manifest
+3. Check for errors
+4. Click "Add to home screen"
 
+# iOS Safari:
+1. Open app in Safari
+2. Share → Add to Home Screen
+3. Check icon + name correct
 ```
-File: .env.local (create if needed)
-Format: KEY=value
+
+### Update PWA Icons
+```bash
+File: static/icons/
+Files: icon-192x192.png, icon-512x512.png, icon-maskable-512x512.png
+
+Generate new:
+magick -size 192x192 gradient:'#a78bfa-#f0abfc' -swirl 120 icon-192x192.png
+magick -size 512x512 gradient:'#a78bfa-#f0abfc' -swirl 120 icon-512x512.png
 ```
 
-### Available Options
+### Update Share Image
+```bash
+File: static/og-image.jpg
+Size: 1200x630 (OpenGraph standard)
 
-- `PORT` - Server port (default: 8001)
-- Any Deno Deploy vars get set in dashboard
+Generate new:
+magick -size 1200x630 gradient:'#a78bfa-#f0abfc' -swirl 120 \
+  -pointsize 90 -font Arial-Bold -fill white -gravity center \
+  -annotate +0-80 "COSMIC HOROSCOPE" \
+  -pointsize 40 -annotate +0+50 "✨ Your horoscope as shareable art ✨" \
+  og-image.jpg
+```
+
+---
+
+## 📊 ANALYTICS (OPTIONAL)
+
+### Add PostHog Tracking
+```bash
+File: .env (create if doesn't exist)
+Add:
+POSTHOG_KEY=your_key_here
+POSTHOG_HOST=https://app.posthog.com
+
+File: routes/_app.tsx
+Already configured - just add env vars
+```
+
+### Events Being Tracked
+```
+horoscope_viewed - When user views reading (sign + period)
+theme_changed - When theme switches (theme name)
+gradient_applied - When gradient applied (effect name)
+export_png - When PNG downloaded (format)
+```
 
 ---
 
 ## 📝 NOTES FOR FUTURE PABLO
 
-### The Revolutionary Architecture Discovery:
-
-- **Server-side terminal tools in browser** = GENIUS breakthrough
-- Figlet + Lolcat running on server, serving rich HTML to browser
-- ANSI-to-HTML conversion for Gmail paste compatibility
-- No client-side CLI emulation needed!
+- **Timezone logic**: Melbourne is 15-16hrs ahead of US API, so we use "tomorrow" before 6pm local
+- **Theme system is universal**: Can be copied to other apps (already in asciifier, button_studio, etc.)
+- **No accounts needed**: Everything localStorage, privacy-first
+- **Horoscope API is free**: No rate limits, MIT licensed, stable since 2021
+- **OG image must be 1200x630**: Twitter/Facebook requirement
 
 ### Pablo's Project Quirks:
-
-- **Rainbow Wizard Mode**: The lolcat effects are PERFECT
-- **Pastel-punk aesthetic**: CSS vars system for easy theming
-- **80/20 energy**: Focused on the essential ASCII magic
-- **Terminal-to-web pipeline**: Converts shell tools to web APIs
-
-### Technical Innovations:
-
-- Fresh/Deno for modern server-side rendering
-- CSS custom properties for dynamic theming
-- Islands architecture for interactive components
-- Server-side ASCII generation with client-side polish
+- The TINKER.md already existed but was for juicy-themes (copy-paste error)
+- AboutModal says "ASCIIFIER" in comments (another copy-paste)
+- Theme names in asciifierThemes but used for cosmic-horoscope (name collision from template)
+- Skip-to-content uses custom sr-only class (not Tailwind's built-in)
 
 ---
 
@@ -294,29 +317,29 @@ Format: KEY=value
 
 ```bash
 # Start working
-deno task start
+deno task dev
 
 # Ship it
-deno task build && deployctl deploy --prod
+deployctl deploy --production
 
 # When broken
-rm deno.lock fresh.gen.ts
-deno task start
+rm -rf _fresh
+deno task dev
+
+# Add new theme
+# → utils/themes.ts line ~215
+
+# Change copy
+# → islands/AboutModal.tsx line ~109
 ```
 
 **Quick paths:**
-
-- Text/copy: `routes/index.tsx` (lines 18-22)
-- Colors: `utils/themes.ts`
-- API logic: `routes/api/figlet.ts`
-- Main layout: `routes/index.tsx`
-
-**Live URL:** http://localhost:8001 **Architecture:** Deno/Fresh + Figlet +
-LolcatJS + Tailwind **The Magic:** Server-side terminal tools → Rich browser
-experience
+- Themes: `utils/themes.ts`
+- Copy: `islands/AboutModal.tsx`, `islands/WelcomeModal.tsx`
+- SEO: `routes/_app.tsx`
+- Colors: `static/styles.css` + `utils/themes.ts`
+- Main page: `routes/index.tsx`
 
 ---
 
-_"Server-side terminal tools in browsers = Revolutionary architecture!" 🌈⚡_
-
-**Generated from the legendary Rainbow ASCII breakthrough session** 🚀
+*Last updated: Oct 2025 - When you added PWA + accessibility + SEO polish*
