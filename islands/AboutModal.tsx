@@ -110,9 +110,8 @@ export function AboutModal() {
               class="text-base sm:text-lg leading-relaxed"
               style="color: var(--color-text, #e0e7ff)"
             >
-              I'm Pablo. I build tools with personality.
-              This one turns your horoscope into shareable cosmic art—because
-              your daily guidance deserves to look beautiful.
+              Your horoscope as shareable cosmic art.
+              Because your daily guidance deserves to look as good as it reads.
             </p>
 
             {/* What it's for */}
@@ -131,7 +130,7 @@ export function AboutModal() {
                 class="text-sm sm:text-base font-medium"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                It's quick, it's free, and it works forever.
+                Quick, free, no fuss.
               </p>
             </div>
 
