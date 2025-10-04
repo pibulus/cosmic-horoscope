@@ -2,9 +2,9 @@ import { useEffect } from "preact/hooks";
 import { signal } from "@preact/signals";
 
 /**
- * 🌅 Welcome Modal Component
+ * ✨ Welcome Modal Component
  *
- * First-open modal with ASCII art and sunset gradient intro.
+ * First-open modal with cosmic gradient intro.
  * Shows once, then never again (unless localStorage cleared).
  *
  * Built by Pablo for that legendary first impression 🎸
@@ -14,7 +14,7 @@ import { signal } from "@preact/signals";
 export const welcomeModalOpen = signal(false);
 
 // Check if user has seen welcome before
-const WELCOME_SEEN_KEY = "asciifier-welcome-seen";
+const WELCOME_SEEN_KEY = "cosmic-welcome-seen";
 
 export function checkWelcomeStatus() {
   if (typeof localStorage !== "undefined") {
@@ -85,56 +85,54 @@ export function WelcomeModal() {
           class="relative w-full max-w-2xl animate-welcome-in"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Logo Image Header */}
+          {/* Cosmic Header */}
           <div
-            class="p-6 border-4 rounded-3xl text-center shadow-brutal-xl mb-4 overflow-hidden"
-            style="background: linear-gradient(135deg, #FFB6C1 0%, #FFA07A 25%, #FF8C94 50%, #9B6B9E 75%, #6B4D8A 100%); border-color: var(--color-border, #0A0A0A)"
+            class="p-8 border-4 rounded-3xl text-center shadow-brutal-xl mb-4"
+            style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 50%, #fbbf24 100%); border-color: var(--color-border, #a78bfa)"
           >
-            <img
-              src="/asciifier-logo.png"
-              alt="ASCIIFIER - Text Art Machine"
-              class="w-full h-auto"
-              style="image-rendering: crisp-edges; image-rendering: pixelated;"
-            />
+            <div class="text-7xl mb-4">✨</div>
+            <h1 class="text-4xl md:text-5xl font-bold text-white">
+              COSMIC HOROSCOPE
+            </h1>
           </div>
 
           {/* Content */}
           <div
             class="p-8 border-4 rounded-3xl shadow-brutal-xl space-y-6"
-            style="background-color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A)"
+            style="background-color: var(--color-base, #0a0e27); border-color: var(--color-border, #a78bfa)"
           >
             {/* Headline */}
-            <h1
+            <h2
               id="welcome-modal-title"
-              class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center leading-tight tracking-tight"
-              style="color: var(--color-text, #0A0A0A)"
+              class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center leading-tight tracking-tight"
+              style="color: var(--color-text, #e0e7ff)"
             >
-              Turn anything into <br />
-              glorious text art
-            </h1>
+              Your daily horoscope,<br />
+              styled as cosmic art
+            </h2>
 
             {/* Features */}
             <div class="space-y-3 sm:space-y-4">
               <p
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
               >
-                🎨 <strong>Type anything or drop an image</strong>{" "}
-                — Watch it transform into glorious ASCII.
+                ♈ <strong>Pick your zodiac sign</strong>{" "}
+                — Get your personalized daily, weekly, or monthly reading.
               </p>
               <p
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
               >
-                🌈 <strong>17 fonts, 10 color effects</strong>{" "}
-                — Go rainbow, fire, ocean, matrix, cyberpunk.
+                🌈 <strong>Apply cosmic gradients</strong>{" "}
+                — Unicorn, fire, vaporwave, ocean, neon, poison vibes.
               </p>
               <p
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
               >
-                📚 <strong>Gallery full of classics</strong>{" "}
-                — Dragons, Homer Simpson, Escher stairs. Copy and go.
+                💾 <strong>Export as beautiful images</strong>{" "}
+                — Share your cosmic readings with the world.
               </p>
             </div>
 
@@ -142,18 +140,18 @@ export function WelcomeModal() {
             <button
               onClick={markWelcomeSeen}
               class="w-full px-6 py-4 border-3 rounded-xl font-mono font-bold text-base sm:text-lg transition-all hover:scale-105 shadow-brutal-sm active:scale-[0.98]"
-              style="background: linear-gradient(135deg, #FF69B4 0%, #FFB6C1 100%); color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A)"
-              aria-label="Close welcome message and start using ASCIIFIER"
+              style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 100%); color: white; border-color: var(--color-border, #a78bfa)"
+              aria-label="Close welcome message and start reading your horoscope"
             >
-              Start creating
+              Consult the stars ✨
             </button>
 
             {/* Tagline */}
             <p
               class="text-base sm:text-lg md:text-xl font-bold text-center pt-2"
-              style="color: var(--color-accent, #FF69B4)"
+              style="color: var(--color-accent, #f0abfc)"
             >
-              Quick. Free. Nostalgic.
+              Quick. Free. Cosmic. ✨
             </p>
           </div>
         </div>

@@ -1,13 +1,18 @@
 // Share functionality - Pablo style
 // "No integrations, just URLs that work"
 
-export function generateShareableAscii(ascii: string, style: string): string {
-  // Create a shareable URL with the ASCII art encoded
+export function generateShareableHoroscope(
+  horoscope: string,
+  sign: string,
+  effect: string,
+): string {
+  // Create a shareable URL with the horoscope encoded
   const data = {
-    art: ascii.substring(0, 5000), // Limit for URL safety
-    style: style,
+    horoscope: horoscope.substring(0, 5000), // Limit for URL safety
+    sign,
+    effect,
     ts: Date.now(),
-    v: "2.0",
+    v: "1.0",
   };
 
   // Simple base64 encoding
@@ -19,9 +24,9 @@ export function generateShareableAscii(ascii: string, style: string): string {
   return url;
 }
 
-export function parseSharedAscii(
+export function parseSharedHoroscope(
   hash: string,
-): { art: string; style: string } | null {
+): { horoscope: string; sign: string; effect: string } | null {
   if (!hash.startsWith("#share=")) return null;
 
   try {
@@ -30,23 +35,24 @@ export function parseSharedAscii(
     const data = JSON.parse(decoded);
 
     return {
-      art: data.art,
-      style: data.style,
+      horoscope: data.horoscope,
+      sign: data.sign,
+      effect: data.effect,
     };
   } catch {
     return null;
   }
 }
 
-// Fun share messages
+// Cosmic share messages
 export const shareMessages = [
-  "Look what I made! →",
-  "ASCII art fresh from the machine →",
-  "Text art that actually slaps →",
-  "Made with ASCIIFIER →",
-  "Pixels converted to poetry →",
-  "Check this out →",
-  "Art mode: ACTIVATED →",
+  "The stars spoke to me ✨",
+  "My cosmic reading →",
+  "Check out my horoscope →",
+  "The universe has a message →",
+  "Cosmic vibes incoming →",
+  "My daily celestial guidance →",
+  "Reading the stars →",
 ];
 
 export function getRandomShareMessage(): string {

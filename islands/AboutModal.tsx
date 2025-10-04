@@ -73,20 +73,20 @@ export function AboutModal() {
           {/* Header */}
           <div
             class="p-6 border-4 border-b-0 rounded-t-3xl"
-            style="background-color: var(--color-secondary, #FFE5B4); border-color: var(--color-border, #0A0A0A)"
+            style="background-color: var(--color-secondary, #1a1f3a); border-color: var(--color-border, #a78bfa)"
           >
             <div class="flex items-start justify-between mb-2">
               <h2
                 id="about-modal-title"
                 class="text-3xl font-bold font-mono"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
               >
-                About ASCIIFIER
+                About COSMIC HOROSCOPE ✨
               </h2>
               <button
                 onClick={closeAboutModal}
                 class="text-3xl leading-none font-bold transition-transform hover:scale-110"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
                 aria-label="Close about dialog"
               >
                 ×
@@ -94,44 +94,44 @@ export function AboutModal() {
             </div>
             <p
               class="text-lg font-mono font-bold"
-              style="color: var(--color-accent, #FF69B4)"
+              style="color: var(--color-accent, #f0abfc)"
             >
-              A love letter to text art 🌈
+              Horoscopes styled as cosmic art 🌙
             </p>
           </div>
 
           {/* Content */}
           <div
             class="p-8 border-4 rounded-b-3xl shadow-brutal-xl space-y-6"
-            style="background-color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A)"
+            style="background-color: var(--color-base, #0a0e27); border-color: var(--color-border, #a78bfa)"
           >
             {/* Story */}
             <p
               class="text-base sm:text-lg leading-relaxed"
-              style="color: var(--color-text, #0A0A0A)"
+              style="color: var(--color-text, #e0e7ff)"
             >
-              I'm Pablo. I build tools with personality. This one celebrates
-              ASCII art—the OG way we made the internet beautiful before we had
-              images.
+              I'm Pablo. I build tools with personality. This one turns
+              horoscope readings into shareable cosmic art—because your
+              daily guidance deserves to look beautiful.
             </p>
 
             {/* What it's for */}
             <div
               class="py-4 px-4 border-2 rounded-xl space-y-2"
-              style="background-color: var(--color-secondary, #FFE5B4); border-color: var(--color-border, #0A0A0A)"
+              style="background-color: var(--color-secondary, #1a1f3a); border-color: var(--color-border, #a78bfa)"
             >
               <p
                 class="text-sm sm:text-base font-medium"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
               >
-                Make signatures for forums. Turn your face into ASCII. Explore
-                the gallery of internet classics. Export and share anywhere.
+                Pick your sign. Get daily, weekly, or monthly readings. Apply
+                cosmic gradients. Export as beautiful images to share.
               </p>
               <p
                 class="text-sm sm:text-base font-medium"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
               >
-                It's quick, it's fun, and it works forever. Free.
+                It's quick, it's cosmic, and it's completely free. ✨
               </p>
             </div>
 
@@ -139,7 +139,7 @@ export function AboutModal() {
             <div class="pt-2">
               <p
                 class="text-sm font-medium mb-3 text-center"
-                style="color: var(--color-text, #0A0A0A)"
+                style="color: var(--color-text, #e0e7ff)"
               >
                 Check out more of my work:
               </p>

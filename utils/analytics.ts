@@ -75,22 +75,20 @@ class AnalyticsService {
     }
   }
 
-  // ASCII Art Generation
-  trackAsciiGenerated(font: string, effect: string | null, success: boolean) {
-    this.trackEvent("ascii_generated", {
-      font,
+  // Horoscope Viewed
+  trackHoroscopeViewed(sign: string, period: string, effect: string | null) {
+    this.trackEvent("horoscope_viewed", {
+      sign,
+      period,
       effect: effect || "none",
-      success,
       timestamp: Date.now(),
     });
   }
 
-  // Image Conversion
-  trackImageConverted(fileSize: number, success: boolean, errorType?: string) {
-    this.trackEvent("image_converted", {
-      file_size_kb: Math.round(fileSize / 1024),
-      success,
-      error_type: errorType,
+  // Sign Selection
+  trackSignSelected(sign: string) {
+    this.trackEvent("sign_selected", {
+      sign,
       timestamp: Date.now(),
     });
   }
@@ -98,7 +96,7 @@ class AnalyticsService {
   // Export Events
   trackExport(format: string) {
     this.trackEvent("export_clicked", {
-      format, // "plain", "html", "clipboard"
+      format, // "png", "clipboard"
       timestamp: Date.now(),
     });
   }
@@ -108,14 +106,6 @@ class AnalyticsService {
     this.trackEvent("theme_changed", {
       from_theme: fromTheme,
       to_theme: toTheme,
-      timestamp: Date.now(),
-    });
-  }
-
-  // Random ASCII Art
-  trackRandomAscii(category?: string) {
-    this.trackEvent("random_ascii_viewed", {
-      category: category || "mixed",
       timestamp: Date.now(),
     });
   }
