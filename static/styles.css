@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom font loading */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
+
+/* Root variables for theming */
+:root {
+  --color-base: #faf9f6;
+  --color-base-gradient: #faf9f6;
+  --color-secondary: #ffe5b4;
+  --color-accent: #ff69b4;
+  --color-text: #0a0a0a;
+  --color-border: #0a0a0a;
+}
+
+/* Force scrollbar to prevent layout shift */
+html {
+  overflow-y: scroll;
+}
+
+/* Global theme transitions */
+* {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Grain effect is now handled inline in _app.tsx for better compatibility */
+
+/* Better focus styles */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 65, 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 65, 0.6);
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-shadow-brutal {
+    text-shadow: 2px 2px 0px var(--color-border);
+  }
+
+  .ascii-display {
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    white-space: pre;
+    overflow-wrap: normal;
+  }
+
+  /* Smooth scrolling */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+
+  /* Juicy button shadow - subtle but classy */
+  .shadow-juicy {
+    box-shadow: 3px 3px 0 var(--color-border, #0a0a0a);
+  }
+
+  /* Wavy title animation - subtle wave effect */
+  .wavy-title span {
+    display: inline-block;
+    animation: wave 3s ease-in-out infinite;
+    animation-delay: calc(var(--char-index) * 0.1s);
+  }
+
+  /* Wavy dropzone title - more engaging wave */
+  .wavy-dropzone-title span span {
+    display: inline-block;
+    animation: dropzoneWave 2.5s ease-in-out infinite;
+    animation-delay: calc(var(--char-index) * 0.08s);
+  }
+
+  @keyframes wave {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes dropzoneWave {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateY(-6px) rotate(-1deg);
+    }
+    75% {
+      transform: translateY(-6px) rotate(1deg);
+    }
+  }
+}

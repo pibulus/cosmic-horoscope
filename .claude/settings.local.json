@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(deno check:*)",
+      "Bash(deno fmt:*)",
+      "Bash(open:*)",
+      "WebSearch",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(bash:*)",
+      "Bash(git checkout:*)",
+      "Bash(deno task:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:jsr.io)",
+      "WebFetch(domain:github.com)",
+      "Bash(git revert:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
