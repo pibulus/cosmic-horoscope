@@ -13,25 +13,45 @@ export default function App({ Component }: PageProps) {
     <html lang="en">
       <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ASCIIFIER • Text Art Machine</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
+        <title>Cosmic Horoscope • Daily Readings as Art</title>
         <meta
           name="description"
-          content="Drop a pic. Get ASCII magic. 12 styles, live preview, $0 forever. No scale, no BS."
+          content="Get your daily, weekly, or monthly horoscope styled as shareable cosmic art. Pick your sign, apply gradients, export as beautiful images."
         />
 
+        {/* PWA & iOS App Meta Tags */}
+        <meta name="application-name" content="Cosmic Horoscope" />
+        <meta name="apple-mobile-web-app-title" content="Cosmic Horoscope" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#a78bfa" />
+
         {/* Open Graph */}
-        <meta property="og:title" content="ASCIIFIER • Pics to Text Art" />
+        <meta property="og:title" content="Cosmic Horoscope • Your Horoscope as Art" />
         <meta
           property="og:description"
-          content="The text art machine that actually slaps. Drop image, get ASCII."
+          content="Daily horoscopes styled as shareable cosmic art. Pick your sign, apply gradients, export."
         />
         <meta property="og:type" content="website" />
+
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+
+        {/* iOS Icon Support */}
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
 
         {/* Favicon */}
         <link
           rel="icon"
-          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>"
         />
 
         {/* Styles */}
@@ -97,6 +117,21 @@ export default function App({ Component }: PageProps) {
 
         {/* About modal */}
         <AboutModal />
+
+        {/* Service Worker Registration */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('🔮 SW registered:', registration.scope))
+                    .catch(error => console.log('SW registration failed:', error));
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );

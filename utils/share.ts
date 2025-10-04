@@ -44,15 +44,15 @@ export function parseSharedHoroscope(
   }
 }
 
-// Cosmic share messages
+// Cosmic share messages (e-girl grind fiction energy)
 export const shareMessages = [
-  "The stars spoke to me ✨",
-  "My cosmic reading →",
-  "Check out my horoscope →",
-  "The universe has a message →",
-  "Cosmic vibes incoming →",
-  "My daily celestial guidance →",
-  "Reading the stars →",
+  "The stars said what now? →",
+  "My cosmic read →",
+  "Horoscope hit different today →",
+  "Universe dropped this →",
+  "Cosmic vibes check →",
+  "Reading came through →",
+  "Stars really said this →",
 ];
 
 export function getRandomShareMessage(): string {

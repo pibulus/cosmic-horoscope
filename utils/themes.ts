@@ -207,20 +207,12 @@ export class ThemeSystem {
 }
 
 // =================================================================
-// 🎨 ASCIIFIER THEME COLLECTION - LIGHT THEMES FROM JUICY THEMES
+// 🔮 COSMIC HOROSCOPE THEME COLLECTION
+// E-girl grind fiction meets Tokyo boyfriend energy
+// Curated for mystery angel diva pop aesthetic
 // =================================================================
 
 export const asciifierThemes: Theme[] = [
-  // Hot Pink Dream (pink text/borders on cream background)
-  {
-    name: "PINK_DREAM",
-    vibe: "hot pink on cream",
-    base: "#FFF9FC",
-    secondary: "#FFD6E8",
-    accent: "#FF1493",
-    text: "#8B0A50",
-    border: "#C71585",
-  },
   // Turquoise Pop (cyan text/borders on white)
   {
     name: "TURQUOISE",
@@ -250,36 +242,6 @@ export const asciifierThemes: Theme[] = [
     accent: "#9C27B0",
     text: "#4A148C",
     border: "#6A1B9A",
-  },
-  // Ocean Blue (blue text/borders on sky background)
-  {
-    name: "OCEAN",
-    vibe: "ocean blue",
-    base: "#F5FCFF",
-    secondary: "#BBDEFB",
-    accent: "#2196F3",
-    text: "#0D47A1",
-    border: "#1565C0",
-  },
-  // Neon Mint (green text/borders on mint background)
-  {
-    name: "MINT",
-    vibe: "neon mint",
-    base: "#F5FFF9",
-    secondary: "#C8E6C9",
-    accent: "#4CAF50",
-    text: "#1B5E20",
-    border: "#2E7D32",
-  },
-  // Sunset Orange (orange text/borders on cream)
-  {
-    name: "SUNSET",
-    vibe: "sunset orange",
-    base: "#FFF8F5",
-    secondary: "#FFCCBC",
-    accent: "#FF6D00",
-    text: "#BF360C",
-    border: "#E64A19",
   },
   // Cyber Blue (indigo text/borders on light blue)
   {
@@ -311,16 +273,6 @@ export const asciifierThemes: Theme[] = [
     text: "#004D40",
     border: "#00695C",
   },
-  // Amber Glow (orange text/borders on cream)
-  {
-    name: "AMBER",
-    vibe: "amber glow",
-    base: "#FFF9F5",
-    secondary: "#FFE0B2",
-    accent: "#FF6F00",
-    text: "#E65100",
-    border: "#EF6C00",
-  },
   // Risograph Pink+Yellow (pink text/borders on yellow)
   {
     name: "RISO",
@@ -331,15 +283,35 @@ export const asciifierThemes: Theme[] = [
     text: "#C2185B",
     border: "#D81B60",
   },
-  // Lime Punch (green text/borders on light green)
+  // Midnight Oracle (deep purple/black gradient - mystery energy)
   {
-    name: "LIME",
-    vibe: "lime punch",
-    base: "#F9FFF5",
-    secondary: "#DCEDC8",
-    accent: "#8BC34A",
-    text: "#33691E",
-    border: "#558B2F",
+    name: "MIDNIGHT",
+    vibe: "midnight oracle",
+    base: "#0a0a1f",
+    secondary: "#1a1a3a",
+    accent: "#9C27B0",
+    text: "#e0e7ff",
+    border: "#6A1B9A",
+  },
+  // Neon Oracle (hot pink + electric blue - Tokyo boyfriend energy)
+  {
+    name: "NEON_ORACLE",
+    vibe: "neon oracle",
+    base: "#0d0d1a",
+    secondary: "#1a1a2e",
+    accent: "#FF1493",
+    text: "#00D9FF",
+    border: "#FF1493",
+  },
+  // Stardust (silver/lavender/pink - angel diva pop)
+  {
+    name: "STARDUST",
+    vibe: "stardust shimmer",
+    base: "#F8F7FF",
+    secondary: "#E8E3FF",
+    accent: "#D4B5F7",
+    text: "#6A4C93",
+    border: "#9D84B7",
   },
   // Cherry Red (red text/borders on blush)
   {

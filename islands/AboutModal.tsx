@@ -110,9 +110,9 @@ export function AboutModal() {
               class="text-base sm:text-lg leading-relaxed"
               style="color: var(--color-text, #e0e7ff)"
             >
-              I'm Pablo. I build tools with personality. This one turns
-              horoscope readings into shareable cosmic art—because your
-              daily guidance deserves to look beautiful.
+              Built by Pablo for that e-girl grind fiction energy.
+              Your horoscope shouldn't be boring text in a feed.
+              Make it art. Make it yours.
             </p>
 
             {/* What it's for */}
@@ -124,14 +124,16 @@ export function AboutModal() {
                 class="text-sm sm:text-base font-medium"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                Pick your sign. Get daily, weekly, or monthly readings. Apply
-                cosmic gradients. Export as beautiful images to share.
+                Pick your sign.
+                Get readings—daily, weekly, monthly.
+                Apply cosmic gradients.
+                Export. Share. Flex.
               </p>
               <p
                 class="text-sm sm:text-base font-medium"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                It's quick, it's cosmic, and it's completely free. ✨
+                Quick, free, no BS.
               </p>
             </div>
 

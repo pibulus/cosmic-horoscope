@@ -107,8 +107,8 @@ export function WelcomeModal() {
               class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center leading-tight tracking-tight"
               style="color: var(--color-text, #e0e7ff)"
             >
-              Your daily horoscope,<br />
-              styled as cosmic art
+              Horoscopes that look<br />
+              as good as they read
             </h2>
 
             {/* Features */}
@@ -117,22 +117,22 @@ export function WelcomeModal() {
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                ♈ <strong>Pick your zodiac sign</strong>{" "}
-                — Get your personalized daily, weekly, or monthly reading.
+                Pick your sign.
+                Daily, weekly, monthly—your call.
               </p>
               <p
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                🌈 <strong>Apply cosmic gradients</strong>{" "}
-                — Unicorn, fire, vaporwave, ocean, neon, poison vibes.
+                Apply gradients.
+                Unicorn, fire, vaporwave, neon—six cosmic vibes.
               </p>
               <p
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                💾 <strong>Export as beautiful images</strong>{" "}
-                — Share your cosmic readings with the world.
+                Export as images.
+                Share your reading, flex the aesthetic.
               </p>
             </div>
 
@@ -143,7 +143,7 @@ export function WelcomeModal() {
               style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 100%); color: white; border-color: var(--color-border, #a78bfa)"
               aria-label="Close welcome message and start reading your horoscope"
             >
-              Consult the stars ✨
+              Check the stars
             </button>
 
             {/* Tagline */}
@@ -151,7 +151,7 @@ export function WelcomeModal() {
               class="text-base sm:text-lg md:text-xl font-bold text-center pt-2"
               style="color: var(--color-accent, #f0abfc)"
             >
-              Quick. Free. Cosmic. ✨
+              Quick. Free. Yours.
             </p>
           </div>
         </div>
