@@ -33,24 +33,25 @@ export default function HomeIsland() {
 
   return (
     <>
-      {/* Header */}
+      {/* Header - Simplified & Smaller */}
       <header
-        class="border-b-4 relative flex-shrink-0"
+        class="border-b-2 relative flex-shrink-0"
         style="border-color: var(--color-border, #a78bfa); background-color: var(--color-secondary, #1a1f3a)"
       >
-        <div class="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="/" class="group text-center">
-              <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+          <div class="flex items-center justify-between">
+            <a href="/" class="group flex items-baseline gap-3">
+              <h1 class="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
                 COSMIC HOROSCOPE
               </h1>
-              <p
-                class="mt-2 text-sm sm:text-base md:text-lg font-mono font-bold"
-                style="color: var(--color-accent, #f0abfc)"
+              <span
+                class="hidden sm:inline text-xs font-mono opacity-60"
+                style="color: var(--color-text-secondary, #f0abfc)"
               >
-                Horoscopes as shareable art
-              </p>
+                shareable art
+              </span>
             </a>
+            {/* Theme switcher stays in routes/index.tsx as floating button */}
           </div>
         </div>
       </header>

@@ -91,7 +91,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
   const emoji = getZodiacEmoji(sign);
 
   return (
-    <div class="w-full min-h-screen relative flex flex-col items-center">
+    <div class="w-full min-h-screen relative flex flex-col items-center px-4 py-8">
       {/* Main content container */}
       <div class="w-full max-w-4xl mx-auto relative z-10">
         {/* NEW Cosmic Header */}
@@ -102,7 +102,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
         />
 
         {/* Period selector - neo-brutalist tabs */}
-        <div class="flex justify-center gap-4 mb-10 px-4">
+        <div class="flex justify-center gap-4 mb-12 px-4">
           {["daily", "weekly", "monthly"].map((period, index) => {
             const isActive = currentPeriod.value === period;
             return (
@@ -164,47 +164,13 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
             <p class="text-purple-300 text-xl">Reading the stars...</p>
           </div>
         ) : horoscopeData.value ? (
-          <div class="space-y-6">
+          <div class="space-y-8">
             {/* Date */}
             {horoscopeData.value.date && (
-              <p class="text-center text-purple-300 text-lg font-mono">
+              <p class="text-center text-purple-300 text-lg font-mono mb-8">
                 {horoscopeData.value.date}
               </p>
             )}
-
-            {/* Effect dropdowns */}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <MagicDropdown
-                label="ASCII Font"
-                options={FIGLET_FONTS}
-                value={selectedFont.value}
-                onChange={(val) => {
-                  selectedFont.value = val;
-                  sounds.click();
-                }}
-                changed={selectedFont.value !== "Standard"}
-              />
-              <MagicDropdown
-                label="Color Gradient"
-                options={COLOR_EFFECTS}
-                value={colorEffect.value}
-                onChange={(val) => {
-                  colorEffect.value = val;
-                  sounds.success();
-                }}
-                changed={colorEffect.value !== "none"}
-              />
-              <MagicDropdown
-                label="Visual Effect"
-                options={VISUAL_EFFECTS}
-                value={visualEffect.value}
-                onChange={(val) => {
-                  visualEffect.value = val;
-                  sounds.success();
-                }}
-                changed={visualEffect.value !== "neon"}
-              />
-            </div>
 
             {/* Terminal Display for ASCII Art Horoscope */}
             <TerminalDisplay
@@ -215,6 +181,45 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
               terminalPath={`~/cosmic/${sign}.txt`}
               visualEffect={visualEffect.value}
             />
+
+            {/* Customization section - MOVED BELOW terminal */}
+            <div class="mt-10 pt-8 border-t-2 border-purple-500/30">
+              <h3 class="text-center text-sm font-mono font-bold uppercase tracking-wider text-purple-300/80 mb-6">
+                ✨ Customize Your Horoscope
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <MagicDropdown
+                  label="ASCII Font"
+                  options={FIGLET_FONTS}
+                  value={selectedFont.value}
+                  onChange={(val) => {
+                    selectedFont.value = val;
+                    sounds.click();
+                  }}
+                  changed={selectedFont.value !== "Standard"}
+                />
+                <MagicDropdown
+                  label="Color Gradient"
+                  options={COLOR_EFFECTS}
+                  value={colorEffect.value}
+                  onChange={(val) => {
+                    colorEffect.value = val;
+                    sounds.success();
+                  }}
+                  changed={colorEffect.value !== "none"}
+                />
+                <MagicDropdown
+                  label="Visual Effect"
+                  options={VISUAL_EFFECTS}
+                  value={visualEffect.value}
+                  onChange={(val) => {
+                    visualEffect.value = val;
+                    sounds.success();
+                  }}
+                  changed={visualEffect.value !== "neon"}
+                />
+              </div>
+            </div>
 
             {/* Action buttons */}
             {onChangeSign && (
