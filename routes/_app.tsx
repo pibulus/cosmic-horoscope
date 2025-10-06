@@ -76,6 +76,7 @@ export default function App({ Component }: PageProps) {
 
         {/* Styles */}
         <link rel="stylesheet" href="/styles.css" />
+        <link rel="stylesheet" href="/cosmic-animations.css" />
 
         {/* Analytics env vars */}
         <script
