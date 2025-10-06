@@ -174,7 +174,7 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
             )}
 
             {/* Terminal Display - 90% width, max 900px */}
-            <div class="mx-auto" style="width: 90%; max-width: 900px; margin-bottom: 24px;">
+            <div class="mx-auto" style="width: 90%; max-width: 900px;">
               <TerminalDisplay
                 content={asciiOutput.value}
                 htmlContent={colorizedHtml.value}
@@ -182,8 +182,110 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
                 filename={`${sign}-${currentPeriod.value}-horoscope`}
                 terminalPath={`~/cosmic/${sign}.txt`}
                 visualEffect={visualEffect.value}
+                hideExportButtons={true}
               />
             </div>
+
+            {/* Export buttons - OUTSIDE terminal, 24px below */}
+            {asciiOutput.value && (
+              <div class="flex justify-center" style="gap: 16px; margin-top: 24px;">
+                <button
+                  onClick={() => {
+                    // Download PNG
+                    import("../utils/exportUtils.ts").then(({ downloadPNG }) => {
+                      downloadPNG(".ascii-display", `${sign}-${currentPeriod.value}-horoscope`);
+                      sounds.success();
+                    });
+                  }}
+                  class="rounded-2xl font-black transition-all"
+                  style="
+                    height: 48px;
+                    padding: 0 24px;
+                    font-size: 14px;
+                    border: 4px solid;
+                    border-color: var(--color-border, #0A0A0A);
+                    background-color: var(--color-secondary, #FFE5B4);
+                    color: var(--color-text, #0A0A0A);
+                    box-shadow: 4px 4px 0 var(--color-border, #0A0A0A);
+                  "
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLElement).style.transform = "translate(-2px, -2px)";
+                    (e.target as HTMLElement).style.boxShadow = "6px 6px 0 var(--color-border, #0A0A0A)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLElement).style.transform = "";
+                    (e.target as HTMLElement).style.boxShadow = "4px 4px 0 var(--color-border, #0A0A0A)";
+                  }}
+                  title="Download as PNG image"
+                >
+                  🖼️ PNG
+                </button>
+
+                <button
+                  onClick={() => {
+                    // Download TXT
+                    import("../utils/exportUtils.ts").then(({ downloadText }) => {
+                      downloadText(asciiOutput.value, colorizedHtml.value || "", `${sign}-${currentPeriod.value}-horoscope`);
+                      sounds.success();
+                    });
+                  }}
+                  class="rounded-2xl font-black transition-all"
+                  style="
+                    height: 48px;
+                    padding: 0 24px;
+                    font-size: 14px;
+                    border: 4px solid;
+                    border-color: var(--color-border, #0A0A0A);
+                    background-color: var(--color-secondary, #FFE5B4);
+                    color: var(--color-text, #0A0A0A);
+                    box-shadow: 4px 4px 0 var(--color-border, #0A0A0A);
+                  "
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLElement).style.transform = "translate(-2px, -2px)";
+                    (e.target as HTMLElement).style.boxShadow = "6px 6px 0 var(--color-border, #0A0A0A)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLElement).style.transform = "";
+                    (e.target as HTMLElement).style.boxShadow = "4px 4px 0 var(--color-border, #0A0A0A)";
+                  }}
+                  title="Download as text file"
+                >
+                  💾 TXT
+                </button>
+
+                <button
+                  onClick={async () => {
+                    const { copyToClipboard } = await import("../utils/exportUtils.ts");
+                    const success = await copyToClipboard(asciiOutput.value, colorizedHtml.value || asciiOutput.value, "email");
+                    if (success) {
+                      sounds.success();
+                    }
+                  }}
+                  class="rounded-2xl font-black transition-all"
+                  style="
+                    height: 48px;
+                    padding: 0 32px;
+                    font-size: 14px;
+                    border: 4px solid;
+                    border-color: var(--color-border, #0A0A0A);
+                    background-color: var(--color-accent, #FF69B4);
+                    color: var(--color-base, #FAF9F6);
+                    box-shadow: 4px 4px 0 var(--color-border, #0A0A0A);
+                  "
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLElement).style.transform = "translate(-2px, -2px)";
+                    (e.target as HTMLElement).style.boxShadow = "6px 6px 0 var(--color-border, #0A0A0A)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLElement).style.transform = "";
+                    (e.target as HTMLElement).style.boxShadow = "4px 4px 0 var(--color-border, #0A0A0A)";
+                  }}
+                  title="Copy to clipboard"
+                >
+                  📋 COPY
+                </button>
+              </div>
+            )}
 
             {/* Customization dropdowns - NO LABEL, 48px below terminal */}
             <div class="mx-auto" style="width: 90%; max-width: 900px; margin-top: 48px;">

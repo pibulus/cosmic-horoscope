@@ -58,6 +58,8 @@ interface TerminalDisplayProps {
   showShuffleButton?: boolean;
   /** Visual effect to apply (glow, saturation, etc.) */
   visualEffect?: string;
+  /** Hide export buttons (for cosmic-horoscope which renders them externally) */
+  hideExportButtons?: boolean;
 }
 
 export function TerminalDisplay({
@@ -69,6 +71,7 @@ export function TerminalDisplay({
   terminalPath = "~/output/text-art.txt",
   showShuffleButton = false,
   visualEffect = "subtle",
+  hideExportButtons = false,
 }: TerminalDisplayProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [mobileExportOpen, setMobileExportOpen] = useState(false);
@@ -142,8 +145,8 @@ export function TerminalDisplay({
 
       {/* Terminal Content Area */}
       <div
-        class="p-4 sm:p-6 md:p-8 overflow-auto custom-scrollbar transition-all duration-700"
-        style="height: 400px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        class="overflow-auto custom-scrollbar transition-all duration-700"
+        style="height: 400px; padding: 40px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         {isLoading && !content
           ? (
@@ -159,16 +162,16 @@ export function TerminalDisplay({
           : htmlContent
           ? (
             <pre
-              class="ascii-display font-mono text-base opacity-85"
-              style={`color: #00FF41; line-height: 1.4; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${getVisualEffectStyle(visualEffect)}`}
+              class="ascii-display font-mono opacity-85"
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${getVisualEffectStyle(visualEffect)}`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
           )
           : content
           ? (
             <pre
-              class="ascii-display font-mono text-base opacity-85"
-              style={`color: #00FF41; line-height: 1.4; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${getVisualEffectStyle(visualEffect)}`}
+              class="ascii-display font-mono opacity-85"
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${getVisualEffectStyle(visualEffect)}`}
             >
               {content}
             </pre>
@@ -176,8 +179,8 @@ export function TerminalDisplay({
           : null}
       </div>
 
-      {/* Export Buttons - Show when content is ready */}
-      {hasContent && (
+      {/* Export Buttons - Show when content is ready (unless hidden) */}
+      {!hideExportButtons && hasContent && (
         <>
           {/* Mobile: Single Export Dropdown */}
           <div class="sm:hidden absolute bottom-6 right-6 z-10 animate-pop-in">
