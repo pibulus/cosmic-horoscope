@@ -91,18 +91,19 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
   const emoji = getZodiacEmoji(sign);
 
   return (
-    <div class="w-full min-h-screen relative flex flex-col items-center px-4 py-8">
-      {/* Main content container */}
-      <div class="w-full max-w-4xl mx-auto relative z-10">
-        {/* NEW Cosmic Header */}
+    <div class="w-full min-h-screen relative flex flex-col items-center">
+      {/* Main content container - max-width 1200px, centered */}
+      <div class="w-full max-w-[1200px] mx-auto px-4" style="margin-top: 96px;">
+
+        {/* Flat Header - Icon, Sign, Dates */}
         <CosmicHeader
           sign={sign}
           emoji={emoji}
           dates={zodiacInfo?.dates}
         />
 
-        {/* Period selector - neo-brutalist tabs */}
-        <div class="flex justify-center gap-4 mb-12 px-4">
+        {/* Period selector - 48px below header */}
+        <div class="flex justify-center" style="gap: 16px; margin-bottom: 24px;">
           {["daily", "weekly", "monthly"].map((period, index) => {
             const isActive = currentPeriod.value === period;
             return (
@@ -157,37 +158,36 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
 
         {/* Horoscope content */}
         {isLoading.value ? (
-          <div class="text-center py-32">
+          <div class="text-center" style="padding: 64px 0;">
             <div class="text-6xl mb-6 animate-pulse" style="animation: glow-pulse 2s ease-in-out infinite;">
               ✨
             </div>
-            <p class="text-purple-300 text-xl">Reading the stars...</p>
+            <p style="color: rgba(255, 255, 255, 0.6); font-size: 18px;">Reading the stars...</p>
           </div>
         ) : horoscopeData.value ? (
-          <div class="space-y-8">
-            {/* Date */}
+          <div>
+            {/* Date - 14px, muted, 24px below tabs */}
             {horoscopeData.value.date && (
-              <p class="text-center text-purple-300 text-lg font-mono mb-8">
+              <div class="text-center font-mono" style="font-size: 14px; color: rgba(255, 255, 255, 0.6); margin-bottom: 64px;">
                 {horoscopeData.value.date}
-              </p>
+              </div>
             )}
 
-            {/* Terminal Display for ASCII Art Horoscope */}
-            <TerminalDisplay
-              content={asciiOutput.value}
-              htmlContent={colorizedHtml.value}
-              isLoading={isLoading.value}
-              filename={`${sign}-${currentPeriod.value}-horoscope`}
-              terminalPath={`~/cosmic/${sign}.txt`}
-              visualEffect={visualEffect.value}
-            />
+            {/* Terminal Display - 90% width, max 900px */}
+            <div class="mx-auto" style="width: 90%; max-width: 900px; margin-bottom: 24px;">
+              <TerminalDisplay
+                content={asciiOutput.value}
+                htmlContent={colorizedHtml.value}
+                isLoading={isLoading.value}
+                filename={`${sign}-${currentPeriod.value}-horoscope`}
+                terminalPath={`~/cosmic/${sign}.txt`}
+                visualEffect={visualEffect.value}
+              />
+            </div>
 
-            {/* Customization section - MOVED BELOW terminal */}
-            <div class="mt-10 pt-8 border-t-2 border-purple-500/30">
-              <h3 class="text-center text-sm font-mono font-bold uppercase tracking-wider text-purple-300/80 mb-6">
-                ✨ Customize Your Horoscope
-              </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Customization dropdowns - NO LABEL, 48px below terminal */}
+            <div class="mx-auto" style="width: 90%; max-width: 900px; margin-top: 48px;">
+              <div class="flex justify-center flex-wrap" style="gap: 24px;">
                 <MagicDropdown
                   label="ASCII Font"
                   options={FIGLET_FONTS}
@@ -221,13 +221,19 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
               </div>
             </div>
 
-            {/* Action buttons */}
+            {/* Change Sign button - 48px below dropdowns, HUGE */}
             {onChangeSign && (
-              <div class="flex justify-center mt-8">
+              <div class="flex justify-center" style="margin-top: 48px;">
                 <button
                   onClick={onChangeSign}
-                  class="px-10 py-5 rounded-2xl font-black text-lg uppercase tracking-wider magnetic brutal-shadow transition-all duration-200 bg-gradient-to-br from-pink-500 to-purple-600 text-white border-pink-400"
-                  style="border-width: 4px; box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.8), 0 0 30px rgba(236, 72, 153, 0.5);"
+                  class="rounded-2xl font-black uppercase tracking-wider magnetic brutal-shadow transition-all duration-200 bg-gradient-to-br from-pink-500 to-purple-600 text-white border-pink-400"
+                  style="
+                    height: 64px;
+                    width: 280px;
+                    font-size: 20px;
+                    border-width: 4px;
+                    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.8), 0 0 30px rgba(236, 72, 153, 0.5);
+                  "
                   onMouseEnter={(e) => {
                     (e.target as HTMLElement).style.transform = "translate(-3px, -3px) scale(1.05)";
                     (e.target as HTMLElement).style.boxShadow = "9px 9px 0 rgba(0, 0, 0, 0.8), 0 0 40px rgba(236, 72, 153, 0.7)";
@@ -246,10 +252,27 @@ export default function HoroscopeDisplay({ sign, onChangeSign }: HoroscopeDispla
                   }}
                   aria-label="Change your zodiac sign"
                 >
-                  ✨ Change Sign
+                  ✨ CHANGE SIGN
                 </button>
               </div>
             )}
+
+            {/* Footer - 96px below button */}
+            <footer
+              style="
+                margin-top: 96px;
+                height: 64px;
+                border-top: 3px solid #a855f7;
+                background: rgba(0, 0, 0, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <div style="font-size: 14px; color: #ffffff;">
+                Made with cosmic vibes ✨
+              </div>
+            </footer>
           </div>
         ) : (
           <div class="text-center py-32 text-purple-400">
