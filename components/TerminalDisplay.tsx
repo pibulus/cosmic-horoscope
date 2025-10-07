@@ -160,7 +160,7 @@ export function TerminalDisplay({
       {/* Terminal Content Area - Responsive height */}
       <div
         class="overflow-auto custom-scrollbar transition-all duration-700 terminal-content"
-        style="min-height: 300px; max-height: 400px; padding: 20px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        style="min-height: 450px; max-height: 600px; padding: 20px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         <style>
           {`
@@ -168,7 +168,7 @@ export function TerminalDisplay({
               .terminal-content {
                 padding: 40px !important;
                 min-height: 520px !important;
-                max-height: 600px !important;
+                max-height: none !important;
               }
             }
           `}
@@ -188,7 +188,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 12px; line-height: 1.4; white-space: pre; overflow-x: auto; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -209,7 +209,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 12px; line-height: 1.4; white-space: pre; overflow-x: auto; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
             >
