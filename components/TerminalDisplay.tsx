@@ -197,7 +197,7 @@ export function TerminalDisplay({
                 {`
                   @media (min-width: 640px) {
                     .ascii-display {
-                      font-size: 18px !important;
+                      font-size: 22px !important;
                       line-height: 1.6 !important;
                     }
                   }
@@ -218,7 +218,7 @@ export function TerminalDisplay({
                 {`
                   @media (min-width: 640px) {
                     .ascii-display {
-                      font-size: 18px !important;
+                      font-size: 22px !important;
                       line-height: 1.6 !important;
                     }
                   }
