@@ -10,52 +10,37 @@ interface CosmicHeaderProps {
 
 export function CosmicHeader({ sign, emoji, dates }: CosmicHeaderProps) {
   return (
-    <div class="w-full text-center" style="margin-bottom: 48px;">
-      {/* Icon - 120px, no background */}
-      <div
-        class="spring-bounce"
-        style="
-          font-size: 120px;
+    <div class="w-full text-center" style="margin-bottom: 32px;">
+      {/* Icon - clean, no effects */}
+      <div style="
+          font-size: 100px;
           line-height: 1;
           margin-bottom: 16px;
-          filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.6));
-          animation: subtle-float 4s ease-in-out infinite;
-          animation-delay: 0.1s;
-        "
-      >
+        ">
         {emoji}
       </div>
 
-      {/* Sign Name - 72px, huge, bold, hard shadow */}
+      {/* Sign Name - clean brutalist */}
       <h1
-        class="font-black capitalize spring-bounce"
+        class="font-black font-mono capitalize uppercase"
         style="
-          font-size: 72px;
+          font-size: 48px;
           line-height: 1;
           margin-bottom: 8px;
-          color: #ffffff;
-          text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
-          letter-spacing: -0.02em;
-          animation-delay: 0.2s;
+          color: var(--color-text, #faf9f6);
+          letter-spacing: 0.05em;
         "
-        onMouseEnter={(e) => {
-          (e.target as HTMLElement).style.animation = 'chromatic-aberration 0.3s linear infinite, glitch-jitter 0.5s ease-in-out infinite';
-        }}
-        onMouseLeave={(e) => {
-          (e.target as HTMLElement).style.animation = '';
-        }}
       >
         {sign}
       </h1>
 
-      {/* Dates - 16px, green, no border, just text */}
+      {/* Dates - minimal */}
       {dates && (
         <div
-          class="font-mono spring-bounce"
+          class="font-mono opacity-60"
           style="
-            font-size: 16px;
-            color: #22c55e;
-            animation-delay: 0.3s;
+            font-size: 14px;
+            color: var(--color-text, #faf9f6);
           "
         >
           {dates}

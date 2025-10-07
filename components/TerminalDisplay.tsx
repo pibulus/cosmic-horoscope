@@ -5,7 +5,11 @@
 
 import { useState } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
-import { copyToClipboard, downloadPNG, downloadText } from "../utils/exportUtils.ts";
+import {
+  copyToClipboard,
+  downloadPNG,
+  downloadText,
+} from "../utils/exportUtils.ts";
 
 /**
  * Get CSS filter string for visual effects
@@ -17,26 +21,33 @@ function getVisualEffectStyle(effect?: string): string {
       css = "filter: none; text-shadow: none;";
       break;
     case "neon":
-      css = "filter: saturate(2.2) brightness(1.2); text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor;";
+      css =
+        "filter: saturate(2.2) brightness(1.2); text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor;";
       break;
     case "glitch":
-      css = "filter: saturate(2.5) contrast(1.5); text-shadow: -3px 0 4px #ff00ff, 3px 0 4px #00ffff, -2px 0 2px #ff0000, 2px 0 2px #00ff00;";
+      css =
+        "filter: saturate(2.5) contrast(1.5); text-shadow: -3px 0 4px #ff00ff, 3px 0 4px #00ffff, -2px 0 2px #ff0000, 2px 0 2px #00ff00;";
       break;
     case "thermal":
-      css = "filter: saturate(2) contrast(1.8) brightness(1.3) hue-rotate(20deg); text-shadow: 0 0 10px #ff6600, 0 0 20px #ff3300;";
+      css =
+        "filter: saturate(2) contrast(1.8) brightness(1.3) hue-rotate(20deg); text-shadow: 0 0 10px #ff6600, 0 0 20px #ff3300;";
       break;
     case "hologram":
-      css = "filter: saturate(1.8) brightness(1.5); text-shadow: 0 0 10px currentColor, 0 0 20px #00ffff, 0 0 30px #ff00ff; opacity: 0.9;";
+      css =
+        "filter: saturate(1.8) brightness(1.5); text-shadow: 0 0 10px currentColor, 0 0 20px #00ffff, 0 0 30px #ff00ff; opacity: 0.9;";
       break;
     case "retro":
-      css = "filter: saturate(1.4) contrast(1.2) blur(0.3px); text-shadow: 0 0 2px currentColor, 0 0 4px currentColor;";
+      css =
+        "filter: saturate(1.4) contrast(1.2) blur(0.3px); text-shadow: 0 0 2px currentColor, 0 0 4px currentColor;";
       break;
     case "cyberpunk":
-      css = "filter: saturate(2) contrast(1.3); text-shadow: -1px 0 2px #ff00ff, 1px 0 2px #00ffff, 0 0 8px currentColor;";
+      css =
+        "filter: saturate(2) contrast(1.3); text-shadow: -1px 0 2px #ff00ff, 1px 0 2px #00ffff, 0 0 8px currentColor;";
       break;
     default:
       // Default to neon if not specified
-      css = "filter: saturate(2.2) brightness(1.2); text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor;";
+      css =
+        "filter: saturate(2.2) brightness(1.2); text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor;";
   }
   return css;
 }
@@ -163,7 +174,9 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${getVisualEffectStyle(visualEffect)}`}
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${
+                getVisualEffectStyle(visualEffect)
+              }`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
             />
           )
@@ -171,7 +184,9 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${getVisualEffectStyle(visualEffect)}`}
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${
+                getVisualEffectStyle(visualEffect)
+              }`}
             >
               {content}
             </pre>
@@ -191,7 +206,7 @@ export function TerminalDisplay({
                   setMobileExportOpen(!mobileExportOpen);
                 }}
                 class="px-4 py-3 border-3 rounded-xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl active:scale-95"
-                style="background-color: var(--color-accent, #FF69B4); color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A);"
+                style="background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
               >
                 📤 Export
               </button>
@@ -206,7 +221,7 @@ export function TerminalDisplay({
                       setMobileExportOpen(false);
                     }}
                     class="w-full px-4 py-3 font-mono font-bold text-left hover:bg-opacity-80 transition-colors"
-                    style="background-color: var(--color-secondary, #FFE5B4); color: var(--color-text, #0A0A0A);"
+                    style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6);"
                   >
                     🖼️ PNG
                   </button>
@@ -216,7 +231,7 @@ export function TerminalDisplay({
                       setMobileExportOpen(false);
                     }}
                     class="w-full px-4 py-3 font-mono font-bold text-left hover:bg-opacity-80 transition-colors border-t-2"
-                    style="background-color: var(--color-secondary, #FFE5B4); color: var(--color-text, #0A0A0A); border-color: var(--color-border, #0A0A0A);"
+                    style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
                   >
                     💾 TXT
                   </button>
@@ -227,8 +242,8 @@ export function TerminalDisplay({
                     }}
                     class="w-full px-4 py-3 font-mono font-bold text-left hover:bg-opacity-80 transition-colors border-t-2"
                     style={copiedToClipboard
-                      ? "background-color: #4ADE80; color: #0A0A0A; border-color: var(--color-border, #0A0A0A);"
-                      : "background-color: var(--color-accent, #FF69B4); color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A);"}
+                      ? "background-color: #4ADE80; color: #0a0a0a; border-color: var(--color-border, #a855f7);"
+                      : "background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"}
                   >
                     {copiedToClipboard ? "✅ COPIED!" : "📋 COPY"}
                   </button>
@@ -242,7 +257,7 @@ export function TerminalDisplay({
             <button
               onClick={handleDownloadPNG}
               class="px-5 py-3 border-4 rounded-2xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl hover:-translate-y-1 active:translate-y-0"
-              style="background-color: var(--color-secondary, #FFE5B4); color: var(--color-text, #0A0A0A); border-color: var(--color-border, #0A0A0A);"
+              style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
               title="Download as PNG image"
             >
               🖼️ PNG
@@ -250,7 +265,7 @@ export function TerminalDisplay({
             <button
               onClick={handleDownloadText}
               class="px-5 py-3 border-4 rounded-2xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl hover:-translate-y-1 active:translate-y-0"
-              style="background-color: var(--color-secondary, #FFE5B4); color: var(--color-text, #0A0A0A); border-color: var(--color-border, #0A0A0A);"
+              style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
               title="Download as text file"
             >
               💾 TXT
@@ -261,8 +276,8 @@ export function TerminalDisplay({
                 copiedToClipboard ? "animate-bounce-once" : ""
               }`}
               style={copiedToClipboard
-                ? "background-color: #4ADE80; color: #0A0A0A; border-color: var(--color-border, #0A0A0A);"
-                : "background-color: var(--color-accent, #FF69B4); color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A);"}
+                ? "background-color: #4ADE80; color: #0a0a0a; border-color: var(--color-border, #a855f7);"
+                : "background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"}
               title="Copy to clipboard"
             >
               {copiedToClipboard ? "✅ COPIED!" : "📋 COPY"}
