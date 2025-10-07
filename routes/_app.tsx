@@ -74,9 +74,100 @@ export default function App({ Component }: PageProps) {
           href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>"
         />
 
+        {/* Fonts - JetBrains Mono for better terminal experience */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet"
+        />
+
         {/* Styles */}
         <link rel="stylesheet" href="/styles.css" />
         <link rel="stylesheet" href="/cosmic-animations.css" />
+
+        {/* Global animation and interaction styles */}
+        <style>
+          {`
+          /* Spring physics for buttons */
+          button {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+          }
+
+          /* Better font rendering */}
+          body, .font-mono {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+          }
+
+          /* Smooth scrolling */}
+          html {
+            scroll-behavior: smooth;
+          }
+
+          /* Custom scrollbar theming */}
+          ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+          }
+
+          ::-webkit-scrollbar-track {
+            background: var(--color-base-solid, #0a0a0a);
+          }
+
+          ::-webkit-scrollbar-thumb {
+            background: var(--color-accent, #c084fc);
+            border-radius: 6px;
+          }
+
+          ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-border, #a855f7);
+          }
+
+          /* Spring bounce animation for interactive elements */}
+          @keyframes spring-in {
+            0% {
+              transform: scale(0.9);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.05);
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+
+          /* Glow pulse for important elements */}
+          @keyframes glow-pulse {
+            0%, 100% {
+              filter: drop-shadow(0 0 10px var(--color-accent));
+              opacity: 0.9;
+            }
+            50% {
+              filter: drop-shadow(0 0 20px var(--color-accent)) drop-shadow(0 0 30px var(--color-border));
+              opacity: 1;
+            }
+          }
+
+          /* Magnetic button hover effect */
+          button:hover {
+            filter: drop-shadow(0 0 8px var(--color-accent));
+          }
+
+          /* Respect reduced motion preferences */}
+          @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+              animation-duration: 0.01ms !important;
+              animation-iteration-count: 1 !important;
+              transition-duration: 0.01ms !important;
+            }
+          }
+          `}
+        </style>
 
         {/* Analytics env vars */}
         <script

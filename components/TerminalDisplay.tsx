@@ -154,10 +154,10 @@ export function TerminalDisplay({
         </div>
       </div>
 
-      {/* Terminal Content Area */}
+      {/* Terminal Content Area - Taller for more presence */}
       <div
         class="overflow-auto custom-scrollbar transition-all duration-700"
-        style="height: 400px; padding: 40px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        style="height: 520px; padding: 40px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         {isLoading && !content
           ? (
@@ -174,7 +174,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -184,7 +184,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.8px; font-weight: 900; ${
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
             >

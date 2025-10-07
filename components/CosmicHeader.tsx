@@ -10,42 +10,29 @@ interface CosmicHeaderProps {
 
 export function CosmicHeader({ sign, emoji, dates }: CosmicHeaderProps) {
   return (
-    <div class="w-full text-center" style="margin-bottom: 32px;">
-      {/* Icon - clean, no effects */}
+    <div class="w-full flex items-center justify-center gap-4" style="margin-bottom: 24px;">
+      {/* Icon - smaller, inline */}
       <div style="
-          font-size: 100px;
+          font-size: 48px;
           line-height: 1;
-          margin-bottom: 16px;
+          text-shadow: var(--shadow-glow, none);
         ">
         {emoji}
       </div>
 
-      {/* Sign Name - clean brutalist */}
+      {/* Sign Name - smaller, inline brutalist */}
       <h1
         class="font-black font-mono capitalize uppercase"
         style="
-          font-size: 48px;
+          font-size: 32px;
           line-height: 1;
-          margin-bottom: 8px;
           color: var(--color-text, #faf9f6);
           letter-spacing: 0.05em;
+          text-shadow: var(--shadow-glow, none);
         "
       >
         {sign}
       </h1>
-
-      {/* Dates - minimal */}
-      {dates && (
-        <div
-          class="font-mono opacity-60"
-          style="
-            font-size: 14px;
-            color: var(--color-text, #faf9f6);
-          "
-        >
-          {dates}
-        </div>
-      )}
     </div>
   );
 }

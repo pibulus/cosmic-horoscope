@@ -21,6 +21,8 @@ export const cosmicPurple: Theme = {
     "--mesh-1": "#9333ea",
     "--mesh-2": "#ec4899",
     "--mesh-3": "#f59e0b",
+    "--particle-count": "8",
+    "--orb-count": "3",
   },
 };
 
@@ -42,6 +44,8 @@ export const sunsetMagic: Theme = {
     "--mesh-1": "#fb923c",
     "--mesh-2": "#f472b6",
     "--mesh-3": "#ff6b6b",
+    "--particle-count": "10",
+    "--orb-count": "4",
   },
 };
 
@@ -63,6 +67,8 @@ export const neonOracle: Theme = {
     "--mesh-1": "#00ff41",
     "--mesh-2": "#00ffff",
     "--mesh-3": "#7c3aed",
+    "--particle-count": "12",
+    "--orb-count": "3",
   },
 };
 
@@ -84,6 +90,8 @@ export const pinkMoon: Theme = {
     "--mesh-1": "#ff1493",
     "--mesh-2": "#ec4899",
     "--mesh-3": "#a855f7",
+    "--particle-count": "8",
+    "--orb-count": "5",
   },
 };
 

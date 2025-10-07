@@ -102,18 +102,27 @@ export default function HoroscopeDisplay(
   return (
     <div class="w-full min-h-screen relative flex flex-col items-center">
       {/* Main content container - max-width 1200px, centered */}
-      <div class="w-full max-w-[1200px] mx-auto px-4" style="margin-top: 96px;">
-        {/* Flat Header - Icon, Sign, Dates */}
+      <div class="w-full max-w-[1200px] mx-auto px-4" style="margin-top: 64px;">
+        {/* Compact Header - Icon + Sign inline */}
         <CosmicHeader
           sign={sign}
           emoji={emoji}
-          dates={zodiacInfo?.dates}
         />
+
+        {/* Date Range - moved below header, subtle */}
+        {zodiacInfo?.dates && (
+          <div
+            class="text-center font-mono opacity-50"
+            style="font-size: 12px; color: var(--color-text, #faf9f6); margin-bottom: 32px;"
+          >
+            {zodiacInfo.dates}
+          </div>
+        )}
 
         {/* Period selector - brutalist style */}
         <div
           class="flex justify-center"
-          style="gap: 16px; margin-bottom: 24px;"
+          style="gap: 16px; margin-bottom: 32px;"
         >
           {["daily", "weekly", "monthly"].map((period) => {
             const isActive = currentPeriod.value === period;
@@ -121,7 +130,7 @@ export default function HoroscopeDisplay(
               <button
                 key={period}
                 onClick={() => handlePeriodChange(period)}
-                class="relative px-8 py-3 font-black font-mono text-sm uppercase tracking-wider transition-all duration-150 border-4 rounded-lg"
+                class="relative px-8 py-3 font-black font-mono text-sm uppercase tracking-wider transition-all duration-150 border-4 rounded-lg hover:scale-105 active:scale-95"
                 style={`
                   background-color: ${
                   isActive
@@ -167,37 +176,24 @@ export default function HoroscopeDisplay(
               {horoscopeData.value.date && (
                 <div
                   class="text-center font-mono"
-                  style="font-size: 14px; color: rgba(255, 255, 255, 0.6); margin-bottom: 64px;"
+                  style="font-size: 14px; color: rgba(255, 255, 255, 0.6); margin-bottom: 24px;"
                 >
                   {horoscopeData.value.date}
                 </div>
               )}
 
-              {/* Terminal Display - 90% width, max 900px */}
-              <div class="mx-auto" style="width: 90%; max-width: 900px;">
-                <TerminalDisplay
-                  content={asciiOutput.value}
-                  htmlContent={colorizedHtml.value}
-                  isLoading={isLoading.value}
-                  filename={`${sign}-${currentPeriod.value}-horoscope`}
-                  terminalPath={`~/cosmic/${sign}.txt`}
-                  visualEffect={visualEffect.value}
-                  hideExportButtons={false}
-                />
-              </div>
-
-              {/* Customization section - collapsible */}
+              {/* Customization section - ABOVE terminal, collapsible */}
               <div
                 class="mx-auto"
-                style="width: 90%; max-width: 900px; margin-top: 32px;"
+                style="width: 90%; max-width: 900px; margin-bottom: 24px;"
               >
-                <div class="flex justify-center">
+                <div class="flex justify-center gap-3">
                   <button
                     onClick={() => {
                       showCustomization.value = !showCustomization.value;
                       sounds.click();
                     }}
-                    class="px-6 py-2 font-mono font-bold text-sm border-3 rounded-lg transition-all"
+                    class="px-6 py-2 font-mono font-bold text-sm border-4 rounded-lg transition-all hover:scale-105 active:scale-95"
                     style="
                     background-color: var(--color-secondary, #1a1a1a);
                     border-color: var(--color-border, #a855f7);
@@ -205,8 +201,25 @@ export default function HoroscopeDisplay(
                     box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
                   "
                   >
-                    {showCustomization.value ? "▲ Hide" : "▼ Customize"} Effects
+                    {showCustomization.value ? "▲" : "▼"} Customize Effects
                   </button>
+
+                  {/* Change Sign button - inline with customize */}
+                  {onChangeSign && (
+                    <button
+                      onClick={onChangeSign}
+                      class="px-6 py-2 font-mono font-bold text-sm border-4 rounded-lg transition-all hover:scale-105 active:scale-95"
+                      style="
+                      background-color: var(--color-secondary, #1a1a1a);
+                      border-color: var(--color-border, #a855f7);
+                      color: var(--color-text, #faf9f6);
+                      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+                    "
+                      aria-label="Change your zodiac sign"
+                    >
+                      ← Change Sign
+                    </button>
+                  )}
                 </div>
 
                 {showCustomization.value && (
@@ -248,24 +261,18 @@ export default function HoroscopeDisplay(
                 )}
               </div>
 
-              {/* Change Sign button - minimal */}
-              {onChangeSign && (
-                <div class="flex justify-center" style="margin-top: 32px;">
-                  <button
-                    onClick={onChangeSign}
-                    class="px-6 py-2 font-mono font-bold text-sm border-3 rounded-lg transition-all"
-                    style="
-                    background-color: var(--color-secondary, #1a1a1a);
-                    border-color: var(--color-border, #a855f7);
-                    color: var(--color-text, #faf9f6);
-                    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
-                  "
-                    aria-label="Change your zodiac sign"
-                  >
-                    ← Change Sign
-                  </button>
-                </div>
-              )}
+              {/* Terminal Display - 90% width, max 900px */}
+              <div class="mx-auto" style="width: 90%; max-width: 900px;">
+                <TerminalDisplay
+                  content={asciiOutput.value}
+                  htmlContent={colorizedHtml.value}
+                  isLoading={isLoading.value}
+                  filename={`${sign}-${currentPeriod.value}-horoscope`}
+                  terminalPath={`~/cosmic/${sign}.txt`}
+                  visualEffect={visualEffect.value}
+                  hideExportButtons={false}
+                />
+              </div>
 
               {/* Footer - minimal */}
               <footer style="

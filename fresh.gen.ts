@@ -9,6 +9,7 @@ import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $thanks from "./routes/thanks.tsx";
 import * as $AboutModal from "./islands/AboutModal.tsx";
+import * as $BackgroundEffects from "./islands/BackgroundEffects.tsx";
 import * as $HomeIsland from "./islands/HomeIsland.tsx";
 import * as $HoroscopeDisplay from "./islands/HoroscopeDisplay.tsx";
 import * as $KofiModal from "./islands/KofiModal.tsx";
@@ -30,6 +31,7 @@ const manifest = {
   },
   islands: {
     "./islands/AboutModal.tsx": $AboutModal,
+    "./islands/BackgroundEffects.tsx": $BackgroundEffects,
     "./islands/HomeIsland.tsx": $HomeIsland,
     "./islands/HoroscopeDisplay.tsx": $HoroscopeDisplay,
     "./islands/KofiModal.tsx": $KofiModal,
