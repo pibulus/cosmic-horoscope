@@ -57,7 +57,9 @@ export default function ThemeIsland() {
 
   const cycleTheme = () => {
     sounds.click();
-    const currentIndex = cosmicThemes.findIndex((t) => t.name === currentTheme.name);
+    const currentIndex = cosmicThemes.findIndex((t) =>
+      t.name === currentTheme.name
+    );
     const nextIndex = (currentIndex + 1) % cosmicThemes.length;
     const nextTheme = cosmicThemes[nextIndex];
     themeSystem.setTheme(nextTheme.name);
@@ -121,7 +123,10 @@ export default function ThemeIsland() {
             </div>
 
             {/* Divider */}
-            <div class="my-3 border-t-2 opacity-20" style="border-color: var(--color-border, #a78bfa)" />
+            <div
+              class="my-3 border-t-2 opacity-20"
+              style="border-color: var(--color-border, #a78bfa)"
+            />
 
             {/* Cycle button */}
             <button

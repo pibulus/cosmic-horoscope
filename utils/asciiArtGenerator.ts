@@ -36,7 +36,7 @@ export const FIGLET_FONTS = [
 export function generateHoroscopeAscii(
   signName: string,
   horoscopeText: string,
-  font: string = "Standard"
+  font: string = "Standard",
 ): string {
   const signUpper = signName.toUpperCase();
 

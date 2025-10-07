@@ -6,12 +6,23 @@
 
 import { FreshContext } from "$fresh/server.ts";
 
-const HOROSCOPE_API_BASE = "https://horoscope-app-api.vercel.app/api/v1/get-horoscope";
+const HOROSCOPE_API_BASE =
+  "https://horoscope-app-api.vercel.app/api/v1/get-horoscope";
 
 // Zodiac signs (validated)
 const VALID_SIGNS = [
-  "aries", "taurus", "gemini", "cancer", "leo", "virgo",
-  "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"
+  "aries",
+  "taurus",
+  "gemini",
+  "cancer",
+  "leo",
+  "virgo",
+  "libra",
+  "scorpio",
+  "sagittarius",
+  "capricorn",
+  "aquarius",
+  "pisces",
 ];
 
 interface HoroscopeParams {
@@ -40,10 +51,14 @@ function getDayParamForTimezone(): string {
   }
 }
 
-export const handler = async (req: Request, _ctx: FreshContext): Promise<Response> => {
+export const handler = async (
+  req: Request,
+  _ctx: FreshContext,
+): Promise<Response> => {
   const url = new URL(req.url);
   const sign = url.searchParams.get("sign")?.toLowerCase();
-  const period = url.searchParams.get("period") as "daily" | "weekly" | "monthly" || "daily";
+  const period =
+    url.searchParams.get("period") as "daily" | "weekly" | "monthly" || "daily";
   const customDay = url.searchParams.get("day"); // Optional override
 
   // Validate sign
@@ -51,12 +66,12 @@ export const handler = async (req: Request, _ctx: FreshContext): Promise<Respons
     return new Response(
       JSON.stringify({
         error: "Invalid zodiac sign",
-        validSigns: VALID_SIGNS
+        validSigns: VALID_SIGNS,
       }),
       {
         status: 400,
-        headers: { "Content-Type": "application/json" }
-      }
+        headers: { "Content-Type": "application/json" },
+      },
     );
   }
 
@@ -75,11 +90,13 @@ export const handler = async (req: Request, _ctx: FreshContext): Promise<Respons
     apiUrl = `${HOROSCOPE_API_BASE}/monthly?${params}`;
   } else {
     return new Response(
-      JSON.stringify({ error: "Invalid period. Must be: daily, weekly, or monthly" }),
+      JSON.stringify({
+        error: "Invalid period. Must be: daily, weekly, or monthly",
+      }),
       {
         status: 400,
-        headers: { "Content-Type": "application/json" }
-      }
+        headers: { "Content-Type": "application/json" },
+      },
     );
   }
 
@@ -100,9 +117,9 @@ export const handler = async (req: Request, _ctx: FreshContext): Promise<Respons
         status: 200,
         headers: {
           "Content-Type": "application/json",
-          "Cache-Control": "public, max-age=3600" // Cache for 1 hour
-        }
-      }
+          "Cache-Control": "public, max-age=3600", // Cache for 1 hour
+        },
+      },
     );
   } catch (error) {
     console.error("Horoscope API error:", error);
@@ -110,12 +127,12 @@ export const handler = async (req: Request, _ctx: FreshContext): Promise<Respons
     return new Response(
       JSON.stringify({
         error: "Failed to fetch horoscope",
-        message: error instanceof Error ? error.message : "Unknown error"
+        message: error instanceof Error ? error.message : "Unknown error",
       }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" }
-      }
+        headers: { "Content-Type": "application/json" },
+      },
     );
   }
 };

@@ -31,7 +31,8 @@ self.addEventListener("activate", (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (
-            cacheName !== CACHE_NAME && cacheName.startsWith("cosmic-horoscope-")
+            cacheName !== CACHE_NAME &&
+            cacheName.startsWith("cosmic-horoscope-")
           ) {
             console.log("🗑️ Removing old cache:", cacheName);
             return caches.delete(cacheName);

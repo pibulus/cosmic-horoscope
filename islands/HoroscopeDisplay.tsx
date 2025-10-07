@@ -13,7 +13,6 @@ import { TerminalDisplay } from "../components/TerminalDisplay.tsx";
 import { CosmicHeader } from "../components/CosmicHeader.tsx";
 import { applyColorToArt } from "../utils/colorEffects.ts";
 import {
-  escapeHtml,
   FIGLET_FONTS,
   generateHoroscopeAscii,
 } from "../utils/asciiArtGenerator.ts";
@@ -36,7 +35,6 @@ export default function HoroscopeDisplay(
   const selectedFont = useSignal("Standard");
   const asciiOutput = useSignal("");
   const colorizedHtml = useSignal("");
-  const showCustomization = useSignal(false);
 
   // Initialize analytics
   useEffect(() => {
@@ -89,7 +87,9 @@ export default function HoroscopeDisplay(
 
       if (inHeader) {
         // Header in gold/yellow
-        colorizedLines.push(`<span style="color: #FFD700; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`);
+        colorizedLines.push(
+          `<span style="color: #FFD700; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`,
+        );
       } else if (line.trim()) {
         // Body in terminal green
         colorizedLines.push(`<span style="color: #00FF41;">${line}</span>`);
@@ -111,7 +111,7 @@ export default function HoroscopeDisplay(
 
       if (data.success) {
         horoscopeData.value = data.data;
-        analytics.trackEvent("horoscope_viewed", { sign: zodiacSign, period });
+        analytics.trackHoroscopeViewed(zodiacSign, period, colorEffect.value);
         sounds.success();
       } else {
         console.error("Horoscope fetch failed:", data.error);
@@ -133,37 +133,31 @@ export default function HoroscopeDisplay(
   const emoji = getZodiacEmoji(sign);
 
   return (
-    <div class="w-full min-h-screen relative flex flex-col items-center">
+    <div class="w-full relative flex flex-col items-center">
       {/* Main content container - max-width 1200px, centered */}
-      <div class="w-full max-w-[1200px] mx-auto px-4" style="margin-top: 64px;">
-        {/* Compact Header - Icon + Sign inline */}
-        <CosmicHeader
-          sign={sign}
-          emoji={emoji}
-        />
-
-        {/* Date Range - moved below header, subtle */}
-        {zodiacInfo?.dates && (
-          <div
-            class="text-center font-mono opacity-50"
-            style="font-size: 12px; color: var(--color-text, #faf9f6); margin-bottom: 32px;"
-          >
-            {zodiacInfo.dates}
-          </div>
-        )}
-
-        {/* Period selector - brutalist style */}
-        <div
-          class="flex justify-center"
-          style="gap: 16px; margin-bottom: 32px;"
-        >
+      <div
+        class="w-full max-w-[1200px] mx-auto px-2 sm:px-4"
+        style="padding-bottom: 100px;"
+      >
+        <style>
+          {`
+            @media (min-width: 640px) {
+              .w-full.max-w-\\[1200px\\] {
+                padding-bottom: 120px !important;
+              }
+            }
+          `}
+        </style>
+        {/* Period selector + Controls - Single clean row */}
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+          {/* Period buttons */}
           {["daily", "weekly", "monthly"].map((period) => {
             const isActive = currentPeriod.value === period;
             return (
               <button
                 key={period}
                 onClick={() => handlePeriodChange(period)}
-                class="relative px-8 py-3 font-black font-mono text-sm uppercase tracking-wider transition-all duration-150 border-4 rounded-lg hover:scale-105 active:scale-95"
+                class="relative px-4 sm:px-8 py-2 sm:py-3 font-black font-mono text-xs sm:text-sm uppercase tracking-wider transition-all duration-150 border-4 rounded-lg hover:scale-105 active:scale-95"
                 style={`
                   background-color: ${
                   isActive
@@ -185,6 +179,34 @@ export default function HoroscopeDisplay(
               </button>
             );
           })}
+
+          {/* Separator */}
+          <div
+            class="hidden sm:block"
+            style="width: 2px; height: 40px; background-color: var(--color-border, #a855f7); margin: 0 8px; opacity: 0.3;"
+          />
+
+          {/* Color & Effect controls inline */}
+          <MagicDropdown
+            label="Color"
+            options={COLOR_EFFECTS}
+            value={colorEffect.value}
+            onChange={(val) => {
+              colorEffect.value = val;
+              sounds.success();
+            }}
+            changed={colorEffect.value !== "none"}
+          />
+          <MagicDropdown
+            label="Effect"
+            options={VISUAL_EFFECTS}
+            value={visualEffect.value}
+            onChange={(val) => {
+              visualEffect.value = val;
+              sounds.success();
+            }}
+            changed={visualEffect.value !== "neon"}
+          />
         </div>
 
         {/* Horoscope content */}
@@ -205,104 +227,18 @@ export default function HoroscopeDisplay(
           : horoscopeData.value
           ? (
             <div>
-              {/* Date - 14px, muted, 24px below tabs */}
-              {horoscopeData.value.date && (
-                <div
-                  class="text-center font-mono"
-                  style="font-size: 14px; color: rgba(255, 255, 255, 0.6); margin-bottom: 24px;"
-                >
-                  {horoscopeData.value.date}
-                </div>
-              )}
-
-              {/* Customization section - ABOVE terminal, collapsible */}
-              <div
-                class="mx-auto"
-                style="width: 90%; max-width: 900px; margin-bottom: 24px;"
-              >
-                <div class="flex justify-center gap-3">
-                  <button
-                    onClick={() => {
-                      showCustomization.value = !showCustomization.value;
-                      sounds.click();
-                    }}
-                    class="px-6 py-2 font-mono font-bold text-sm border-4 rounded-lg transition-all hover:scale-105 active:scale-95"
-                    style="
-                    background-color: var(--color-secondary, #1a1a1a);
-                    border-color: var(--color-border, #a855f7);
-                    color: var(--color-text, #faf9f6);
-                    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
-                  "
-                  >
-                    {showCustomization.value ? "▲" : "▼"} Customize Effects
-                  </button>
-
-                  {/* Change Sign button - inline with customize */}
-                  {onChangeSign && (
-                    <button
-                      onClick={onChangeSign}
-                      class="px-6 py-2 font-mono font-bold text-sm border-4 rounded-lg transition-all hover:scale-105 active:scale-95"
-                      style="
-                      background-color: var(--color-secondary, #1a1a1a);
-                      border-color: var(--color-border, #a855f7);
-                      color: var(--color-text, #faf9f6);
-                      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
-                    "
-                      aria-label="Change your zodiac sign"
-                    >
-                      ← Change Sign
-                    </button>
-                  )}
-                </div>
-
-                {showCustomization.value && (
-                  <div
-                    class="flex justify-center flex-wrap mt-4"
-                    style="gap: 16px;"
-                  >
-                    <MagicDropdown
-                      label="Font"
-                      options={FIGLET_FONTS}
-                      value={selectedFont.value}
-                      onChange={(val) => {
-                        selectedFont.value = val;
-                        sounds.click();
-                      }}
-                      changed={selectedFont.value !== "Standard"}
-                    />
-                    <MagicDropdown
-                      label="Color"
-                      options={COLOR_EFFECTS}
-                      value={colorEffect.value}
-                      onChange={(val) => {
-                        colorEffect.value = val;
-                        sounds.success();
-                      }}
-                      changed={colorEffect.value !== "none"}
-                    />
-                    <MagicDropdown
-                      label="Effect"
-                      options={VISUAL_EFFECTS}
-                      value={visualEffect.value}
-                      onChange={(val) => {
-                        visualEffect.value = val;
-                        sounds.success();
-                      }}
-                      changed={visualEffect.value !== "neon"}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Terminal Display - 90% width, max 900px */}
-              <div class="mx-auto" style="width: 90%; max-width: 900px;">
+              {/* Terminal Display - 100% on mobile, 90% on desktop, max 900px */}
+              <div class="mx-auto" style="width: 100%; max-width: 900px;">
                 <TerminalDisplay
                   content={asciiOutput.value}
                   htmlContent={colorizedHtml.value}
                   isLoading={isLoading.value}
                   filename={`${sign}-${currentPeriod.value}-${
                     horoscopeData.value.date
-                      ? horoscopeData.value.date.toLowerCase().replace(/[\s,]+/g, "-")
+                      ? horoscopeData.value.date.toLowerCase().replace(
+                        /[\s,]+/g,
+                        "-",
+                      )
                       : "horoscope"
                   }`}
                   terminalPath={`~/cosmic/${sign}.txt`}
@@ -310,20 +246,6 @@ export default function HoroscopeDisplay(
                   hideExportButtons={false}
                 />
               </div>
-
-              {/* Footer - minimal */}
-              <footer style="
-                margin-top: 64px;
-                padding: 24px 0;
-                text-align: center;
-              ">
-                <div
-                  class="font-mono opacity-40"
-                  style="font-size: 12px; color: var(--color-text, #faf9f6);"
-                >
-                  ✨
-                </div>
-              </footer>
             </div>
           )
           : (

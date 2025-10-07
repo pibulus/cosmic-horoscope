@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 
 /**
@@ -64,7 +64,9 @@ export function MagicDropdown({
           break;
         case "ArrowUp":
           e.preventDefault();
-          setFocusedIndex((prev) => (prev - 1 + options.length) % options.length);
+          setFocusedIndex((prev) =>
+            (prev - 1 + options.length) % options.length
+          );
           sounds.hover && sounds.hover();
           break;
         case "Enter":
@@ -90,7 +92,9 @@ export function MagicDropdown({
   // Close on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
         setFocusedIndex(-1);
       }
@@ -98,28 +102,39 @@ export function MagicDropdown({
 
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen]);
 
   return (
-    <div ref={dropdownRef} class="relative" style="min-width: 200px;">
+    <div
+      ref={dropdownRef}
+      class="relative w-full sm:w-auto"
+      style="min-width: 140px;"
+    >
       <button
         type="button"
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-label={`${label} selector`}
-        class="magic-select border-4 rounded-2xl font-mono font-bold cursor-pointer transition-all shadow-brutal hover:shadow-brutal-lg hover:scale-105 active:scale-95 focus:outline-none focus:ring-4"
+        class="magic-select border-3 sm:border-4 rounded-xl sm:rounded-2xl font-mono font-bold cursor-pointer transition-all shadow-brutal hover:shadow-brutal-lg hover:scale-105 active:scale-95 focus:outline-none focus:ring-4"
         style={`
-          height: 52px;
-          padding: 0 20px;
+          height: 40px;
+          padding: 0 12px;
           display: flex;
           align-items: center;
           width: 100%;
-          ${changed
+          @media (min-width: 640px) {
+            height: 52px;
+            padding: 0 20px;
+          }
+          ${
+          changed
             ? "background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7); filter: drop-shadow(0 0 12px var(--color-accent));"
-            : "background-color: var(--color-secondary, #1a1a1a); border-color: var(--color-border, #a855f7); color: var(--color-text, #faf9f6);"}
+            : "background-color: var(--color-secondary, #1a1a1a); border-color: var(--color-border, #a855f7); color: var(--color-text, #faf9f6);"
+        }
           ${isOpen ? "filter: drop-shadow(0 0 16px var(--color-accent));" : ""}
         `}
         onClick={(e) => {
@@ -129,9 +144,11 @@ export function MagicDropdown({
         }}
       >
         <div class="flex items-center justify-between w-full">
-          <span class="text-sm truncate">
+          <span class="text-xs sm:text-sm truncate">
             <span class="opacity-60 mr-1">{label}:</span>
-            <span class="font-black">{selectedOption?.name || "Select..."}</span>
+            <span class="font-black">
+              {selectedOption?.name || "Select..."}
+            </span>
           </span>
           <span
             class="text-base flex-shrink-0 ml-1"
@@ -160,15 +177,19 @@ export function MagicDropdown({
                 padding: 12px 20px;
                 font-size: 14px;
                 background-color: ${
-                  value === option.value
-                    ? "var(--color-accent, #a855f7)"
-                    : index === focusedIndex
-                    ? "rgba(168, 85, 247, 0.2)"
-                    : "transparent"
-                };
+                value === option.value
+                  ? "var(--color-accent, #a855f7)"
+                  : index === focusedIndex
+                  ? "rgba(168, 85, 247, 0.2)"
+                  : "transparent"
+              };
                 color: var(--color-text, #faf9f6);
                 transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-                ${index === focusedIndex || value === option.value ? "filter: drop-shadow(0 0 8px var(--color-accent));" : ""}
+                ${
+                index === focusedIndex || value === option.value
+                  ? "filter: drop-shadow(0 0 8px var(--color-accent));"
+                  : ""
+              }
               `}
               onClick={() => handleSelect(option.value)}
               onMouseEnter={(e) => {
@@ -185,7 +206,9 @@ export function MagicDropdown({
               }}
             >
               <span style="display: inline-flex; align-items: center; gap: 8px;">
-                {value === option.value && <span style="font-size: 16px;">✓</span>}
+                {value === option.value && (
+                  <span style="font-size: 16px;">✓</span>
+                )}
                 {option.name}
               </span>
             </div>

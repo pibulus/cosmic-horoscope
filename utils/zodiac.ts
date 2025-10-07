@@ -18,8 +18,18 @@ export const ZODIAC_SIGNS: ZodiacSign[] = [
   { name: "virgo", emoji: "♍", dates: "Aug 23 - Sep 22", element: "earth" },
   { name: "libra", emoji: "♎", dates: "Sep 23 - Oct 22", element: "air" },
   { name: "scorpio", emoji: "♏", dates: "Oct 23 - Nov 21", element: "water" },
-  { name: "sagittarius", emoji: "♐", dates: "Nov 22 - Dec 21", element: "fire" },
-  { name: "capricorn", emoji: "♑", dates: "Dec 22 - Jan 19", element: "earth" },
+  {
+    name: "sagittarius",
+    emoji: "♐",
+    dates: "Nov 22 - Dec 21",
+    element: "fire",
+  },
+  {
+    name: "capricorn",
+    emoji: "♑",
+    dates: "Dec 22 - Jan 19",
+    element: "earth",
+  },
   { name: "aquarius", emoji: "♒", dates: "Jan 20 - Feb 18", element: "air" },
   { name: "pisces", emoji: "♓", dates: "Feb 19 - Mar 20", element: "water" },
 ];
@@ -30,7 +40,7 @@ const STORAGE_KEY = "cosmic_zodiac_sign";
  * Get zodiac sign data by name
  */
 export function getZodiacSign(name: string): ZodiacSign | undefined {
-  return ZODIAC_SIGNS.find(sign => sign.name === name.toLowerCase());
+  return ZODIAC_SIGNS.find((sign) => sign.name === name.toLowerCase());
 }
 
 /**
@@ -69,5 +79,5 @@ export function clearSavedZodiacSign(): void {
  * Validate if a string is a valid zodiac sign
  */
 export function isValidZodiacSign(sign: string): boolean {
-  return ZODIAC_SIGNS.some(z => z.name === sign.toLowerCase());
+  return ZODIAC_SIGNS.some((z) => z.name === sign.toLowerCase());
 }

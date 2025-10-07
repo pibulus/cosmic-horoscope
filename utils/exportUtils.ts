@@ -106,7 +106,9 @@ export async function downloadPNG(
 
   try {
     // Get the ASCII display element
-    const asciiElement = document.querySelector(asciiElementSelector) as HTMLElement;
+    const asciiElement = document.querySelector(
+      asciiElementSelector,
+    ) as HTMLElement;
     if (!asciiElement) {
       console.error("ASCII display element not found");
       sounds.error();
@@ -115,8 +117,10 @@ export async function downloadPNG(
     }
 
     // Calculate actual text dimensions
-    const lines = asciiElement.innerText.split('\n').filter(line => line.trim().length > 0);
-    const maxLineLength = Math.max(...lines.map(line => line.length));
+    const lines = asciiElement.innerText.split("\n").filter((line) =>
+      line.trim().length > 0
+    );
+    const maxLineLength = Math.max(...lines.map((line) => line.length));
 
     // Get font size from computed styles or use defaults
     const computedStyles = window.getComputedStyle(asciiElement);
@@ -163,7 +167,7 @@ export async function downloadPNG(
       height: contentHeight + (padding * 2),
       style: {
         padding: `${padding}px`,
-      }
+      },
     });
 
     // Immediately restore original styles

@@ -18,7 +18,9 @@ export default function App({ Component }: PageProps) {
           name="viewport"
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
-        <title>Cosmic Horoscope • Horoscopes That Look As Good As They Read</title>
+        <title>
+          Cosmic Horoscope • Horoscopes That Look As Good As They Read
+        </title>
         <meta
           name="description"
           content="Get your daily, weekly, or monthly horoscope styled as shareable cosmic art. Pick your sign, apply gradients, export as beautiful images."
@@ -40,27 +42,45 @@ export default function App({ Component }: PageProps) {
 
         {/* Open Graph */}
         <meta property="og:site_name" content="Cosmic Horoscope" />
-        <meta property="og:title" content="Cosmic Horoscope • Your Horoscope as Art" />
+        <meta
+          property="og:title"
+          content="Cosmic Horoscope • Your Horoscope as Art"
+        />
         <meta
           property="og:description"
           content="Daily horoscopes styled as shareable cosmic art. Pick your sign, apply gradients, export."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://cosmic-horoscope.deno.dev" />
-        <meta property="og:image" content="https://cosmic-horoscope.deno.dev/og-image.jpg" />
+        <meta
+          property="og:image"
+          content="https://cosmic-horoscope.deno.dev/og-image.jpg"
+        />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Cosmic Horoscope - Your horoscope as shareable art" />
+        <meta
+          property="og:image:alt"
+          content="Cosmic Horoscope - Your horoscope as shareable art"
+        />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Cosmic Horoscope • Your Horoscope as Art" />
+        <meta
+          name="twitter:title"
+          content="Cosmic Horoscope • Your Horoscope as Art"
+        />
         <meta
           name="twitter:description"
           content="Daily horoscopes styled as shareable cosmic art. Pick your sign, apply gradients, export."
         />
-        <meta name="twitter:image" content="https://cosmic-horoscope.deno.dev/og-image.jpg" />
-        <meta name="twitter:image:alt" content="Cosmic Horoscope - Your horoscope as shareable art" />
+        <meta
+          name="twitter:image"
+          content="https://cosmic-horoscope.deno.dev/og-image.jpg"
+        />
+        <meta
+          name="twitter:image:alt"
+          content="Cosmic Horoscope - Your horoscope as shareable art"
+        />
 
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />
@@ -76,7 +96,11 @@ export default function App({ Component }: PageProps) {
 
         {/* Fonts - JetBrains Mono for better terminal experience */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"

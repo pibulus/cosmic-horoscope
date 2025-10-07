@@ -157,8 +157,17 @@ export function TerminalDisplay({
       {/* Terminal Content Area - Taller for more presence */}
       <div
         class="overflow-auto custom-scrollbar transition-all duration-700"
-        style="height: 520px; padding: 40px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        style="height: 520px; padding: 20px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
+        <style>
+          {`
+            @media (min-width: 640px) {
+              .overflow-auto.custom-scrollbar {
+                padding: 40px !important;
+              }
+            }
+          `}
+        </style>
         {isLoading && !content
           ? (
             <div class="flex items-start justify-start w-full pt-2 pl-2">
@@ -174,21 +183,42 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
+            >
+              <style>
+                {`
+                  @media (min-width: 640px) {
+                    .ascii-display {
+                      font-size: 18px !important;
+                      line-height: 1.6 !important;
+                    }
+                  }
+                `}
+              </style>
+            </pre>
           )
           : content
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
             >
               {content}
+              <style>
+                {`
+                  @media (min-width: 640px) {
+                    .ascii-display {
+                      font-size: 18px !important;
+                      line-height: 1.6 !important;
+                    }
+                  }
+                `}
+              </style>
             </pre>
           )
           : null}

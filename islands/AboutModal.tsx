@@ -110,8 +110,8 @@ export function AboutModal() {
               class="text-base sm:text-lg leading-relaxed"
               style="color: var(--color-text, #e0e7ff)"
             >
-              Your horoscope as shareable cosmic art.
-              Because your daily guidance deserves to look as good as it reads.
+              Your horoscope as shareable cosmic art. Because your daily
+              guidance deserves to look as good as it reads.
             </p>
 
             {/* What it's for */}
@@ -123,8 +123,8 @@ export function AboutModal() {
                 class="text-sm sm:text-base font-medium"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                Pick your sign. Get daily, weekly, or monthly readings.
-                Apply cosmic gradients. Export as images. Share the vibe.
+                Pick your sign. Get daily, weekly, or monthly readings. Apply
+                cosmic gradients. Export as images. Share the vibe.
               </p>
               <p
                 class="text-sm sm:text-base font-medium"

@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom font loading */
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
+/* CSS Properties for animated gradients */
+@property --rainbow-hue {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 270;
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 45deg;
+}
 
 /* Root variables for theming - Neo-brutalist minimal */
 :root {
@@ -135,6 +145,14 @@ html {
     }
     75% {
       transform: translateY(-6px) rotate(1deg);
+    }
+  }
+
+  /* Animated rainbow gradient for header */
+  @keyframes rainbowShift {
+    to {
+      --rainbow-hue: 630;
+      --gradient-angle: 405deg;
     }
   }
 }

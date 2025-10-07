@@ -117,22 +117,20 @@ export function WelcomeModal() {
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                Pick your sign.
-                Daily, weekly, monthly—your call.
+                Pick your sign. Daily, weekly, monthly—your call.
               </p>
               <p
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                Apply gradients.
-                Unicorn, fire, vaporwave, neon—six cosmic vibes.
+                Apply gradients. Unicorn, fire, vaporwave, neon—six cosmic
+                vibes.
               </p>
               <p
                 class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                Export as images.
-                Share your reading, flex the aesthetic.
+                Export as images. Share your reading, flex the aesthetic.
               </p>
             </div>
 

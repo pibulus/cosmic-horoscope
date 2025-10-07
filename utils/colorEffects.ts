@@ -119,7 +119,9 @@ export function applyColorToArt(art: string, effect: string): string {
     // Apply header color or gradient color
     if (inHeader) {
       // Header gets special bright color
-      colorizedLines.push(`<span style="color: ${headerColor}; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`);
+      colorizedLines.push(
+        `<span style="color: ${headerColor}; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`,
+      );
     } else if (line.trim()) {
       // Body gets gradient effect
       const color = getEffectColor(

@@ -8,7 +8,7 @@ import ZodiacPicker from "./ZodiacPicker.tsx";
 import HoroscopeDisplay from "./HoroscopeDisplay.tsx";
 import { KofiButton } from "./KofiModal.tsx";
 import { AboutLink } from "./AboutModal.tsx";
-import { getSavedZodiacSign } from "../utils/zodiac.ts";
+import { getSavedZodiacSign, getZodiacEmoji } from "../utils/zodiac.ts";
 
 export default function HomeIsland() {
   const selectedSign = useSignal<string | null>(null);
@@ -33,28 +33,43 @@ export default function HomeIsland() {
 
   return (
     <>
-      {/* Header - Neo-brutalist */}
+      {/* Header - Solid dark background */}
       <header
         class="border-b-4 relative flex-shrink-0"
-        style="border-color: var(--color-border, #a855f7); background-color: var(--color-secondary, #1a1a1a)"
+        style="border-color: var(--color-border, #a855f7); background-color: #0a0a0a;"
       >
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+        <div class="max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-5">
           <div class="flex items-center justify-between">
-            <a href="/" class="group flex items-baseline gap-3">
+            <div class="flex items-center gap-2 sm:gap-4">
               <h1
-                class="text-xl sm:text-2xl md:text-3xl font-black font-mono tracking-tight"
+                class="text-base sm:text-2xl md:text-3xl font-black font-mono tracking-tight"
                 style="color: var(--color-text, #faf9f6)"
               >
                 COSMIC HOROSCOPE
               </h1>
-              <span
-                class="hidden sm:inline text-xs font-mono opacity-50"
-                style="color: var(--color-text, #faf9f6)"
-              >
-                shareable art
-              </span>
-            </a>
-            {/* Theme switcher stays in routes/index.tsx as floating button */}
+              {selectedSign.value && (
+                <>
+                  <div
+                    style="font-size: 32px; line-height: 1;"
+                    class="sm:text-5xl"
+                  >
+                    {getZodiacEmoji(selectedSign.value)}
+                  </div>
+                  <div
+                    class="font-black font-mono uppercase"
+                    style="
+                      font-size: 20px;
+                      color: var(--color-text, #faf9f6);
+                      letter-spacing: 0.08em;
+                      text-shadow: var(--shadow-glow, none);
+                    "
+                    class="sm:text-3xl"
+                  >
+                    {selectedSign.value}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -62,7 +77,7 @@ export default function HomeIsland() {
       {/* Main Content */}
       <main
         id="main-content"
-        class="flex-1 w-full px-4 py-6 md:py-8 flex items-center justify-center overflow-auto"
+        class="flex-1 w-full px-2 sm:px-4 py-4 sm:py-6 md:py-8 flex items-center justify-center overflow-auto"
       >
         <div class="max-w-5xl w-full">
           {selectedSign.value
@@ -76,13 +91,16 @@ export default function HomeIsland() {
         </div>
       </main>
 
-      {/* Footer */}
+      {/* Footer - Floating at bottom */}
       <footer
-        class="border-t-4 py-6 flex-shrink-0"
-        style="border-color: var(--color-border, #a855f7); background-color: var(--color-secondary, #1a1a1a)"
+        class="fixed bottom-0 left-0 right-0 py-2 sm:py-3 z-40 border-t-4"
+        style="
+          background-color: #0a0a0a;
+          border-color: var(--color-border, #a855f7);
+        "
       >
-        <div class="max-w-4xl mx-auto px-4">
-          <div class="flex items-center justify-center gap-4">
+        <div class="max-w-4xl mx-auto px-3 sm:px-4">
+          <div class="flex items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm">
             <AboutLink label="Made by Pablo 🎸" />
             <KofiButton size="sm" label="☕ Support" />
           </div>

@@ -1,16 +1,18 @@
 // ===================================================================
-// COSMIC HEADER - Juicy animated header with glitch effects
+// COSMIC HEADER - Simple header (sign now in site header)
 // ===================================================================
 
 interface CosmicHeaderProps {
   sign: string;
   emoji: string;
-  dates?: string;
 }
 
-export function CosmicHeader({ sign, emoji, dates }: CosmicHeaderProps) {
+export function CosmicHeader({ sign, emoji }: CosmicHeaderProps) {
   return (
-    <div class="w-full flex items-center justify-center gap-4" style="margin-bottom: 24px;">
+    <div
+      class="w-full flex items-center justify-center gap-4"
+      style="margin-bottom: 24px;"
+    >
       {/* Icon - smaller, inline */}
       <div style="
           font-size: 48px;

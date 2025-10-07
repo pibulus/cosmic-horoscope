@@ -2,7 +2,8 @@
 
 **Your horoscope as shareable cosmic art.**
 
-Pick your sign. Get daily, weekly, or monthly readings. Apply cosmic gradients. Export as images. Share the vibe.
+Pick your sign. Get daily, weekly, or monthly readings. Apply cosmic gradients.
+Export as images. Share the vibe.
 
 Quick, free, no fuss.
 
@@ -73,6 +74,7 @@ Cosmic Horoscope uses a universal theme system with 11 curated cosmic themes:
 - **Special**: Stardust (angel diva pop energy)
 
 Each theme follows the 60/30/10 color rule:
+
 - 60% base (background)
 - 30% secondary (cards/sections)
 - 10% accent (CTAs/highlights)
@@ -80,6 +82,7 @@ Each theme follows the 60/30/10 color rule:
 ## 🔌 API Integration
 
 Uses the free horoscope-app-api.vercel.app API:
+
 - No auth required
 - Daily, weekly, monthly endpoints
 - Timezone-aware (Melbourne → tomorrow reading for accuracy)
@@ -105,6 +108,7 @@ git push origin main
 ## 📊 Analytics (Optional)
 
 PostHog events tracked:
+
 - `horoscope_viewed` - Sign + period
 - `theme_changed` - Theme name
 - `gradient_applied` - Effect name

@@ -30,7 +30,8 @@ export default function BackgroundEffects() {
         <div
           class="absolute w-[800px] h-[800px] -top-40 -left-40 rounded-full mesh-gradient-1"
           style={{
-            background: "radial-gradient(circle, var(--mesh-1, #9333ea) 0%, var(--mesh-2, #ec4899) 50%, transparent 70%)",
+            background:
+              "radial-gradient(circle, var(--mesh-1, #9333ea) 0%, var(--mesh-2, #ec4899) 50%, transparent 70%)",
             opacity: "0.25",
             filter: "blur(80px)",
             animation: "mesh-float-1 20s ease-in-out infinite",
@@ -40,7 +41,8 @@ export default function BackgroundEffects() {
         <div
           class="absolute w-[600px] h-[600px] top-20 -right-20 rounded-full mesh-gradient-2"
           style={{
-            background: "radial-gradient(circle, var(--mesh-2, #ec4899) 0%, var(--mesh-3, #f59e0b) 40%, transparent 70%)",
+            background:
+              "radial-gradient(circle, var(--mesh-2, #ec4899) 0%, var(--mesh-3, #f59e0b) 40%, transparent 70%)",
             opacity: "0.2",
             filter: "blur(70px)",
             animation: "mesh-float-2 25s ease-in-out infinite",
@@ -51,7 +53,8 @@ export default function BackgroundEffects() {
         <div
           class="absolute w-[500px] h-[500px] bottom-20 left-1/4 rounded-full mesh-gradient-3"
           style={{
-            background: "radial-gradient(circle, var(--mesh-3, #f59e0b) 0%, var(--mesh-1, #9333ea) 40%, transparent 70%)",
+            background:
+              "radial-gradient(circle, var(--mesh-3, #f59e0b) 0%, var(--mesh-1, #9333ea) 40%, transparent 70%)",
             opacity: "0.25",
             filter: "blur(60px)",
             animation: "mesh-float-3 18s ease-in-out infinite",
@@ -66,7 +69,8 @@ export default function BackgroundEffects() {
           style={{
             top: "15%",
             left: "70%",
-            background: "radial-gradient(circle, var(--color-accent, #c084fc) 0%, transparent 70%)",
+            background:
+              "radial-gradient(circle, var(--color-accent, #c084fc) 0%, transparent 70%)",
             borderRadius: "50%",
             filter: "blur(15px)",
             opacity: "0.4",
@@ -79,7 +83,8 @@ export default function BackgroundEffects() {
           style={{
             top: "60%",
             left: "15%",
-            background: "radial-gradient(circle, var(--mesh-2, #ec4899) 0%, transparent 70%)",
+            background:
+              "radial-gradient(circle, var(--mesh-2, #ec4899) 0%, transparent 70%)",
             borderRadius: "50%",
             filter: "blur(12px)",
             opacity: "0.35",
@@ -93,7 +98,8 @@ export default function BackgroundEffects() {
           style={{
             top: "40%",
             left: "85%",
-            background: "radial-gradient(circle, var(--mesh-3, #f59e0b) 0%, transparent 70%)",
+            background:
+              "radial-gradient(circle, var(--mesh-3, #f59e0b) 0%, transparent 70%)",
             borderRadius: "50%",
             filter: "blur(18px)",
             opacity: "0.3",
@@ -130,7 +136,8 @@ export default function BackgroundEffects() {
           position: "fixed",
           width: "200px",
           height: "200px",
-          background: "radial-gradient(circle, var(--color-accent, #c084fc) 0%, transparent 70%)",
+          background:
+            "radial-gradient(circle, var(--color-accent, #c084fc) 0%, transparent 70%)",
           borderRadius: "50%",
           pointerEvents: "none",
           zIndex: 1,

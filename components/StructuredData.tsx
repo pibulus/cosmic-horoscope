@@ -21,37 +21,42 @@ export function StructuredData({ horoscope }: StructuredDataProps) {
     "@type": "WebApplication",
     "name": "Cosmic Horoscope",
     "url": "https://cosmic-horoscope.deno.dev",
-    "description": "Get your daily, weekly, or monthly horoscope styled as shareable cosmic art.",
+    "description":
+      "Get your daily, weekly, or monthly horoscope styled as shareable cosmic art.",
     "applicationCategory": "LifestyleApplication",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
     },
     "creator": {
       "@type": "Person",
       "name": "Pablo Alvarado",
-      "url": "https://pibul.us"
-    }
+      "url": "https://pibul.us",
+    },
   };
 
   // If horoscope data is provided, add Article schema
-  const horoscopeSchema = horoscope ? {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": `${horoscope.sign.charAt(0).toUpperCase() + horoscope.sign.slice(1)} ${horoscope.period} Horoscope`,
-    "description": horoscope.text.substring(0, 200),
-    "datePublished": horoscope.date,
-    "author": {
-      "@type": "Organization",
-      "name": "Cosmic Horoscope"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Cosmic Horoscope",
-      "url": "https://cosmic-horoscope.deno.dev"
+  const horoscopeSchema = horoscope
+    ? {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": `${
+        horoscope.sign.charAt(0).toUpperCase() + horoscope.sign.slice(1)
+      } ${horoscope.period} Horoscope`,
+      "description": horoscope.text.substring(0, 200),
+      "datePublished": horoscope.date,
+      "author": {
+        "@type": "Organization",
+        "name": "Cosmic Horoscope",
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Cosmic Horoscope",
+        "url": "https://cosmic-horoscope.deno.dev",
+      },
     }
-  } : null;
+    : null;
 
   // Combine schemas
   const structuredData = horoscopeSchema
@@ -62,7 +67,7 @@ export function StructuredData({ horoscope }: StructuredDataProps) {
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData, null, 2)
+        __html: JSON.stringify(structuredData, null, 2),
       }}
     />
   );
