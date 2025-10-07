@@ -5,11 +5,10 @@ import { WelcomeModal } from "../islands/WelcomeModal.tsx";
 import WelcomeChecker from "../islands/WelcomeChecker.tsx";
 
 export default function Home() {
-
   return (
     <div
       class="min-h-[100dvh] flex flex-col"
-      style="background: var(--color-base-gradient, var(--color-base, #0a0e27))"
+      style="background: var(--color-base, #0a0a0a)"
     >
       {/* Skip to content link for accessibility */}
       <a

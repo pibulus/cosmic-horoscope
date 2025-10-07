@@ -6,12 +6,27 @@ export class SoundEngine {
   private initialized = false;
 
   init() {
-    if (this.initialized) return;
+    // This is now a no-op - initialization happens lazily on first sound
+    // Kept for backwards compatibility
+  }
 
-    // Initialize on first user interaction
+  private ensureAudioContext() {
+    if (this.initialized && this.audioContext) {
+      // Resume if suspended (required by browser autoplay policies)
+      if (this.audioContext.state === "suspended") {
+        this.audioContext.resume();
+      }
+      return;
+    }
+
+    // Lazy initialization on first actual use (after user interaction)
     if (typeof window !== "undefined") {
-      this.audioContext = new AudioContext();
-      this.initialized = true;
+      try {
+        this.audioContext = new AudioContext();
+        this.initialized = true;
+      } catch (e) {
+        console.warn("Failed to initialize AudioContext:", e);
+      }
     }
   }
 
@@ -21,7 +36,7 @@ export class SoundEngine {
     duration: number,
     type: OscillatorType = "sine",
   ) {
-    if (!this.audioContext) this.init();
+    this.ensureAudioContext();
     if (!this.audioContext) return;
 
     const oscillator = this.audioContext.createOscillator();

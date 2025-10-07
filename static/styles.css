@@ -5,14 +5,13 @@
 /* Custom font loading */
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap");
 
-/* Root variables for theming - Cosmic default */
+/* Root variables for theming - Neo-brutalist minimal */
 :root {
-  --color-base: #0a0e27;
-  --color-base-gradient: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-  --color-secondary: #1a1f3a;
-  --color-accent: #f0abfc;
-  --color-text: #e0e7ff;
-  --color-border: #a78bfa;
+  --color-base: #0a0a0a;
+  --color-secondary: #1a1a1a;
+  --color-accent: #a855f7;
+  --color-text: #faf9f6;
+  --color-border: #a855f7;
 }
 
 /* Force scrollbar to prevent layout shift */

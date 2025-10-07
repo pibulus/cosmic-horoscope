@@ -26,9 +26,10 @@ class AnalyticsService {
     const key = (window as any).ENV?.POSTHOG_KEY;
     const host = (window as any).ENV?.POSTHOG_HOST || "https://app.posthog.com";
 
-    if (!key) {
-      // Silently disable analytics - no warnings needed for local dev
+    // Early exit if no key - don't even import the library
+    if (!key || key === "undefined" || key === "null") {
       this.isInitialized = true;
+      this.eventQueue = []; // Clear queue since we won't process it
       return;
     }
 
@@ -45,9 +46,15 @@ class AnalyticsService {
         disable_session_recording: true,
         disable_survey_popups: true,
         property_blacklist: ["$current_url", "$referrer"],
+        // Suppress console noise for connection failures
+        opt_out_capturing_by_default: false,
         loaded: () => {
           this.isInitialized = true;
           this.processQueue();
+        },
+        loaded_error: (error: any) => {
+          // Silently fail - no console spam
+          this.isInitialized = true;
         },
       });
     } catch (error) {

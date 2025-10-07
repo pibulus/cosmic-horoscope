@@ -33,20 +33,23 @@ export default function HomeIsland() {
 
   return (
     <>
-      {/* Header - Simplified & Smaller */}
+      {/* Header - Neo-brutalist */}
       <header
-        class="border-b-2 relative flex-shrink-0"
-        style="border-color: var(--color-border, #a78bfa); background-color: var(--color-secondary, #1a1f3a)"
+        class="border-b-4 relative flex-shrink-0"
+        style="border-color: var(--color-border, #a855f7); background-color: var(--color-secondary, #1a1a1a)"
       >
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div class="flex items-center justify-between">
             <a href="/" class="group flex items-baseline gap-3">
-              <h1 class="text-xl sm:text-2xl md:text-3xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              <h1
+                class="text-xl sm:text-2xl md:text-3xl font-black font-mono tracking-tight"
+                style="color: var(--color-text, #faf9f6)"
+              >
                 COSMIC HOROSCOPE
               </h1>
               <span
-                class="hidden sm:inline text-xs font-mono opacity-60"
-                style="color: var(--color-text-secondary, #f0abfc)"
+                class="hidden sm:inline text-xs font-mono opacity-50"
+                style="color: var(--color-text, #faf9f6)"
               >
                 shareable art
               </span>
@@ -57,23 +60,26 @@ export default function HomeIsland() {
       </header>
 
       {/* Main Content */}
-      <main id="main-content" class="flex-1 w-full px-4 py-6 md:py-8 flex items-center justify-center overflow-auto">
+      <main
+        id="main-content"
+        class="flex-1 w-full px-4 py-6 md:py-8 flex items-center justify-center overflow-auto"
+      >
         <div class="max-w-5xl w-full">
-          {selectedSign.value ? (
-            <HoroscopeDisplay
-              sign={selectedSign.value}
-              onChangeSign={handleChangeSign}
-            />
-          ) : (
-            <ZodiacPicker onSignSelected={handleSignSelected} />
-          )}
+          {selectedSign.value
+            ? (
+              <HoroscopeDisplay
+                sign={selectedSign.value}
+                onChangeSign={handleChangeSign}
+              />
+            )
+            : <ZodiacPicker onSignSelected={handleSignSelected} />}
         </div>
       </main>
 
       {/* Footer */}
       <footer
         class="border-t-4 py-6 flex-shrink-0"
-        style="border-color: var(--color-border, #a78bfa); background-color: var(--color-secondary, #1a1f3a)"
+        style="border-color: var(--color-border, #a855f7); background-color: var(--color-secondary, #1a1a1a)"
       >
         <div class="max-w-4xl mx-auto px-4">
           <div class="flex items-center justify-center gap-4">
