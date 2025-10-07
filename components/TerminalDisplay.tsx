@@ -111,33 +111,36 @@ export function TerminalDisplay({
 
   return (
     <div
-      class="rounded-3xl border-4 shadow-brutal overflow-hidden relative"
+      class="rounded-2xl sm:rounded-3xl border-3 sm:border-4 shadow-brutal overflow-hidden relative"
       style="background-color: #000000; border-color: var(--color-border, #0A0A0A);"
     >
       {/* Terminal Menu Bar */}
       <div
-        class="px-4 py-3 border-b-4 flex items-center justify-between"
+        class="px-3 sm:px-4 py-2 sm:py-3 border-b-3 sm:border-b-4 flex items-center justify-between"
         style="background-color: rgba(0,0,0,0.3); border-color: var(--color-border, #0A0A0A)"
       >
-        <div class="flex space-x-2">
+        <div class="flex space-x-1.5 sm:space-x-2">
           <div
-            class="w-3 h-3 bg-red-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
+            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
             title="Close (jk)"
           >
           </div>
           <div
-            class="w-3 h-3 bg-yellow-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
+            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-yellow-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
             title="Minimize (nope)"
           >
           </div>
           <div
-            class="w-3 h-3 bg-green-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
+            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
             title="Full screen (maybe)"
           >
           </div>
         </div>
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-mono opacity-60" style="color: #00FF41">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <span
+            class="text-[10px] sm:text-xs font-mono opacity-60"
+            style="color: #00FF41"
+          >
             {terminalPath}
           </span>
           {/* Shuffle button in menu bar (gallery mode) */}
@@ -154,16 +157,18 @@ export function TerminalDisplay({
         </div>
       </div>
 
-      {/* Terminal Content Area - Taller for more presence */}
+      {/* Terminal Content Area - Responsive height */}
       <div
-        class="overflow-auto custom-scrollbar transition-all duration-700"
-        style="height: 520px; padding: 20px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        class="overflow-auto custom-scrollbar transition-all duration-700 terminal-content"
+        style="min-height: 300px; max-height: 400px; padding: 20px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         <style>
           {`
             @media (min-width: 640px) {
-              .overflow-auto.custom-scrollbar {
+              .terminal-content {
                 padding: 40px !important;
+                min-height: 520px !important;
+                max-height: 600px !important;
               }
             }
           `}
@@ -183,7 +188,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 12px; line-height: 1.4; white-space: pre; overflow-x: auto; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -204,7 +209,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 12px; line-height: 1.4; white-space: pre; overflow-x: auto; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
             >

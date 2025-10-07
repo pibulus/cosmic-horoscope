@@ -137,7 +137,7 @@ export default function HoroscopeDisplay(
       {/* Main content container - max-width 1200px, centered */}
       <div
         class="w-full max-w-[1200px] mx-auto px-2 sm:px-4"
-        style="padding-bottom: 100px;"
+        style="padding-bottom: 80px;"
       >
         <style>
           {`
@@ -149,7 +149,7 @@ export default function HoroscopeDisplay(
           `}
         </style>
         {/* Period selector + Controls - Single clean row */}
-        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-8">
           {/* Period buttons */}
           {["daily", "weekly", "monthly"].map((period) => {
             const isActive = currentPeriod.value === period;

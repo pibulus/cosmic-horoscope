@@ -77,7 +77,7 @@ export default function HomeIsland() {
       {/* Main Content */}
       <main
         id="main-content"
-        class="flex-1 w-full px-2 sm:px-4 py-4 sm:py-6 md:py-8 flex items-center justify-center overflow-auto"
+        class="flex-1 w-full px-2 sm:px-4 py-2 sm:py-6 md:py-8 flex items-center justify-center overflow-auto"
       >
         <div class="max-w-5xl w-full">
           {selectedSign.value
