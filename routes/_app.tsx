@@ -89,6 +89,26 @@ export default function App({ Component }: PageProps) {
         <StructuredData />
       </head>
       <body>
+        {/* Skip to content link for keyboard users */}
+        <a
+          href="#main-content"
+          class="sr-only focus:not-sr-only"
+          style={{
+            position: "fixed",
+            top: "1rem",
+            left: "1rem",
+            zIndex: 99999,
+            padding: "0.5rem 1rem",
+            backgroundColor: "var(--color-accent)",
+            color: "var(--color-text)",
+            borderRadius: "0.5rem",
+            fontFamily: "JetBrains Mono, monospace",
+            fontWeight: "bold",
+          }}
+        >
+          Skip to content
+        </a>
+
         {/* Real grain texture using noise image */}
         <div
           id="grain-layer"

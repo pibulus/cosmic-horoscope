@@ -7,16 +7,10 @@ import WelcomeChecker from "../islands/WelcomeChecker.tsx";
 export default function Home() {
   return (
     <div
+      id="main-content"
       class="min-h-[100dvh] flex flex-col"
       style="background: var(--color-base, #0a0a0a)"
     >
-      {/* Skip to content link for accessibility */}
-      <a
-        href="#main-content"
-        class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-purple-500 focus:text-white focus:rounded-lg focus:font-bold"
-      >
-        Skip to content
-      </a>
       {/* Check if first visit and show welcome */}
       <WelcomeChecker />
 
