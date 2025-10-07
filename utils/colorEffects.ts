@@ -75,8 +75,9 @@ export function getEffectColor(
 }
 
 /**
- * Apply a color effect to ASCII art text
+ * Apply a color effect to ASCII art text with special header treatment
  * Returns HTML with colored spans for each line
+ * Header section gets a special bright color, body gets gradient
  */
 export function applyColorToArt(art: string, effect: string): string {
   if (effect === "none" || !art) {
@@ -85,21 +86,54 @@ export function applyColorToArt(art: string, effect: string): string {
 
   const lines = art.split("\n");
   const colorizedLines: string[] = [];
+  let inHeader = false;
+
+  // Define header colors for each effect (brighter than body)
+  const headerColors: Record<string, string> = {
+    unicorn: "hsl(280, 100%, 75%)", // Bright purple
+    fire: "hsl(40, 100%, 65%)", // Bright orange-yellow
+    cyberpunk: "hsl(320, 100%, 70%)", // Hot pink
+    sunrise: "hsl(30, 100%, 70%)", // Golden
+    vaporwave: "hsl(310, 95%, 75%)", // Pink-purple
+    chrome: "hsl(200, 60%, 85%)", // Light cyan
+    ocean: "hsl(180, 85%, 65%)", // Bright cyan
+    neon: "hsl(100, 100%, 70%)", // Lime green
+    poison: "hsl(100, 100%, 55%)", // Toxic green
+  };
+
+  const headerColor = headerColors[effect] || "#FFD700"; // Gold fallback
 
   for (let y = 0; y < lines.length; y++) {
     const line = lines[y];
 
-    // Calculate color for this line
-    const color = getEffectColor(
-      effect,
-      Math.floor(line.length / 2),
-      y,
-      line.length,
-      lines.length,
-    );
+    // Check for header markers
+    if (line.includes("[HEADER_START]")) {
+      inHeader = true;
+      continue; // Skip the marker line
+    }
+    if (line.includes("[HEADER_END]")) {
+      inHeader = false;
+      continue; // Skip the marker line
+    }
 
-    // Wrap entire line in colored span
-    colorizedLines.push(`<span style="color: ${color};">${line}</span>`);
+    // Apply header color or gradient color
+    if (inHeader) {
+      // Header gets special bright color
+      colorizedLines.push(`<span style="color: ${headerColor}; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`);
+    } else if (line.trim()) {
+      // Body gets gradient effect
+      const color = getEffectColor(
+        effect,
+        Math.floor(line.length / 2),
+        y,
+        line.length,
+        lines.length,
+      );
+      colorizedLines.push(`<span style="color: ${color};">${line}</span>`);
+    } else {
+      // Empty lines stay empty
+      colorizedLines.push(line);
+    }
   }
 
   return colorizedLines.join("\n");

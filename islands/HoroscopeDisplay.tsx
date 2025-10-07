@@ -58,15 +58,48 @@ export default function HoroscopeDisplay(
       const ascii = generateHoroscopeAscii(sign, text, selectedFont.value);
       asciiOutput.value = ascii;
 
-      // Apply color effect if selected
+      // Always apply special header formatting
+      // Even with no color effect, header gets golden color
       if (colorEffect.value !== "none") {
         const colorized = applyColorToArt(ascii, colorEffect.value);
         colorizedHtml.value = colorized;
       } else {
-        colorizedHtml.value = "";
+        // No color effect: still highlight header in gold
+        const colorized = applyHeaderHighlight(ascii);
+        colorizedHtml.value = colorized;
       }
     }
   }, [horoscopeData.value, selectedFont.value, colorEffect.value]);
+
+  // Helper function to highlight header even without color effects
+  const applyHeaderHighlight = (art: string): string => {
+    const lines = art.split("\n");
+    const colorizedLines: string[] = [];
+    let inHeader = false;
+
+    for (const line of lines) {
+      if (line.includes("[HEADER_START]")) {
+        inHeader = true;
+        continue;
+      }
+      if (line.includes("[HEADER_END]")) {
+        inHeader = false;
+        continue;
+      }
+
+      if (inHeader) {
+        // Header in gold/yellow
+        colorizedLines.push(`<span style="color: #FFD700; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`);
+      } else if (line.trim()) {
+        // Body in terminal green
+        colorizedLines.push(`<span style="color: #00FF41;">${line}</span>`);
+      } else {
+        colorizedLines.push(line);
+      }
+    }
+
+    return colorizedLines.join("\n");
+  };
 
   const fetchHoroscope = async (zodiacSign: string, period: Period) => {
     isLoading.value = true;
@@ -267,7 +300,11 @@ export default function HoroscopeDisplay(
                   content={asciiOutput.value}
                   htmlContent={colorizedHtml.value}
                   isLoading={isLoading.value}
-                  filename={`${sign}-${currentPeriod.value}-horoscope`}
+                  filename={`${sign}-${currentPeriod.value}-${
+                    horoscopeData.value.date
+                      ? horoscopeData.value.date.toLowerCase().replace(/[\s,]+/g, "-")
+                      : "horoscope"
+                  }`}
                   terminalPath={`~/cosmic/${sign}.txt`}
                   visualEffect={visualEffect.value}
                   hideExportButtons={false}

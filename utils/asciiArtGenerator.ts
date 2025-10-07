@@ -29,36 +29,29 @@ export const FIGLET_FONTS = [
 ];
 
 /**
- * Simple text-based horoscope formatter
- * This is a placeholder until we add figlet library
- * For now, just format the horoscope nicely with sign header
+ * Simple text-based horoscope formatter with improved spacing and color markers
+ * Formats horoscope with a beautiful header and body text
+ * Uses special markers for header colorization
  */
 export function generateHoroscopeAscii(
   signName: string,
   horoscopeText: string,
   font: string = "Standard"
 ): string {
-  // For now, create a simple bordered ASCII art header
-  // TODO: Replace with actual figlet library once added
-
   const signUpper = signName.toUpperCase();
-  const borderLength = signUpper.length + 4;
-  const border = "═".repeat(borderLength);
 
-  // Create ASCII art header for the sign
-  const header = `
-╔${border}╗
-║  ${signUpper}  ║
-╚${border}╝
-`;
+  // Wrap header in special markers for colorization
+  const header = `[HEADER_START]
+${signUpper} HOROSCOPE
+[HEADER_END]`;
 
-  // Format horoscope text with nice line breaks (max 60 chars per line)
+  // Format horoscope text with nice line breaks (max 68 chars per line for better fit)
   const words = horoscopeText.split(" ");
   const lines: string[] = [];
   let currentLine = "";
 
   for (const word of words) {
-    if ((currentLine + word).length > 58) {
+    if ((currentLine + word).length > 66) {
       lines.push(currentLine.trim());
       currentLine = word + " ";
     } else {
@@ -69,13 +62,11 @@ export function generateHoroscopeAscii(
     lines.push(currentLine.trim());
   }
 
-  // Center each line
-  const centeredLines = lines.map(line => {
-    const padding = Math.max(0, Math.floor((60 - line.length) / 2));
-    return " ".repeat(padding) + line;
-  });
+  // Join lines with proper spacing (no centering - left aligned looks cleaner)
+  const bodyText = lines.join("\n");
 
-  return header + "\n" + centeredLines.join("\n") + "\n";
+  // Add spacing between header and body
+  return `${header}\n\n${bodyText}\n`;
 }
 
 /**
