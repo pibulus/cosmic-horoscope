@@ -165,6 +165,19 @@ export function WelcomeModal() {
             >
               Quick. Free. Yours.
             </p>
+
+            {/* AI-Free Badge */}
+            <div
+              class="mt-4 pt-4 text-center border-t-2"
+              style="border-color: rgba(167, 139, 250, 0.3)"
+            >
+              <p
+                class="text-sm font-medium opacity-80"
+                style="color: var(--color-text, #e0e7ff)"
+              >
+                ✨ Real astrologer wisdom, zero AI
+              </p>
+            </div>
           </div>
         </div>
       </div>

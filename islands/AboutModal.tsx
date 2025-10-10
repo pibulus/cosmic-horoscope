@@ -133,6 +133,12 @@ export function AboutModal() {
               >
                 Quick, free, no fuss.
               </p>
+              <p
+                class="text-sm sm:text-base font-medium pt-2"
+                style="color: var(--color-accent, #f0abfc)"
+              >
+                ✨ Real astrologer wisdom, zero AI
+              </p>
             </div>
 
             {/* Links */}
