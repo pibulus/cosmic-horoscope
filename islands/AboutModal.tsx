@@ -72,20 +72,21 @@ export function AboutModal() {
         >
           {/* Header */}
           <div
-            class="p-6 border-4 border-b-0 rounded-t-3xl"
+            class="p-4 sm:p-6 border-4 border-b-0 rounded-t-3xl"
             style="background-color: var(--color-secondary, #1a1f3a); border-color: var(--color-border, #a78bfa)"
           >
             <div class="flex items-start justify-between mb-2">
               <h2
                 id="about-modal-title"
-                class="text-3xl font-bold font-mono"
+                class="text-2xl sm:text-3xl font-bold font-mono"
                 style="color: var(--color-text, #e0e7ff)"
               >
                 About STARGRAM ✨
               </h2>
               <button
+                type="button"
                 onClick={closeAboutModal}
-                class="text-3xl leading-none font-bold transition-transform hover:scale-110"
+                class="text-2xl sm:text-3xl leading-none font-bold transition-transform hover:scale-110"
                 style="color: var(--color-text, #e0e7ff)"
                 aria-label="Close about dialog"
               >
@@ -93,7 +94,7 @@ export function AboutModal() {
               </button>
             </div>
             <p
-              class="text-lg font-mono font-bold"
+              class="text-base sm:text-lg font-mono font-bold"
               style="color: var(--color-accent, #f0abfc)"
             >
               Horoscopes styled as cosmic art 🌙
@@ -102,7 +103,7 @@ export function AboutModal() {
 
           {/* Content */}
           <div
-            class="p-8 border-4 rounded-b-3xl shadow-brutal-xl space-y-6"
+            class="p-4 sm:p-8 border-4 rounded-b-3xl shadow-brutal-xl space-y-4 sm:space-y-6"
             style="background-color: var(--color-base, #0a0e27); border-color: var(--color-border, #a78bfa)"
           >
             {/* Story */}
@@ -182,7 +183,7 @@ export function AboutModal() {
           <div class="text-center mt-4">
             <p
               class="text-xs font-mono opacity-60"
-              style="color: var(--color-text, #0A0A0A)"
+              style="color: var(--color-text, #e0e7ff)"
             >
               Press ESC or click outside to close
             </p>
@@ -237,6 +238,7 @@ export function AboutLink({
 }: AboutLinkProps) {
   return (
     <button
+      type="button"
       onClick={openAboutModal}
       class={`px-3 py-2 text-sm border-3 rounded-xl font-mono font-bold shadow-brutal transition-all hover:scale-105 active:scale-95 ${className}`}
       style="background-color: var(--color-accent, #FF69B4); color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A);"

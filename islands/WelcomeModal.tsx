@@ -101,18 +101,18 @@ export function WelcomeModal() {
         >
           {/* Cosmic Header */}
           <div
-            class="p-8 border-4 rounded-3xl text-center shadow-brutal-xl mb-4"
+            class="p-6 sm:p-8 border-4 rounded-3xl text-center shadow-brutal-xl mb-4"
             style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 50%, #fbbf24 100%); border-color: var(--color-border, #a78bfa)"
           >
-            <div class="text-7xl mb-4">✨</div>
-            <h1 class="text-4xl md:text-5xl font-bold text-white">
+            <div class="text-6xl sm:text-7xl mb-4">✨</div>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
               STARGRAM
             </h1>
           </div>
 
           {/* Content */}
           <div
-            class="p-8 border-4 rounded-3xl shadow-brutal-xl space-y-6"
+            class="p-5 sm:p-8 border-4 rounded-3xl shadow-brutal-xl space-y-4 sm:space-y-6"
             style="background-color: var(--color-base, #0a0e27); border-color: var(--color-border, #a78bfa)"
           >
             {/* Headline */}

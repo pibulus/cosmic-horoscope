@@ -12,6 +12,7 @@ import * as $AboutModal from "./islands/AboutModal.tsx";
 import * as $BackgroundEffects from "./islands/BackgroundEffects.tsx";
 import * as $HomeIsland from "./islands/HomeIsland.tsx";
 import * as $HoroscopeDisplay from "./islands/HoroscopeDisplay.tsx";
+import * as $InstallPrompt from "./islands/InstallPrompt.tsx";
 import * as $KofiModal from "./islands/KofiModal.tsx";
 import * as $TabSwitcher from "./islands/TabSwitcher.tsx";
 import * as $ThemeIsland from "./islands/ThemeIsland.tsx";
@@ -34,6 +35,7 @@ const manifest = {
     "./islands/BackgroundEffects.tsx": $BackgroundEffects,
     "./islands/HomeIsland.tsx": $HomeIsland,
     "./islands/HoroscopeDisplay.tsx": $HoroscopeDisplay,
+    "./islands/InstallPrompt.tsx": $InstallPrompt,
     "./islands/KofiModal.tsx": $KofiModal,
     "./islands/TabSwitcher.tsx": $TabSwitcher,
     "./islands/ThemeIsland.tsx": $ThemeIsland,

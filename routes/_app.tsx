@@ -1,6 +1,7 @@
 import { type PageProps } from "$fresh/server.ts";
 import { KofiModal } from "../islands/KofiModal.tsx";
 import { AboutModal } from "../islands/AboutModal.tsx";
+import InstallPrompt from "../islands/InstallPrompt.tsx";
 import { StructuredData } from "../components/StructuredData.tsx";
 
 export default function App({ Component }: PageProps) {
@@ -276,6 +277,9 @@ export default function App({ Component }: PageProps) {
 
         {/* About modal */}
         <AboutModal />
+
+        {/* Install prompt */}
+        <InstallPrompt />
 
         {/* Service Worker Registration */}
         <script
