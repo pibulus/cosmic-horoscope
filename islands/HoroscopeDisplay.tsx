@@ -32,6 +32,7 @@ export default function HoroscopeDisplay(
   const isLoading = useSignal(false);
   const isBootingUp = useSignal(false);
   const bootComplete = useSignal(false);
+  const bootMessages = useSignal<string[]>([]);
   const colorEffect = useSignal("sunrise");
   const visualEffect = useSignal("neon"); // Hard-coded to neon
   const selectedFont = useSignal("Standard");
@@ -115,16 +116,58 @@ export default function HoroscopeDisplay(
     isBootingUp.value = true;
     bootComplete.value = false;
 
-    // Boot sequence messages
-    const bootMessages = [
-      "> Establishing link to Celestial Mainframe...",
-      "> Signal lock: ACQUIRED",
-      `> Decrypting transmission for [${zodiacSign.toUpperCase()}]...`,
-      "> LOADING...",
+    // Array of different boot sequences for variety
+    const bootSequences = [
+      // 1. Technical (original)
+      [
+        "> Establishing link to Celestial Mainframe...",
+        "> Signal lock: ACQUIRED",
+        `> Decrypting transmission for [${zodiacSign.toUpperCase()}]...`,
+        "> LOADING...",
+      ],
+      // 2. Mystical
+      [
+        "> Consulting the astral records...",
+        "> Planetary alignment: VERIFIED",
+        `> Channeling cosmic wisdom for [${zodiacSign.toUpperCase()}]...`,
+        "> RECEIVING...",
+      ],
+      // 3. Cyberpunk
+      [
+        "> Jacking into the zodiac matrix...",
+        "> Neural link: ESTABLISHED",
+        `> Decrypting star data for [${zodiacSign.toUpperCase()}]...`,
+        "> DOWNLOADING...",
+      ],
+      // 4. Retro Sci-Fi
+      [
+        "> Contacting mothership...",
+        "> Transmission received",
+        `> Decoding celestial message for [${zodiacSign.toUpperCase()}]...`,
+        "> PROCESSING...",
+      ],
+      // 5. Casual/Cheeky
+      [
+        "> Waking up the fortune teller...",
+        "> Cosmic vibes: STRONG",
+        `> Reading the stars for [${zodiacSign.toUpperCase()}]...`,
+        "> BREWING...",
+      ],
+      // 6. Hacker
+      [
+        "> Breaching cosmic firewall...",
+        "> Root access: GRANTED",
+        `> Extracting horoscope data for [${zodiacSign.toUpperCase()}]...`,
+        "> COMPILING...",
+      ],
     ];
 
+    // Randomly pick a boot sequence
+    const selectedBootMessages = bootSequences[Math.floor(Math.random() * bootSequences.length)];
+    bootMessages.value = selectedBootMessages;
+
     // Type out boot messages with delays
-    for (let i = 0; i < bootMessages.length; i++) {
+    for (let i = 0; i < selectedBootMessages.length; i++) {
       await new Promise((resolve) => setTimeout(resolve, 400));
       sounds.click();
       // Messages are displayed in the loading state
@@ -249,10 +292,7 @@ export default function HoroscopeDisplay(
                     class="font-mono text-left inline-block"
                     style="color: #00FF41; font-size: 16px; line-height: 1.8;"
                   >
-                    <p>> Establishing link to Celestial Mainframe...</p>
-                    <p>> Signal lock: ACQUIRED</p>
-                    <p>> Decrypting transmission for [{sign.toUpperCase()}]...</p>
-                    <p>> LOADING...</p>
+                    {bootMessages.value.map((msg) => <p key={msg}>{msg}</p>)}
                   </div>
                 )
                 : (

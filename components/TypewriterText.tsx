@@ -1,7 +1,7 @@
 // ===================================================================
 // TYPEWRITER TEXT - Character-by-character reveal with keyboard sounds
 // ===================================================================
-// Creates the magical "receiving transmission" effect
+// Creates the magical "receiving transmission" effect with organic typos
 
 import { useEffect, useRef, useState } from "preact/hooks";
 import SimpleTypeWriter from "../utils/simple-typewriter.js";
@@ -21,6 +21,54 @@ interface TypewriterTextProps {
   className?: string;
   /** Inline styles for the container */
   style?: string;
+  /** Probability of typos (0-1, default: 0.03 = 3%) */
+  typoProbability?: number;
+  /** Probability of thinking pauses (0-1, default: 0.02 = 2%) */
+  pauseProbability?: number;
+}
+
+// Helper: Get a plausible typo character for the given character
+function getTypoChar(char: string): string {
+  const typoMap: Record<string, string[]> = {
+    a: ["s", "q", "z"],
+    b: ["v", "g", "n"],
+    c: ["x", "v", "d"],
+    d: ["s", "f", "e"],
+    e: ["w", "r", "d"],
+    f: ["d", "g", "r"],
+    g: ["f", "h", "t"],
+    h: ["g", "j", "y"],
+    i: ["u", "o", "k"],
+    j: ["h", "k", "u"],
+    k: ["j", "l", "i"],
+    l: ["k", "o", "p"],
+    m: ["n", "j", "k"],
+    n: ["b", "m", "h"],
+    o: ["i", "p", "l"],
+    p: ["o", "l"],
+    q: ["w", "a"],
+    r: ["e", "t", "f"],
+    s: ["a", "d", "w"],
+    t: ["r", "y", "g"],
+    u: ["y", "i", "j"],
+    v: ["c", "b", "f"],
+    w: ["q", "e", "s"],
+    x: ["z", "c", "s"],
+    y: ["t", "u", "h"],
+    z: ["a", "x", "s"],
+  };
+
+  const lowerChar = char.toLowerCase();
+  const typos = typoMap[lowerChar];
+
+  if (!typos || typos.length === 0) {
+    // No typo mapping, just return a random nearby key
+    return String.fromCharCode(char.charCodeAt(0) + Math.floor(Math.random() * 3) - 1);
+  }
+
+  const typo = typos[Math.floor(Math.random() * typos.length)];
+  // Match case of original
+  return char === char.toUpperCase() ? typo.toUpperCase() : typo;
 }
 
 export function TypewriterText({
@@ -31,14 +79,15 @@ export function TypewriterText({
   onComplete,
   className = "",
   style = "",
+  typoProbability = 0.03,
+  pauseProbability = 0.02,
 }: TypewriterTextProps) {
   const [displayedText, setDisplayedText] = useState("");
   const [displayedHtml, setDisplayedHtml] = useState("");
   const [isTyping, setIsTyping] = useState(enabled);
   const [isComplete, setIsComplete] = useState(false);
   const typewriterRef = useRef<SimpleTypeWriter | null>(null);
-  const intervalRef = useRef<number | null>(null);
-  const currentIndexRef = useRef(0);
+  const stopTypingRef = useRef(false);
   const containerRef = useRef<HTMLPreElement>(null);
 
   // Initialize keyboard sounds
@@ -59,71 +108,15 @@ export function TypewriterText({
     };
   }, []);
 
-  // Typing animation effect
-  useEffect(() => {
-    if (!enabled || !isTyping) {
-      // If disabled or not typing, show full text immediately
-      setDisplayedText(text);
-      setDisplayedHtml(htmlText || "");
-      setIsComplete(true);
-      if (onComplete) onComplete();
-      return;
+  // Helper to play keyboard sound
+  const playKeySound = (char: string) => {
+    if (typewriterRef.current && char.trim()) {
+      typewriterRef.current.play({
+        key: char,
+        keyCode: char.charCodeAt(0),
+      });
     }
-
-    // Reset for new text
-    currentIndexRef.current = 0;
-    setDisplayedText("");
-    setDisplayedHtml("");
-    setIsComplete(false);
-
-    // Clear any existing interval
-    if (intervalRef.current !== null) {
-      clearInterval(intervalRef.current);
-    }
-
-    // Start typing
-    intervalRef.current = setInterval(() => {
-      const index = currentIndexRef.current;
-
-      if (index >= text.length) {
-        // Typing complete
-        clearInterval(intervalRef.current!);
-        intervalRef.current = null;
-        setIsComplete(true);
-        setIsTyping(false);
-        if (onComplete) onComplete();
-        return;
-      }
-
-      // Add next character
-      const nextChar = text[index];
-      setDisplayedText((prev) => prev + nextChar);
-
-      // For HTML, we need to update carefully to preserve color spans
-      if (htmlText) {
-        // Simple approach: reveal characters in the HTML string
-        // This works because we're just incrementing visibility
-        setDisplayedHtml(htmlText.slice(0, findHtmlPosition(htmlText, index + 1)));
-      }
-
-      // Play keyboard sound for this character
-      if (typewriterRef.current && nextChar.trim()) {
-        // Only play sound for non-whitespace
-        typewriterRef.current.play({
-          key: nextChar,
-          keyCode: nextChar.charCodeAt(0),
-        });
-      }
-
-      currentIndexRef.current++;
-    }, speed) as unknown as number;
-
-    return () => {
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [text, htmlText, speed, enabled, isTyping, onComplete]);
+  };
 
   // Helper to find position in HTML string accounting for tags
   const findHtmlPosition = (html: string, targetIndex: number): number => {
@@ -158,14 +151,106 @@ export function TypewriterText({
     return htmlPos;
   };
 
+  // Async typing function with organic behavior
+  const typeText = async () => {
+    stopTypingRef.current = false;
+    let currentText = "";
+    let currentHtml = "";
+
+    for (let i = 0; i < text.length; i++) {
+      if (stopTypingRef.current) break;
+
+      const char = text[i];
+
+      // Random thinking pause before typing this character
+      if (Math.random() < pauseProbability) {
+        await new Promise((resolve) => setTimeout(resolve, 200 + Math.random() * 200));
+      }
+
+      // Should we make a typo?
+      const makeTypo = char.trim() && Math.random() < typoProbability;
+
+      if (makeTypo) {
+        // Type wrong character
+        const typoChar = getTypoChar(char);
+        currentText += typoChar;
+        setDisplayedText(currentText);
+        if (htmlText) {
+          currentHtml = htmlText.slice(0, findHtmlPosition(htmlText, currentText.length));
+          setDisplayedHtml(currentHtml);
+        }
+        playKeySound(typoChar);
+
+        // Pause to "notice" the typo
+        await new Promise((resolve) => setTimeout(resolve, speed + 100));
+
+        if (stopTypingRef.current) break;
+
+        // Backspace the typo
+        currentText = currentText.slice(0, -1);
+        setDisplayedText(currentText);
+        if (htmlText) {
+          currentHtml = htmlText.slice(0, findHtmlPosition(htmlText, currentText.length));
+          setDisplayedHtml(currentHtml);
+        }
+        playKeySound("\b"); // Backspace sound
+
+        // Small pause before typing correct character
+        await new Promise((resolve) => setTimeout(resolve, speed / 2));
+
+        if (stopTypingRef.current) break;
+      }
+
+      // Type the correct character
+      currentText += char;
+      setDisplayedText(currentText);
+      if (htmlText) {
+        currentHtml = htmlText.slice(0, findHtmlPosition(htmlText, currentText.length));
+        setDisplayedHtml(currentHtml);
+      }
+      playKeySound(char);
+
+      // Wait for next character
+      await new Promise((resolve) => setTimeout(resolve, speed));
+    }
+
+    // Typing complete
+    if (!stopTypingRef.current) {
+      setIsComplete(true);
+      setIsTyping(false);
+      if (onComplete) onComplete();
+    }
+  };
+
+  // Typing animation effect
+  useEffect(() => {
+    if (!enabled || !isTyping) {
+      // If disabled or not typing, show full text immediately
+      setDisplayedText(text);
+      setDisplayedHtml(htmlText || "");
+      setIsComplete(true);
+      if (onComplete) onComplete();
+      return;
+    }
+
+    // Reset for new text
+    setDisplayedText("");
+    setDisplayedHtml("");
+    setIsComplete(false);
+
+    // Start typing
+    typeText();
+
+    return () => {
+      stopTypingRef.current = true;
+    };
+  }, [text, htmlText, speed, enabled, isTyping]);
+
   // Click to skip typing
   const handleClick = () => {
     if (isTyping && !isComplete) {
       // Stop typing and show full text
-      if (intervalRef.current !== null) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      stopTypingRef.current = true;
       setDisplayedText(text);
       setDisplayedHtml(htmlText || "");
       setIsTyping(false);
