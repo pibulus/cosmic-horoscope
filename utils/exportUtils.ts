@@ -96,7 +96,8 @@ export function downloadText(
 
 /**
  * Download ASCII art as a PNG image using in-place capture
- * Temporarily modifies the original element for perfect dimensions, then restores
+ * Uses native iOS Share Sheet on mobile for better compatibility
+ * Falls back to traditional download if share is cancelled
  */
 export async function downloadPNG(
   asciiElementSelector: string = ".ascii-display",
@@ -183,11 +184,41 @@ export async function downloadPNG(
       parentContainer.scrollTop = scrollTop;
     }
 
-    // Download
+    // Convert data URL to blob for better iOS compatibility
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+
+    // Try native share first (better for mobile/iOS)
+    if (navigator.share && navigator.canShare) {
+      try {
+        // Create a file from the blob with proper MIME type
+        const file = new File([blob], `${filename}.png`, {
+          type: "image/png",
+        });
+
+        // Check if we can share this file
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: filename,
+            text: "Check out my cosmic horoscope!",
+          });
+          sounds.success();
+          return; // Success - exit early
+        }
+      } catch (shareError) {
+        // User cancelled or share failed - fall through to download
+        console.log("Share cancelled or failed, falling back to download");
+      }
+    }
+
+    // Fallback: Traditional download (desktop or if share failed)
+    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = dataUrl;
+    a.href = url;
     a.download = `${filename}.png`;
     a.click();
+    URL.revokeObjectURL(url);
 
     sounds.success();
   } catch (error) {

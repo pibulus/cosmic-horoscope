@@ -81,7 +81,7 @@ export function AboutModal() {
                 class="text-3xl font-bold font-mono"
                 style="color: var(--color-text, #e0e7ff)"
               >
-                About COSMIC HOROSCOPE ✨
+                About STARGRAM ✨
               </h2>
               <button
                 onClick={closeAboutModal}

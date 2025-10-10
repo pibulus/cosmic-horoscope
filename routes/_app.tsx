@@ -19,7 +19,7 @@ export default function App({ Component }: PageProps) {
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
         <title>
-          Cosmic Horoscope • Horoscopes That Look As Good As They Read
+          Stargram • Horoscopes That Look As Good As They Read
         </title>
         <meta
           name="description"
@@ -27,11 +27,11 @@ export default function App({ Component }: PageProps) {
         />
 
         {/* Canonical URL */}
-        <link rel="canonical" href="https://cosmic-horoscope.deno.dev" />
+        <link rel="canonical" href="https://stargram.app" />
 
         {/* PWA & iOS App Meta Tags */}
-        <meta name="application-name" content="Cosmic Horoscope" />
-        <meta name="apple-mobile-web-app-title" content="Cosmic Horoscope" />
+        <meta name="application-name" content="Stargram" />
+        <meta name="apple-mobile-web-app-title" content="Stargram" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
@@ -41,33 +41,33 @@ export default function App({ Component }: PageProps) {
         <meta name="theme-color" content="#a78bfa" />
 
         {/* Open Graph */}
-        <meta property="og:site_name" content="Cosmic Horoscope" />
+        <meta property="og:site_name" content="Stargram" />
         <meta
           property="og:title"
-          content="Cosmic Horoscope • Your Horoscope as Art"
+          content="Stargram • Your Horoscope as Art"
         />
         <meta
           property="og:description"
           content="Daily horoscopes styled as shareable cosmic art. Pick your sign, apply gradients, export."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://cosmic-horoscope.deno.dev" />
+        <meta property="og:url" content="https://stargram.app" />
         <meta
           property="og:image"
-          content="https://cosmic-horoscope.deno.dev/og-image.jpg"
+          content="https://stargram.app/og-image.jpg"
         />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta
           property="og:image:alt"
-          content="Cosmic Horoscope - Your horoscope as shareable art"
+          content="Stargram - Your horoscope as shareable art"
         />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Cosmic Horoscope • Your Horoscope as Art"
+          content="Stargram • Your Horoscope as Art"
         />
         <meta
           name="twitter:description"
@@ -75,11 +75,11 @@ export default function App({ Component }: PageProps) {
         />
         <meta
           name="twitter:image"
-          content="https://cosmic-horoscope.deno.dev/og-image.jpg"
+          content="https://stargram.app/og-image.jpg"
         />
         <meta
           name="twitter:image:alt"
-          content="Cosmic Horoscope - Your horoscope as shareable art"
+          content="Stargram - Your horoscope as shareable art"
         />
 
         {/* PWA Manifest */}
@@ -270,7 +270,7 @@ export default function App({ Component }: PageProps) {
         {/* Ko-fi donation modal */}
         <KofiModal
           kofiUsername="madebypablo"
-          title="Support Free Cosmic Readings ☕"
+          title="Support Stargram ☕"
           description="Your support keeps this tool free, ad-free, and open for everyone!"
         />
 

@@ -1,4 +1,4 @@
-# 🔮 Cosmic Horoscope
+# ✨ Stargram
 
 **Your horoscope as shareable cosmic art.**
 
@@ -42,7 +42,7 @@ deno task build
 ## 📁 Project Structure
 
 ```
-cosmic-horoscope/
+stargram/
 ├── routes/
 │   ├── index.tsx           # Main page
 │   ├── _app.tsx           # App wrapper with SEO
@@ -67,7 +67,7 @@ cosmic-horoscope/
 
 ## 🎨 Theme System
 
-Cosmic Horoscope uses a universal theme system with 11 curated cosmic themes:
+Stargram uses a universal theme system with 11 curated cosmic themes:
 
 - **Light Themes**: Turquoise, Coral, Purple, Cyber, Magenta, Teal, Riso, Cherry
 - **Dark Themes**: Midnight, Neon Oracle, Terminal

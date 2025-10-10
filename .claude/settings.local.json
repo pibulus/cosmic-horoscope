@@ -14,7 +14,13 @@
       "WebFetch(domain:jsr.io)",
       "WebFetch(domain:github.com)",
       "Bash(git revert:*)",
-      "Bash(fd:*)"
+      "Bash(fd:*)",
+      "Bash(npm:*)",
+      "Bash(echo $PATH)",
+      "Bash(~/.claude/local/node_modules/.bin/claude-code:*)",
+      "Bash(~/.claude/local/node_modules/@anthropic-ai/claude-code/cli.js --version)",
+      "Bash(brew list:*)",
+      "Read(//opt/homebrew/Cellar/node/24.6.0/bin/**)"
     ],
     "deny": [],
     "ask": []

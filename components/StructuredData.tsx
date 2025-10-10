@@ -19,8 +19,8 @@ export function StructuredData({ horoscope }: StructuredDataProps) {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Cosmic Horoscope",
-    "url": "https://cosmic-horoscope.deno.dev",
+    "name": "Stargram",
+    "url": "https://stargram.app",
     "description":
       "Get your daily, weekly, or monthly horoscope styled as shareable cosmic art.",
     "applicationCategory": "LifestyleApplication",
@@ -48,12 +48,12 @@ export function StructuredData({ horoscope }: StructuredDataProps) {
       "datePublished": horoscope.date,
       "author": {
         "@type": "Organization",
-        "name": "Cosmic Horoscope",
+        "name": "Stargram",
       },
       "publisher": {
         "@type": "Organization",
-        "name": "Cosmic Horoscope",
-        "url": "https://cosmic-horoscope.deno.dev",
+        "name": "Stargram",
+        "url": "https://stargram.app",
       },
     }
     : null;

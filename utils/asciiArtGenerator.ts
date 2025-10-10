@@ -37,12 +37,16 @@ export function generateHoroscopeAscii(
   signName: string,
   horoscopeText: string,
   font: string = "Standard",
+  period: string = "daily",
+  date: string = "",
 ): string {
   const signUpper = signName.toUpperCase();
+  const periodUpper = period.toUpperCase();
 
   // Wrap header in special markers for colorization
   const header = `[HEADER_START]
-${signUpper} HOROSCOPE
+${signUpper} • ${periodUpper}
+${date}
 [HEADER_END]`;
 
   // Format horoscope text with nice line breaks (max 68 chars per line for better fit)

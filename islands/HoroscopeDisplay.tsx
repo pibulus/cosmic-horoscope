@@ -7,7 +7,7 @@ import { useEffect } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 import { analytics } from "../utils/analytics.ts";
 import { getZodiacEmoji, getZodiacSign } from "../utils/zodiac.ts";
-import { COLOR_EFFECTS, VISUAL_EFFECTS } from "../utils/constants.ts";
+import { COLOR_EFFECTS } from "../utils/constants.ts";
 import { MagicDropdown } from "../components/MagicDropdown.tsx";
 import { TerminalDisplay } from "../components/TerminalDisplay.tsx";
 import { CosmicHeader } from "../components/CosmicHeader.tsx";
@@ -30,8 +30,8 @@ export default function HoroscopeDisplay(
   const currentPeriod = useSignal<Period>("daily");
   const horoscopeData = useSignal<any>(null);
   const isLoading = useSignal(false);
-  const colorEffect = useSignal("none");
-  const visualEffect = useSignal("neon");
+  const colorEffect = useSignal("sunrise");
+  const visualEffect = useSignal("neon"); // Hard-coded to neon
   const selectedFont = useSignal("Standard");
   const asciiOutput = useSignal("");
   const colorizedHtml = useSignal("");
@@ -52,8 +52,15 @@ export default function HoroscopeDisplay(
   useEffect(() => {
     if (horoscopeData.value?.horoscope_data) {
       const text = horoscopeData.value.horoscope_data;
-      // Generate ASCII art with sign name as header
-      const ascii = generateHoroscopeAscii(sign, text, selectedFont.value);
+      const date = horoscopeData.value.date || "";
+      // Generate ASCII art with sign name, period, and date
+      const ascii = generateHoroscopeAscii(
+        sign,
+        text,
+        selectedFont.value,
+        currentPeriod.value,
+        date,
+      );
       asciiOutput.value = ascii;
 
       // Always apply special header formatting
@@ -137,7 +144,7 @@ export default function HoroscopeDisplay(
       {/* Main content container - max-width 1200px, centered */}
       <div
         class="w-full max-w-[1200px] mx-auto px-2 sm:px-4"
-        style="padding-bottom: 80px;"
+        style="padding-bottom: 60px;"
       >
         <style>
           {`
@@ -148,16 +155,20 @@ export default function HoroscopeDisplay(
             }
           `}
         </style>
-        {/* Period selector + Controls - Single clean row */}
-        <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-4 sm:mb-8">
-          {/* Period buttons */}
-          {["daily", "weekly", "monthly"].map((period) => {
+        {/* Period selector + Color control - Compact horizontal row */}
+        <div class="flex flex-wrap items-center justify-center gap-1 sm:gap-3 mb-3 sm:mb-8">
+          {/* Period buttons - Compact on mobile */}
+          {[
+            { period: "daily", emoji: "📅" },
+            { period: "weekly", emoji: "🗓️" },
+            { period: "monthly", emoji: "📆" },
+          ].map(({ period, emoji }) => {
             const isActive = currentPeriod.value === period;
             return (
               <button
                 key={period}
                 onClick={() => handlePeriodChange(period)}
-                class="relative px-4 sm:px-8 py-2 sm:py-3 font-black font-mono text-xs sm:text-sm uppercase tracking-wider transition-all duration-150 border-4 rounded-lg hover:scale-105 active:scale-95"
+                class="relative flex-shrink-0 px-3 sm:px-8 py-2 sm:py-3 font-black font-mono text-[10px] sm:text-sm uppercase tracking-wide sm:tracking-wider transition-all duration-150 border-3 sm:border-4 rounded-lg hover:scale-105 active:scale-95"
                 style={`
                   background-color: ${
                   isActive
@@ -170,23 +181,18 @@ export default function HoroscopeDisplay(
                     : "var(--color-border, #a855f7)"
                 };
                   color: var(--color-text, #faf9f6);
-                  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
+                  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.8);
                 `}
                 aria-label={`View ${period} horoscope`}
                 aria-pressed={isActive}
               >
+                <span class="mr-1">{emoji}</span>
                 {period}
               </button>
             );
           })}
 
-          {/* Separator */}
-          <div
-            class="hidden sm:block"
-            style="width: 2px; height: 40px; background-color: var(--color-border, #a855f7); margin: 0 8px; opacity: 0.3;"
-          />
-
-          {/* Color & Effect controls inline */}
+          {/* Color control - Now fits in same row on mobile */}
           <MagicDropdown
             label="Color"
             options={COLOR_EFFECTS}
@@ -195,17 +201,7 @@ export default function HoroscopeDisplay(
               colorEffect.value = val;
               sounds.success();
             }}
-            changed={colorEffect.value !== "none"}
-          />
-          <MagicDropdown
-            label="Effect"
-            options={VISUAL_EFFECTS}
-            value={visualEffect.value}
-            onChange={(val) => {
-              visualEffect.value = val;
-              sounds.success();
-            }}
-            changed={visualEffect.value !== "neon"}
+            changed={colorEffect.value !== "sunrise"}
           />
         </div>
 
@@ -227,8 +223,26 @@ export default function HoroscopeDisplay(
           : horoscopeData.value
           ? (
             <div>
-              {/* Terminal Display - 100% on mobile, 90% on desktop, max 900px */}
-              <div class="mx-auto" style="width: 100%; max-width: 900px;">
+              {/* Terminal Display - Responsive width with breathing room */}
+              <div class="mx-auto terminal-container">
+                <style>
+                  {`
+                    .terminal-container {
+                      width: 95%;
+                      max-width: 900px;
+                    }
+                    @media (min-width: 640px) {
+                      .terminal-container {
+                        width: 90%;
+                      }
+                    }
+                    @media (min-width: 1024px) {
+                      .terminal-container {
+                        width: 85%;
+                      }
+                    }
+                  `}
+                </style>
                 <TerminalDisplay
                   content={asciiOutput.value}
                   htmlContent={colorizedHtml.value}

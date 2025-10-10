@@ -110,8 +110,8 @@ export function MagicDropdown({
   return (
     <div
       ref={dropdownRef}
-      class="relative w-full sm:w-auto"
-      style="min-width: 140px;"
+      class="relative flex-shrink-0"
+      style="min-width: 110px; max-width: 140px;"
     >
       <button
         type="button"
@@ -119,10 +119,10 @@ export function MagicDropdown({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-label={`${label} selector`}
-        class="magic-select border-3 sm:border-4 rounded-xl sm:rounded-2xl font-mono font-bold cursor-pointer transition-all shadow-brutal hover:shadow-brutal-lg hover:scale-105 active:scale-95 focus:outline-none focus:ring-4"
+        class="magic-select border-3 sm:border-4 rounded-lg sm:rounded-2xl font-mono font-bold cursor-pointer transition-all shadow-brutal hover:shadow-brutal-lg hover:scale-105 active:scale-95 focus:outline-none focus:ring-4"
         style={`
-          height: 40px;
-          padding: 0 12px;
+          height: 36px;
+          padding: 0 8px;
           display: flex;
           align-items: center;
           width: 100%;
@@ -144,14 +144,14 @@ export function MagicDropdown({
         }}
       >
         <div class="flex items-center justify-between w-full">
-          <span class="text-xs sm:text-sm truncate">
-            <span class="opacity-60 mr-1">{label}:</span>
+          <span class="text-[10px] sm:text-sm truncate">
+            <span class="opacity-60 mr-0.5 sm:mr-1">{label}:</span>
             <span class="font-black">
               {selectedOption?.name || "Select..."}
             </span>
           </span>
           <span
-            class="text-base flex-shrink-0 ml-1"
+            class="text-xs sm:text-base flex-shrink-0 ml-0.5 sm:ml-1"
             style={`color: var(--color-accent, #a855f7); transform: rotate(${
               isOpen ? "180" : "0"
             }deg); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);`}

@@ -3,7 +3,7 @@
 // ===================================================================
 // Used by both TextToAscii and AsciiGallery for consistent UI
 
-import { useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 import {
   copyToClipboard,
@@ -22,7 +22,7 @@ function getVisualEffectStyle(effect?: string): string {
       break;
     case "neon":
       css =
-        "filter: saturate(2.2) brightness(1.2); text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor;";
+        "filter: saturate(1.5) brightness(1.1); text-shadow: 0 0 4px currentColor, 0 0 8px currentColor;";
       break;
     case "glitch":
       css =
@@ -47,7 +47,7 @@ function getVisualEffectStyle(effect?: string): string {
     default:
       // Default to neon if not specified
       css =
-        "filter: saturate(2.2) brightness(1.2); text-shadow: 0 0 8px currentColor, 0 0 16px currentColor, 0 0 24px currentColor;";
+        "filter: saturate(1.5) brightness(1.1); text-shadow: 0 0 4px currentColor, 0 0 8px currentColor;";
   }
   return css;
 }
@@ -86,6 +86,16 @@ export function TerminalDisplay({
 }: TerminalDisplayProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [mobileExportOpen, setMobileExportOpen] = useState(false);
+  const copyTimeoutRef = useRef<number | null>(null);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current !== null) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleCopy = async () => {
     const success = await copyToClipboard(
@@ -95,7 +105,15 @@ export function TerminalDisplay({
     );
     if (success) {
       setCopiedToClipboard(true);
-      setTimeout(() => setCopiedToClipboard(false), 2000);
+      // Clear any existing timeout
+      if (copyTimeoutRef.current !== null) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+      // Set new timeout and store reference
+      copyTimeoutRef.current = setTimeout(() => {
+        setCopiedToClipboard(false);
+        copyTimeoutRef.current = null;
+      }, 2000) as unknown as number;
     }
   };
 
@@ -160,7 +178,7 @@ export function TerminalDisplay({
       {/* Terminal Content Area - Responsive height */}
       <div
         class="overflow-auto custom-scrollbar transition-all duration-700 terminal-content"
-        style="min-height: 450px; max-height: 600px; padding: 20px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        style="min-height: 450px; max-height: 600px; padding: 12px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         <style>
           {`
@@ -188,7 +206,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -198,7 +216,12 @@ export function TerminalDisplay({
                   @media (min-width: 640px) {
                     .ascii-display {
                       font-size: 22px !important;
-                      line-height: 1.6 !important;
+                      line-height: 1.7 !important;
+                    }
+                  }
+                  @media (min-width: 768px) {
+                    .ascii-display {
+                      font-size: 24px !important;
                     }
                   }
                 `}
@@ -209,7 +232,7 @@ export function TerminalDisplay({
           ? (
             <pre
               class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
             >
@@ -219,7 +242,12 @@ export function TerminalDisplay({
                   @media (min-width: 640px) {
                     .ascii-display {
                       font-size: 22px !important;
-                      line-height: 1.6 !important;
+                      line-height: 1.7 !important;
+                    }
+                  }
+                  @media (min-width: 768px) {
+                    .ascii-display {
+                      font-size: 24px !important;
                     }
                   }
                 `}
@@ -233,7 +261,7 @@ export function TerminalDisplay({
       {!hideExportButtons && hasContent && (
         <>
           {/* Mobile: Single Export Dropdown */}
-          <div class="sm:hidden absolute bottom-6 right-6 z-10 animate-pop-in">
+          <div class="sm:hidden absolute bottom-4 right-4 z-10 animate-pop-in">
             <div class="relative">
               <button
                 onClick={() => {

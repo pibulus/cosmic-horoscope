@@ -1,6 +1,6 @@
 {
-  "name": "Cosmic Horoscope",
-  "short_name": "Cosmic",
+  "name": "Stargram",
+  "short_name": "Stargram",
   "description": "Your daily horoscope as shareable cosmic art. Pick your sign, apply gradients, export as beautiful images.",
   "start_url": "/?source=pwa",
   "display": "standalone",

@@ -42,10 +42,20 @@ export default function HomeIsland() {
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-4">
               <h1
-                class="text-base sm:text-2xl md:text-3xl font-black font-mono tracking-tight"
+                onClick={selectedSign.value ? handleChangeSign : undefined}
+                class={`text-base sm:text-2xl md:text-3xl font-black font-mono tracking-tight transition-all ${
+                  selectedSign.value
+                    ? "cursor-pointer hover:scale-105 active:scale-95 hover:opacity-80"
+                    : ""
+                }`}
                 style="color: var(--color-text, #faf9f6)"
+                role={selectedSign.value ? "button" : undefined}
+                tabIndex={selectedSign.value ? 0 : undefined}
+                aria-label={selectedSign.value
+                  ? "Return to sign selection"
+                  : undefined}
               >
-                COSMIC HOROSCOPE
+                STARGRAM
               </h1>
               {selectedSign.value && (
                 <>

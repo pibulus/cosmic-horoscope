@@ -13,8 +13,11 @@ import { signal } from "@preact/signals";
 // Global signal for modal state
 export const welcomeModalOpen = signal(false);
 
+// Track the animation timeout globally so we can clean it up
+let closeAnimationTimeout: number | null = null;
+
 // Check if user has seen welcome before
-const WELCOME_SEEN_KEY = "cosmic-welcome-seen";
+const WELCOME_SEEN_KEY = "stargram-welcome-seen";
 
 export function checkWelcomeStatus() {
   if (typeof localStorage !== "undefined") {
@@ -35,15 +38,21 @@ export function markWelcomeSeen() {
   // Trigger brightness splash
   document.body.classList.add("brightness-splash");
 
+  // Clear any existing timeout
+  if (closeAnimationTimeout !== null) {
+    clearTimeout(closeAnimationTimeout);
+  }
+
   // Wait for animations to complete before closing modal
-  setTimeout(() => {
+  closeAnimationTimeout = setTimeout(() => {
     document.body.classList.remove("brightness-splash");
     welcomeModalOpen.value = false;
 
     if (typeof localStorage !== "undefined") {
       localStorage.setItem(WELCOME_SEEN_KEY, "true");
     }
-  }, 600);
+    closeAnimationTimeout = null;
+  }, 600) as unknown as number;
 }
 
 export function WelcomeModal() {
@@ -65,6 +74,11 @@ export function WelcomeModal() {
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
+      // Clean up animation timeout if component unmounts while animating
+      if (closeAnimationTimeout !== null) {
+        clearTimeout(closeAnimationTimeout);
+        closeAnimationTimeout = null;
+      }
     };
   }, [isOpen]);
 
@@ -92,7 +106,7 @@ export function WelcomeModal() {
           >
             <div class="text-7xl mb-4">✨</div>
             <h1 class="text-4xl md:text-5xl font-bold text-white">
-              COSMIC HOROSCOPE
+              STARGRAM
             </h1>
           </div>
 
