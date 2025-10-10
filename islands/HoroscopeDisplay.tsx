@@ -30,6 +30,8 @@ export default function HoroscopeDisplay(
   const currentPeriod = useSignal<Period>("daily");
   const horoscopeData = useSignal<any>(null);
   const isLoading = useSignal(false);
+  const isBootingUp = useSignal(false);
+  const bootComplete = useSignal(false);
   const colorEffect = useSignal("sunrise");
   const visualEffect = useSignal("neon"); // Hard-coded to neon
   const selectedFont = useSignal("Standard");
@@ -109,7 +111,33 @@ export default function HoroscopeDisplay(
   };
 
   const fetchHoroscope = async (zodiacSign: string, period: Period) => {
+    // Start boot sequence
+    isBootingUp.value = true;
+    bootComplete.value = false;
+
+    // Boot sequence messages
+    const bootMessages = [
+      "> Establishing link to Celestial Mainframe...",
+      "> Signal lock: ACQUIRED",
+      `> Decrypting transmission for [${zodiacSign.toUpperCase()}]...`,
+      "> LOADING...",
+    ];
+
+    // Type out boot messages with delays
+    for (let i = 0; i < bootMessages.length; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      sounds.click();
+      // Messages are displayed in the loading state
+    }
+
+    // Wait a moment before starting fetch
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    // Boot complete, start actual fetch
+    isBootingUp.value = false;
+    bootComplete.value = true;
     isLoading.value = true;
+
     try {
       const response = await fetch(
         `/api/horoscope?sign=${zodiacSign}&period=${period}`,
@@ -206,7 +234,7 @@ export default function HoroscopeDisplay(
         </div>
 
         {/* Horoscope content */}
-        {isLoading.value
+        {(isLoading.value || isBootingUp.value)
           ? (
             <div class="text-center" style="padding: 64px 0;">
               <div
@@ -215,9 +243,23 @@ export default function HoroscopeDisplay(
               >
                 ✨
               </div>
-              <p style="color: rgba(255, 255, 255, 0.6); font-size: 18px;">
-                Reading the stars...
-              </p>
+              {isBootingUp.value
+                ? (
+                  <div
+                    class="font-mono text-left inline-block"
+                    style="color: #00FF41; font-size: 16px; line-height: 1.8;"
+                  >
+                    <p>> Establishing link to Celestial Mainframe...</p>
+                    <p>> Signal lock: ACQUIRED</p>
+                    <p>> Decrypting transmission for [{sign.toUpperCase()}]...</p>
+                    <p>> LOADING...</p>
+                  </div>
+                )
+                : (
+                  <p style="color: rgba(255, 255, 255, 0.6); font-size: 18px;">
+                    Receiving transmission...
+                  </p>
+                )}
             </div>
           )
           : horoscopeData.value
@@ -258,6 +300,8 @@ export default function HoroscopeDisplay(
                   terminalPath={`~/cosmic/${sign}.txt`}
                   visualEffect={visualEffect.value}
                   hideExportButtons={false}
+                  enableTypewriter={bootComplete.value}
+                  typewriterSpeed={60}
                 />
               </div>
             </div>

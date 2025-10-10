@@ -10,6 +10,7 @@ import {
   downloadPNG,
   downloadText,
 } from "../utils/exportUtils.ts";
+import { TypewriterText } from "./TypewriterText.tsx";
 
 /**
  * Get CSS filter string for visual effects
@@ -71,6 +72,10 @@ interface TerminalDisplayProps {
   visualEffect?: string;
   /** Hide export buttons (for cosmic-horoscope which renders them externally) */
   hideExportButtons?: boolean;
+  /** Enable typewriter effect (default: false) */
+  enableTypewriter?: boolean;
+  /** Typewriter speed in ms per character (default: 60) */
+  typewriterSpeed?: number;
 }
 
 export function TerminalDisplay({
@@ -83,9 +88,12 @@ export function TerminalDisplay({
   showShuffleButton = false,
   visualEffect = "subtle",
   hideExportButtons = false,
+  enableTypewriter = false,
+  typewriterSpeed = 60,
 }: TerminalDisplayProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [mobileExportOpen, setMobileExportOpen] = useState(false);
+  const [typingComplete, setTypingComplete] = useState(false);
   const copyTimeoutRef = useRef<number | null>(null);
 
   // Cleanup timeout on unmount
@@ -202,8 +210,24 @@ export function TerminalDisplay({
               </pre>
             </div>
           )
+          : (htmlContent || content) && enableTypewriter
+          ? (
+            // Typewriter mode
+            <TypewriterText
+              text={content}
+              htmlText={htmlContent}
+              speed={typewriterSpeed}
+              enabled={true}
+              onComplete={() => setTypingComplete(true)}
+              className="ascii-display font-mono opacity-85"
+              style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+                getVisualEffectStyle(visualEffect)
+              }`}
+            />
+          )
           : htmlContent
           ? (
+            // Static HTML mode
             <pre
               class="ascii-display font-mono opacity-85"
               style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
@@ -230,6 +254,7 @@ export function TerminalDisplay({
           )
           : content
           ? (
+            // Static text mode
             <pre
               class="ascii-display font-mono opacity-85"
               style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
