@@ -224,27 +224,31 @@ export function TypewriterText({
 
   // Typing animation effect
   useEffect(() => {
-    if (!enabled || !isTyping) {
-      // If disabled or not typing, show full text immediately
+    // Stop any in-flight typing loop before starting a new one
+    stopTypingRef.current = true;
+
+    if (!enabled) {
       setDisplayedText(text);
       setDisplayedHtml(htmlText || "");
+      setIsTyping(false);
       setIsComplete(true);
       if (onComplete) onComplete();
       return;
     }
 
-    // Reset for new text
+    // Reset state so the next render actually types the text out
     setDisplayedText("");
     setDisplayedHtml("");
     setIsComplete(false);
+    setIsTyping(true);
 
-    // Start typing
+    // Kick off the async typing loop for the latest content
     typeText();
 
     return () => {
       stopTypingRef.current = true;
     };
-  }, [text, htmlText, speed, enabled, isTyping]);
+  }, [text, htmlText, speed, enabled]);
 
   // Click to skip typing
   const handleClick = () => {
