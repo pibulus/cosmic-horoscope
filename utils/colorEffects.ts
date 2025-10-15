@@ -79,6 +79,14 @@ export function getEffectColor(
  * Returns HTML with colored spans for each line
  * Header section gets a special bright color, body gets gradient
  */
+const escapeHtml = (value: string): string =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
 export function applyColorToArt(art: string, effect: string): string {
   if (effect === "none" || !art) {
     return "";
@@ -120,7 +128,9 @@ export function applyColorToArt(art: string, effect: string): string {
     if (inHeader) {
       // Header gets special bright color
       colorizedLines.push(
-        `<span style="color: ${headerColor}; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`,
+        `<span style="color: ${headerColor}; font-weight: 900; letter-spacing: 0.1em;">${
+          escapeHtml(line)
+        }</span>`,
       );
     } else if (line.trim()) {
       // Body gets gradient effect
@@ -131,7 +141,9 @@ export function applyColorToArt(art: string, effect: string): string {
         line.length,
         lines.length,
       );
-      colorizedLines.push(`<span style="color: ${color};">${line}</span>`);
+      colorizedLines.push(
+        `<span style="color: ${color};">${escapeHtml(line)}</span>`,
+      );
     } else {
       // Empty lines stay empty
       colorizedLines.push(line);

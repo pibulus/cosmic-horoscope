@@ -5,30 +5,6 @@
 // Uses figlet library for text-to-ASCII transformation
 
 /**
- * Curated figlet fonts for horoscope display
- * Hand-picked for readability and cosmic vibes
- */
-export const FIGLET_FONTS = [
-  { name: "Standard", value: "Standard" },
-  { name: "Doom", value: "Doom" },
-  { name: "Slant", value: "Slant" },
-  { name: "Shadow", value: "Shadow" },
-  { name: "Ghost", value: "Ghost" },
-  { name: "Bloody", value: "Bloody" },
-  { name: "Colossal", value: "Colossal" },
-  { name: "Isometric3", value: "Isometric3" },
-  { name: "Poison", value: "Poison" },
-  { name: "Speed", value: "Speed" },
-  { name: "Star Wars", value: "Star Wars" },
-  { name: "Small", value: "Small" },
-  { name: "Chunky", value: "Chunky" },
-  { name: "Larry 3D", value: "Larry 3D" },
-  { name: "Banner", value: "Banner" },
-  { name: "Block", value: "Block" },
-  { name: "Big", value: "Big" },
-];
-
-/**
  * Simple text-based horoscope formatter with improved spacing and color markers
  * Formats horoscope with a beautiful header and body text
  * Uses special markers for header colorization
@@ -36,7 +12,6 @@ export const FIGLET_FONTS = [
 export function generateHoroscopeAscii(
   signName: string,
   horoscopeText: string,
-  font: string = "Standard",
   period: string = "daily",
   date: string = "",
 ): string {

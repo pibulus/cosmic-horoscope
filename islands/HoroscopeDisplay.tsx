@@ -3,7 +3,7 @@
 // ===================================================================
 
 import { useSignal } from "@preact/signals";
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 import { analytics } from "../utils/analytics.ts";
 import { getZodiacEmoji, getZodiacSign } from "../utils/zodiac.ts";
@@ -12,10 +12,7 @@ import { MagicDropdown } from "../components/MagicDropdown.tsx";
 import { TerminalDisplay } from "../components/TerminalDisplay.tsx";
 import { CosmicHeader } from "../components/CosmicHeader.tsx";
 import { applyColorToArt } from "../utils/colorEffects.ts";
-import {
-  FIGLET_FONTS,
-  generateHoroscopeAscii,
-} from "../utils/asciiArtGenerator.ts";
+import { generateHoroscopeAscii } from "../utils/asciiArtGenerator.ts";
 
 interface HoroscopeDisplayProps {
   sign: string;
@@ -35,9 +32,11 @@ export default function HoroscopeDisplay(
   const bootMessages = useSignal<string[]>([]);
   const colorEffect = useSignal("sunrise");
   const visualEffect = useSignal("neon"); // Hard-coded to neon
-  const selectedFont = useSignal("Standard");
   const asciiOutput = useSignal("");
   const colorizedHtml = useSignal("");
+  const requestIdRef = useRef(0);
+  const activeController = useRef<AbortController | null>(null);
+  const errorMessage = useSignal<string | null>(null);
 
   // Initialize analytics
   useEffect(() => {
@@ -60,7 +59,6 @@ export default function HoroscopeDisplay(
       const ascii = generateHoroscopeAscii(
         sign,
         text,
-        selectedFont.value,
         currentPeriod.value,
         date,
       );
@@ -77,9 +75,17 @@ export default function HoroscopeDisplay(
         colorizedHtml.value = colorized;
       }
     }
-  }, [horoscopeData.value, selectedFont.value, colorEffect.value]);
+  }, [horoscopeData.value, colorEffect.value]);
 
   // Helper function to highlight header even without color effects
+  const escapeHtml = (value: string): string =>
+    value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
   const applyHeaderHighlight = (art: string): string => {
     const lines = art.split("\n");
     const colorizedLines: string[] = [];
@@ -98,11 +104,15 @@ export default function HoroscopeDisplay(
       if (inHeader) {
         // Header in gold/yellow
         colorizedLines.push(
-          `<span style="color: #FFD700; font-weight: 900; letter-spacing: 0.1em;">${line}</span>`,
+          `<span style="color: #FFD700; font-weight: 900; letter-spacing: 0.1em;">${
+            escapeHtml(line)
+          }</span>`,
         );
       } else if (line.trim()) {
         // Body in terminal green
-        colorizedLines.push(`<span style="color: #00FF41;">${line}</span>`);
+        colorizedLines.push(
+          `<span style="color: #00FF41;">${escapeHtml(line)}</span>`,
+        );
       } else {
         colorizedLines.push(line);
       }
@@ -112,9 +122,19 @@ export default function HoroscopeDisplay(
   };
 
   const fetchHoroscope = async (zodiacSign: string, period: Period) => {
+    // Abort any in-flight request before starting a new one
+    if (activeController.current) {
+      activeController.current.abort();
+    }
+    const controller = new AbortController();
+    activeController.current = controller;
+    const requestToken = ++requestIdRef.current;
+
     // Start boot sequence
     isBootingUp.value = true;
     bootComplete.value = false;
+    errorMessage.value = null;
+    bootMessages.value = [];
 
     // Array of different boot sequences for variety
     const bootSequences = [
@@ -169,12 +189,18 @@ export default function HoroscopeDisplay(
     // Type out boot messages with delays
     for (let i = 0; i < selectedBootMessages.length; i++) {
       await new Promise((resolve) => setTimeout(resolve, 400));
+      if (controller.signal.aborted || requestToken !== requestIdRef.current) {
+        return;
+      }
       sounds.click();
-      // Messages are displayed in the loading state
+      bootMessages.value = selectedBootMessages.slice(0, i + 1);
     }
 
     // Wait a moment before starting fetch
     await new Promise((resolve) => setTimeout(resolve, 300));
+    if (controller.signal.aborted || requestToken !== requestIdRef.current) {
+      return;
+    }
 
     // Boot complete, start actual fetch
     isBootingUp.value = false;
@@ -184,8 +210,16 @@ export default function HoroscopeDisplay(
     try {
       const response = await fetch(
         `/api/horoscope?sign=${zodiacSign}&period=${period}`,
+        { signal: controller.signal },
       );
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
+      }
       const data = await response.json();
+
+      if (controller.signal.aborted || requestToken !== requestIdRef.current) {
+        return;
+      }
 
       if (data.success) {
         horoscopeData.value = data.data;
@@ -194,17 +228,39 @@ export default function HoroscopeDisplay(
       } else {
         console.error("Horoscope fetch failed:", data.error);
         sounds.error();
+        horoscopeData.value = null;
+        asciiOutput.value = "";
+        colorizedHtml.value = "";
+        errorMessage.value = "The stars sent back static. Try again?";
       }
     } catch (error) {
+      if (controller.signal.aborted || requestToken !== requestIdRef.current) {
+        return;
+      }
       console.error("Failed to fetch horoscope:", error);
       sounds.error();
+      horoscopeData.value = null;
+      asciiOutput.value = "";
+      colorizedHtml.value = "";
+      errorMessage.value = "We lost the cosmic signal. Please try again.";
     } finally {
+      if (controller.signal.aborted || requestToken !== requestIdRef.current) {
+        return;
+      }
       isLoading.value = false;
+      if (activeController.current === controller) {
+        activeController.current = null;
+      }
     }
   };
 
   const handlePeriodChange = (period: string) => {
     currentPeriod.value = period as Period;
+  };
+
+  const handleRetry = () => {
+    sounds.click();
+    fetchHoroscope(sign, currentPeriod.value);
   };
 
   const zodiacInfo = getZodiacSign(sign);
@@ -300,6 +356,29 @@ export default function HoroscopeDisplay(
                     Receiving transmission...
                   </p>
                 )}
+            </div>
+          )
+          : errorMessage.value
+          ? (
+            <div class="w-full flex justify-center" style="padding: 64px 0;">
+              <div
+                class="border-4 rounded-2xl px-6 py-8 max-w-md text-center shadow-brutal-lg"
+                style="background-color: rgba(10, 10, 10, 0.85); border-color: var(--color-border, #a855f7);"
+              >
+                <p
+                  class="font-mono text-sm sm:text-base mb-6"
+                  style="color: var(--color-text, #faf9f6); line-height: 1.7;"
+                >
+                  {errorMessage.value}
+                </p>
+                <button
+                  onClick={handleRetry}
+                  class="inline-flex items-center gap-2 font-mono font-black uppercase tracking-wide px-6 py-3 border-3 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-brutal"
+                  style="background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
+                >
+                  🔁 Retry
+                </button>
+              </div>
             </div>
           )
           : horoscopeData.value
