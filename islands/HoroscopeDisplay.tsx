@@ -231,7 +231,14 @@ export default function HoroscopeDisplay(
         horoscopeData.value = null;
         asciiOutput.value = "";
         colorizedHtml.value = "";
-        errorMessage.value = "The stars sent back static. Try again?";
+        // Random error messages with personality
+        const errorMessages = [
+          "⚠️ TRANSMISSION CORRUPTED — The stars sent back static. Retry?",
+          "❌ LINK SEVERED — Cosmic firewall blocked the vibes. Try again?",
+          "⚡ SIGNAL LOST — Mothership went dark. Reconnect?",
+          "🔮 DIVINATION FAILED — The universe hung up on us. One more time?",
+        ];
+        errorMessage.value = errorMessages[Math.floor(Math.random() * errorMessages.length)];
       }
     } catch (error) {
       if (controller.signal.aborted || requestToken !== requestIdRef.current) {
@@ -242,7 +249,14 @@ export default function HoroscopeDisplay(
       horoscopeData.value = null;
       asciiOutput.value = "";
       colorizedHtml.value = "";
-      errorMessage.value = "We lost the cosmic signal. Please try again.";
+      // Random network error messages
+      const networkErrors = [
+        "🛰️ CONNECTION TIMEOUT — Can't reach the astral plane. Check your link?",
+        "⚠️ MAINFRAME OFFLINE — The celestial servers are napping. Retry?",
+        "❌ DECRYPT FAILED — Star data scrambled beyond recognition. Try again?",
+        "🌌 VOID DETECTED — Nothing but cosmic silence out there. Reconnect?",
+      ];
+      errorMessage.value = networkErrors[Math.floor(Math.random() * networkErrors.length)];
     } finally {
       if (controller.signal.aborted || requestToken !== requestIdRef.current) {
         return;

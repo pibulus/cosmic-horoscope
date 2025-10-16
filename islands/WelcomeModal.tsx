@@ -125,6 +125,26 @@ export function WelcomeModal() {
               as good as they read
             </h2>
 
+            {/* AI-Free Badge - PROMINENT */}
+            <div
+              class="p-4 sm:p-5 border-3 rounded-2xl text-center"
+              style="background: rgba(167, 139, 250, 0.15); border-color: rgba(167, 139, 250, 0.4);"
+            >
+              <p
+                class="text-base sm:text-lg md:text-xl font-black leading-tight"
+                style="color: var(--color-accent, #f0abfc)"
+              >
+                🚫🤖 100% AI-FREE ZONE
+              </p>
+              <p
+                class="text-xs sm:text-sm font-medium mt-2 opacity-90"
+                style="color: var(--color-text, #e0e7ff)"
+              >
+                Real horoscopes from actual astrologers.<br />
+                Downloaded from the stars. No robots.
+              </p>
+            </div>
+
             {/* Features */}
             <div class="space-y-3 sm:space-y-4">
               <p
@@ -165,19 +185,6 @@ export function WelcomeModal() {
             >
               Quick. Free. Yours.
             </p>
-
-            {/* AI-Free Badge */}
-            <div
-              class="mt-4 pt-4 text-center border-t-2"
-              style="border-color: rgba(167, 139, 250, 0.3)"
-            >
-              <p
-                class="text-sm font-medium opacity-80"
-                style="color: var(--color-text, #e0e7ff)"
-              >
-                ✨ Real astrologer wisdom, zero AI
-              </p>
-            </div>
           </div>
         </div>
       </div>
