@@ -404,16 +404,16 @@ export default function HoroscopeDisplay(
                   {`
                     .terminal-container {
                       width: 95%;
-                      max-width: 900px;
+                      max-width: 1100px;
                     }
                     @media (min-width: 640px) {
                       .terminal-container {
-                        width: 90%;
+                        width: 92%;
                       }
                     }
                     @media (min-width: 1024px) {
                       .terminal-container {
-                        width: 85%;
+                        width: 90%;
                       }
                     }
                   `}

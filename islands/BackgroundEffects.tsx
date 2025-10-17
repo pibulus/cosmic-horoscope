@@ -32,7 +32,7 @@ export default function BackgroundEffects() {
           style={{
             background:
               "radial-gradient(circle, var(--mesh-1, #9333ea) 0%, var(--mesh-2, #ec4899) 50%, transparent 70%)",
-            opacity: "0.25",
+            opacity: "0.10",
             filter: "blur(80px)",
             animation: "mesh-float-1 20s ease-in-out infinite",
             willChange: "transform, opacity",
@@ -43,7 +43,7 @@ export default function BackgroundEffects() {
           style={{
             background:
               "radial-gradient(circle, var(--mesh-2, #ec4899) 0%, var(--mesh-3, #f59e0b) 40%, transparent 70%)",
-            opacity: "0.2",
+            opacity: "0.08",
             filter: "blur(70px)",
             animation: "mesh-float-2 25s ease-in-out infinite",
             animationDelay: "5s",
@@ -55,7 +55,7 @@ export default function BackgroundEffects() {
           style={{
             background:
               "radial-gradient(circle, var(--mesh-3, #f59e0b) 0%, var(--mesh-1, #9333ea) 40%, transparent 70%)",
-            opacity: "0.25",
+            opacity: "0.10",
             filter: "blur(60px)",
             animation: "mesh-float-3 18s ease-in-out infinite",
             animationDelay: "10s",
@@ -73,7 +73,7 @@ export default function BackgroundEffects() {
               "radial-gradient(circle, var(--color-accent, #c084fc) 0%, transparent 70%)",
             borderRadius: "50%",
             filter: "blur(15px)",
-            opacity: "0.4",
+            opacity: "0.15",
             animation: "orb-float 15s ease-in-out infinite",
             willChange: "transform, opacity",
           }}
@@ -87,7 +87,7 @@ export default function BackgroundEffects() {
               "radial-gradient(circle, var(--mesh-2, #ec4899) 0%, transparent 70%)",
             borderRadius: "50%",
             filter: "blur(12px)",
-            opacity: "0.35",
+            opacity: "0.12",
             animation: "orb-float 18s ease-in-out infinite",
             animationDelay: "5s",
             willChange: "transform, opacity",
@@ -102,7 +102,7 @@ export default function BackgroundEffects() {
               "radial-gradient(circle, var(--mesh-3, #f59e0b) 0%, transparent 70%)",
             borderRadius: "50%",
             filter: "blur(18px)",
-            opacity: "0.3",
+            opacity: "0.10",
             animation: "orb-float 20s ease-in-out infinite",
             animationDelay: "10s",
             willChange: "transform, opacity",
@@ -118,7 +118,7 @@ export default function BackgroundEffects() {
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               background: "var(--color-accent, #c084fc)",
-              opacity: "0.3",
+              opacity: "0.15",
               animation: `particle-float ${15 + i * 3}s ease-in-out infinite`,
               animationDelay: `${i * 2}s`,
               filter: "blur(1px)",
@@ -142,7 +142,7 @@ export default function BackgroundEffects() {
           pointerEvents: "none",
           zIndex: 1,
           mixBlendMode: "screen",
-          opacity: "0.15",
+          opacity: "0.08",
           transform: "translate(-100px, -100px)",
           filter: "blur(40px)",
           transition: "left 0.15s ease-out, top 0.15s ease-out",

@@ -137,8 +137,8 @@ export function TerminalDisplay({
 
   return (
     <div
-      class="rounded-2xl sm:rounded-3xl border-3 sm:border-4 shadow-brutal overflow-hidden relative"
-      style="background-color: #000000; border-color: var(--color-border, #0A0A0A);"
+      class="rounded-2xl sm:rounded-3xl border-4 sm:border-6 shadow-brutal overflow-hidden relative terminal-glass"
+      style="background-color: rgba(0, 0, 0, 0.75); border-color: var(--color-border, #0A0A0A); backdrop-filter: blur(16px) saturate(180%);"
     >
       {/* Terminal Menu Bar */}
       <div
@@ -186,14 +186,14 @@ export function TerminalDisplay({
       {/* Terminal Content Area - Responsive height */}
       <div
         class="overflow-auto custom-scrollbar transition-all duration-700 terminal-content"
-        style="min-height: 450px; max-height: 600px; padding: 12px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        style="min-height: 450px; max-height: 600px; padding: 16px; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         <style>
           {`
             @media (min-width: 640px) {
               .terminal-content {
-                padding: 40px !important;
-                min-height: 520px !important;
+                padding: 50px !important;
+                min-height: 600px !important;
                 max-height: none !important;
               }
             }
@@ -219,8 +219,8 @@ export function TerminalDisplay({
               speed={typewriterSpeed}
               enabled={true}
               onComplete={() => setTypingComplete(true)}
-              className="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              className="ascii-display font-mono opacity-90"
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
             />
@@ -229,8 +229,8 @@ export function TerminalDisplay({
           ? (
             // Static HTML mode
             <pre
-              class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              class="ascii-display font-mono opacity-90"
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
               dangerouslySetInnerHTML={{ __html: htmlContent }}
@@ -239,13 +239,13 @@ export function TerminalDisplay({
                 {`
                   @media (min-width: 640px) {
                     .ascii-display {
-                      font-size: 22px !important;
+                      font-size: 28px !important;
                       line-height: 1.7 !important;
                     }
                   }
                   @media (min-width: 768px) {
                     .ascii-display {
-                      font-size: 24px !important;
+                      font-size: 30px !important;
                     }
                   }
                 `}
@@ -256,8 +256,8 @@ export function TerminalDisplay({
           ? (
             // Static text mode
             <pre
-              class="ascii-display font-mono opacity-85"
-              style={`color: #00FF41; font-size: 16px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
+              class="ascii-display font-mono opacity-90"
+              style={`color: #00FF41; font-size: 18px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; word-break: normal; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.05em; font-weight: 900; font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Courier New', monospace; ${
                 getVisualEffectStyle(visualEffect)
               }`}
             >
@@ -266,13 +266,13 @@ export function TerminalDisplay({
                 {`
                   @media (min-width: 640px) {
                     .ascii-display {
-                      font-size: 22px !important;
+                      font-size: 28px !important;
                       line-height: 1.7 !important;
                     }
                   }
                   @media (min-width: 768px) {
                     .ascii-display {
-                      font-size: 24px !important;
+                      font-size: 30px !important;
                     }
                   }
                 `}
