@@ -10,7 +10,7 @@ import {
   downloadPNG,
   downloadText,
 } from "../utils/exportUtils.ts";
-import { TypewriterText } from "./TypewriterText.tsx";
+import { TypedWriter } from "./TypedWriter.tsx";
 
 /**
  * Get CSS filter string for visual effects
@@ -23,7 +23,7 @@ function getVisualEffectStyle(effect?: string): string {
       break;
     case "neon":
       css =
-        "filter: saturate(1.5) brightness(1.1); text-shadow: 0 0 4px currentColor, 0 0 8px currentColor;";
+        "filter: saturate(1.3) brightness(1.05); text-shadow: 0 0 2px currentColor, 0 0 4px currentColor;";
       break;
     case "glitch":
       css =
@@ -48,7 +48,7 @@ function getVisualEffectStyle(effect?: string): string {
     default:
       // Default to neon if not specified
       css =
-        "filter: saturate(1.5) brightness(1.1); text-shadow: 0 0 4px currentColor, 0 0 8px currentColor;";
+        "filter: saturate(1.3) brightness(1.05); text-shadow: 0 0 2px currentColor, 0 0 4px currentColor;";
   }
   return css;
 }
@@ -213,7 +213,7 @@ export function TerminalDisplay({
           : (htmlContent || content) && enableTypewriter
           ? (
             // Typewriter mode
-            <TypewriterText
+            <TypedWriter
               text={content}
               htmlText={htmlContent}
               speed={typewriterSpeed}

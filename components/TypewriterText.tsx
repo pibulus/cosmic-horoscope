@@ -89,6 +89,7 @@ export function TypewriterText({
   const typewriterRef = useRef<SimpleTypeWriter | null>(null);
   const stopTypingRef = useRef(false);
   const containerRef = useRef<HTMLPreElement>(null);
+  const currentContentRef = useRef<string>(""); // Track what we're currently typing
 
   // Initialize keyboard sounds
   useEffect(() => {
@@ -224,26 +225,43 @@ export function TypewriterText({
 
   // Typing animation effect
   useEffect(() => {
-    // Stop any in-flight typing loop before starting a new one
-    stopTypingRef.current = true;
-
     if (!enabled) {
+      // If disabled, show full text immediately
+      stopTypingRef.current = true;
       setDisplayedText(text);
       setDisplayedHtml(htmlText || "");
       setIsTyping(false);
       setIsComplete(true);
+      currentContentRef.current = text;
       if (onComplete) onComplete();
       return;
     }
 
-    // Reset state so the next render actually types the text out
-    setDisplayedText("");
-    setDisplayedHtml("");
-    setIsComplete(false);
-    setIsTyping(true);
+    // Only restart if the SOURCE content changed
+    const contentKey = `${text}|${htmlText || ""}`;
+    if (currentContentRef.current === contentKey) {
+      // Same content, don't restart
+      return;
+    }
 
-    // Kick off the async typing loop for the latest content
-    typeText();
+    // Content changed - stop current typing and start new
+    stopTypingRef.current = true;
+    currentContentRef.current = contentKey;
+
+    // Small delay to ensure previous typing fully stopped
+    setTimeout(() => {
+      if (!enabled) return;
+
+      // Reset state for new typing animation
+      setDisplayedText("");
+      setDisplayedHtml("");
+      setIsComplete(false);
+      setIsTyping(true);
+      stopTypingRef.current = false;
+
+      // Start typing the new content
+      typeText();
+    }, 50);
 
     return () => {
       stopTypingRef.current = true;

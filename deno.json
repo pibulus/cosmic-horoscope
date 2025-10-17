@@ -34,7 +34,8 @@
     "$std/": "https://deno.land/std@0.216.0/",
     "tailwindcss": "npm:tailwindcss@^3.4.0",
     "html-to-image": "npm:html-to-image@^1.11.11",
-    "posthog-js": "npm:posthog-js@^1.246.0"
+    "posthog-js": "npm:posthog-js@^1.246.0",
+    "typed.js": "npm:typed.js@^2.1.0"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

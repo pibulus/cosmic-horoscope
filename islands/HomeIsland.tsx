@@ -66,14 +66,13 @@ export default function HomeIsland() {
                     {getZodiacEmoji(selectedSign.value)}
                   </div>
                   <div
-                    class="font-black font-mono uppercase"
+                    class="font-black font-mono uppercase sm:text-3xl"
                     style="
                       font-size: 20px;
                       color: var(--color-text, #faf9f6);
                       letter-spacing: 0.08em;
                       text-shadow: var(--shadow-glow, none);
                     "
-                    class="sm:text-3xl"
                   >
                     {selectedSign.value}
                   </div>
