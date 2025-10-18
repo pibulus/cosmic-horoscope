@@ -103,9 +103,9 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
       {/* Helper text */}
       <div
         class="text-center mt-6 font-mono"
-        style="color: var(--color-text, #faf9f6); opacity: 0.5;"
+        style="color: var(--color-text, #faf9f6); opacity: 0.6;"
       >
-        <p class="text-xs md:text-sm">We'll remember your sign ✨</p>
+        <p class="text-sm md:text-base">✨ Choose wisely, the cosmos is watching ✨</p>
       </div>
     </div>
   );

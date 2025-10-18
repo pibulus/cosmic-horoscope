@@ -134,7 +134,8 @@ export default function HoroscopeDisplay(
     isBootingUp.value = true;
     bootComplete.value = false;
     errorMessage.value = null;
-    bootMessages.value = [];
+    // Start with an initial boot message so there's always content to show
+    bootMessages.value = ["> Initializing..."];
 
     // Array of different boot sequences for variety
     const bootSequences = [
@@ -281,98 +282,9 @@ export default function HoroscopeDisplay(
   const emoji = getZodiacEmoji(sign);
 
   return (
-    <div class="w-full relative flex flex-col items-center">
-      {/* Main content container - max-width 1200px, centered */}
-      <div
-        class="w-full max-w-[1200px] mx-auto px-2 sm:px-4"
-        style="padding-bottom: 60px;"
-      >
-        <style>
-          {`
-            @media (min-width: 640px) {
-              .w-full.max-w-\\[1200px\\] {
-                padding-bottom: 120px !important;
-              }
-            }
-          `}
-        </style>
-        {/* Period selector + Color control - Compact horizontal row */}
-        <div class="flex flex-wrap items-center justify-center gap-1 sm:gap-3 mb-3 sm:mb-8">
-          {/* Period buttons - Compact on mobile */}
-          {[
-            { period: "daily", emoji: "📅" },
-            { period: "weekly", emoji: "🗓️" },
-            { period: "monthly", emoji: "📆" },
-          ].map(({ period, emoji }) => {
-            const isActive = currentPeriod.value === period;
-            return (
-              <button
-                key={period}
-                onClick={() => handlePeriodChange(period)}
-                class="relative flex-shrink-0 px-3 sm:px-8 py-2 sm:py-3 font-black font-mono text-[10px] sm:text-sm uppercase tracking-wide sm:tracking-wider transition-all duration-150 border-3 sm:border-4 rounded-lg hover:scale-105 active:scale-95"
-                style={`
-                  background-color: ${
-                  isActive
-                    ? "var(--color-accent, #a855f7)"
-                    : "var(--color-secondary, #1a1a1a)"
-                };
-                  border-color: ${
-                  isActive
-                    ? "var(--color-text, #faf9f6)"
-                    : "var(--color-border, #a855f7)"
-                };
-                  color: var(--color-text, #faf9f6);
-                  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.8);
-                `}
-                aria-label={`View ${period} horoscope`}
-                aria-pressed={isActive}
-              >
-                <span class="mr-1">{emoji}</span>
-                {period}
-              </button>
-            );
-          })}
-
-          {/* Color control - Now fits in same row on mobile */}
-          <MagicDropdown
-            label="Color"
-            options={COLOR_EFFECTS}
-            value={colorEffect.value}
-            onChange={(val) => {
-              colorEffect.value = val;
-              sounds.success();
-            }}
-            changed={colorEffect.value !== "sunrise"}
-          />
-        </div>
-
-        {/* Horoscope content */}
-        {(isLoading.value || isBootingUp.value)
-          ? (
-            <div class="text-center" style="padding: 64px 0;">
-              <div
-                class="text-6xl mb-6 animate-pulse"
-                style="animation: glow-pulse 2s ease-in-out infinite;"
-              >
-                ✨
-              </div>
-              {isBootingUp.value
-                ? (
-                  <div
-                    class="font-mono text-left inline-block"
-                    style="color: #00FF41; font-size: 16px; line-height: 1.8;"
-                  >
-                    {bootMessages.value.map((msg) => <p key={msg}>{msg}</p>)}
-                  </div>
-                )
-                : (
-                  <p style="color: rgba(255, 255, 255, 0.6); font-size: 18px;">
-                    Receiving transmission...
-                  </p>
-                )}
-            </div>
-          )
-          : errorMessage.value
+    <div class="w-full h-screen flex items-center justify-center p-8 md:p-12">
+      {/* Always show terminal */}
+      {errorMessage.value
           ? (
             <div class="w-full flex justify-center" style="padding: 64px 0;">
               <div
@@ -395,56 +307,39 @@ export default function HoroscopeDisplay(
               </div>
             </div>
           )
-          : horoscopeData.value
-          ? (
-            <div>
-              {/* Terminal Display - Responsive width with breathing room */}
-              <div class="mx-auto terminal-container">
-                <style>
-                  {`
-                    .terminal-container {
-                      width: 95%;
-                      max-width: 1100px;
-                    }
-                    @media (min-width: 640px) {
-                      .terminal-container {
-                        width: 92%;
-                      }
-                    }
-                    @media (min-width: 1024px) {
-                      .terminal-container {
-                        width: 90%;
-                      }
-                    }
-                  `}
-                </style>
-                <TerminalDisplay
-                  content={asciiOutput.value}
-                  htmlContent={colorizedHtml.value}
-                  isLoading={isLoading.value}
-                  filename={`${sign}-${currentPeriod.value}-${
-                    horoscopeData.value.date
-                      ? horoscopeData.value.date.toLowerCase().replace(
-                        /[\s,]+/g,
-                        "-",
-                      )
-                      : "horoscope"
-                  }`}
-                  terminalPath={`~/cosmic/${sign}.txt`}
-                  visualEffect={visualEffect.value}
-                  hideExportButtons={false}
-                  enableTypewriter={bootComplete.value}
-                  typewriterSpeed={60}
-                />
-              </div>
-            </div>
-          )
           : (
-            <div class="text-center py-32 text-purple-400">
-              <p class="text-xl">No horoscope data available</p>
-            </div>
+            <TerminalDisplay
+              content={(isLoading.value || isBootingUp.value)
+                ? bootMessages.value.join('\n')
+                : (horoscopeData.value ? asciiOutput.value : 'No horoscope data available')
+              }
+              htmlContent={(isLoading.value || isBootingUp.value)
+                ? bootMessages.value.map(msg => `<span style="color: #00FF41;">${msg}</span>`).join('\n')
+                : (horoscopeData.value ? colorizedHtml.value : '')
+              }
+              isLoading={isLoading.value || isBootingUp.value}
+              filename={horoscopeData.value ? `${sign}-${currentPeriod.value}-${
+                horoscopeData.value.date
+                  ? horoscopeData.value.date.toLowerCase().replace(
+                    /[\s,]+/g,
+                    "-",
+                  )
+                  : "horoscope"
+              }` : `${sign}-horoscope`}
+              terminalPath={`~/cosmic/${sign}.txt`}
+              visualEffect={visualEffect.value}
+              hideExportButtons={!horoscopeData.value}
+              enableTypewriter={bootComplete.value && horoscopeData.value}
+              typewriterSpeed={60}
+              currentPeriod={currentPeriod.value}
+              onPeriodChange={handlePeriodChange}
+              colorEffect={colorEffect.value}
+              onColorChange={(val) => {
+                colorEffect.value = val;
+                sounds.success();
+              }}
+            />
           )}
-      </div>
     </div>
   );
 }

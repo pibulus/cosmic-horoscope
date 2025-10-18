@@ -13,15 +13,15 @@ import { getSavedZodiacSign, getZodiacEmoji } from "../utils/zodiac.ts";
 export default function HomeIsland() {
   const selectedSign = useSignal<string | null>(null);
 
-  // Load saved sign on mount
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = getSavedZodiacSign();
-      if (saved) {
-        selectedSign.value = saved;
-      }
-    }
-  }, []);
+  // Disabled: Load saved sign on mount - we want users to choose their sign each time
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const saved = getSavedZodiacSign();
+  //     if (saved) {
+  //       selectedSign.value = saved;
+  //     }
+  //   }
+  // }, []);
 
   const handleSignSelected = (sign: string) => {
     selectedSign.value = sign;
@@ -34,7 +34,7 @@ export default function HomeIsland() {
   return (
     <>
       {/* Header - Solid dark background */}
-      <header
+      {/* <header
         class="border-b-4 relative flex-shrink-0"
         style="border-color: var(--color-border, #a855f7); background-color: #0a0a0a;"
       >
@@ -81,14 +81,14 @@ export default function HomeIsland() {
             </div>
           </div>
         </div>
-      </header>
+      </header> */}
 
-      {/* Main Content */}
+      {/* Main Content - Centered both vertically and horizontally */}
       <main
         id="main-content"
-        class="flex-1 w-full px-2 sm:px-4 py-2 sm:py-6 md:py-8 flex items-center justify-center overflow-auto"
+        class="w-full h-screen flex items-center justify-center overflow-hidden"
       >
-        <div class="max-w-5xl w-full">
+        <div class="w-full h-full flex items-center justify-center">
           {selectedSign.value
             ? (
               <HoroscopeDisplay
@@ -101,7 +101,7 @@ export default function HomeIsland() {
       </main>
 
       {/* Footer - Floating at bottom */}
-      <footer
+      {/* <footer
         class="fixed bottom-0 left-0 right-0 py-2 sm:py-3 z-40 border-t-4"
         style="
           background-color: #0a0a0a;
@@ -114,7 +114,7 @@ export default function HomeIsland() {
             <KofiButton size="sm" label="☕ Support" />
           </div>
         </div>
-      </footer>
+      </footer> */}
     </>
   );
 }

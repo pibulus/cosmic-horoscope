@@ -35,7 +35,8 @@
     "tailwindcss": "npm:tailwindcss@^3.4.0",
     "html-to-image": "npm:html-to-image@^1.11.11",
     "posthog-js": "npm:posthog-js@^1.246.0",
-    "typed.js": "npm:typed.js@^2.1.0"
+    "typed.js": "npm:typed.js@^2.1.0",
+    "simplex-noise": "npm:simplex-noise@^4.0.1"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

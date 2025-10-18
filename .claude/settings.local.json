@@ -20,7 +20,8 @@
       "Bash(~/.claude/local/node_modules/.bin/claude-code:*)",
       "Bash(~/.claude/local/node_modules/@anthropic-ai/claude-code/cli.js --version)",
       "Bash(brew list:*)",
-      "Read(//opt/homebrew/Cellar/node/24.6.0/bin/**)"
+      "Read(//opt/homebrew/Cellar/node/24.6.0/bin/**)",
+      "WebFetch(domain:unpkg.com)"
     ],
     "deny": [],
     "ask": []

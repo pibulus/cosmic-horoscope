@@ -1,6 +1,7 @@
 import HomeIsland from "../islands/HomeIsland.tsx";
 import ThemeIsland from "../islands/ThemeIsland.tsx";
 import BackgroundEffects from "../islands/BackgroundEffects.tsx";
+import BackgroundCanvas from "../islands/BackgroundCanvas.tsx";
 import { AboutModal } from "../islands/AboutModal.tsx";
 import { WelcomeModal } from "../islands/WelcomeModal.tsx";
 import WelcomeChecker from "../islands/WelcomeChecker.tsx";
@@ -9,11 +10,16 @@ export default function Home() {
   return (
     <div
       id="main-content"
-      class="min-h-[100dvh] flex flex-col relative"
-      style="background: var(--color-base, #0a0a0a)"
+      class="min-h-[100dvh] flex flex-col relative overflow-hidden"
+      style="background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f20 100%)"
     >
-      {/* Animated Background Effects - Mesh gradients, particles, cursor glow */}
-      <BackgroundEffects />
+      {/* Animated canvas background */}
+      <BackgroundCanvas />
+
+      {/* Atmospheric overlays from deadzone */}
+      <div class="film-grain"></div>
+      <div class="spooky-vignette"></div>
+      <div class="chromatic-aberration"></div>
 
       {/* Check if first visit and show welcome */}
       <WelcomeChecker />
@@ -25,9 +31,9 @@ export default function Home() {
       <AboutModal />
 
       {/* Floating Theme Button */}
-      <div class="fixed top-4 right-4 z-50">
+      {/* <div class="fixed top-4 right-4 z-50">
         <ThemeIsland />
-      </div>
+      </div> */}
 
       {/* Main interactive content */}
       <HomeIsland />
