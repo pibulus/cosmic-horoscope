@@ -10,16 +10,15 @@ export default function Home() {
   return (
     <div
       id="main-content"
-      class="min-h-[100dvh] flex flex-col relative overflow-hidden"
-      style="background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f20 100%)"
+      class="min-h-[100dvh] w-full flex flex-col relative overflow-hidden global-flicker"
+      style="background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f20 100%); position: fixed; top: 0; left: 0; right: 0; bottom: 0;"
     >
       {/* Animated canvas background */}
       <BackgroundCanvas />
 
-      {/* Atmospheric overlays from deadzone */}
-      <div class="film-grain"></div>
-      <div class="spooky-vignette"></div>
-      <div class="chromatic-aberration"></div>
+      {/* Global atmospheric effects - META LAYERING */}
+      <div class="global-film-grain"></div>
+      <div class="global-vignette"></div>
 
       {/* Check if first visit and show welcome */}
       <WelcomeChecker />

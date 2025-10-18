@@ -142,6 +142,16 @@ export function TypedWriter({
       },
       onComplete: () => {
         observer.disconnect();
+
+        // Add persistent blinking cursor after typing completes
+        if (elementRef.current) {
+          const cursor = document.createElement('span');
+          cursor.className = 'blinking-cursor';
+          cursor.textContent = '█';
+          cursor.style.cssText = 'color: #00FF41; font-size: inherit; font-weight: 900; margin-left: 0;';
+          elementRef.current.appendChild(cursor);
+        }
+
         if (onComplete) onComplete();
       },
     });
