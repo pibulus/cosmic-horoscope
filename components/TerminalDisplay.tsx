@@ -146,7 +146,7 @@ export function TerminalDisplay({
   const hasContent = Boolean(content);
   const baseTextStyle = [
     "color: #1cff6b",
-    "font-size: clamp(14px, 2.75vw, 24px)",
+    "font-size: clamp(16px, 4vw, 26px)",
     "line-height: 1.55",
     "white-space: pre-wrap",
     "word-break: break-word",
@@ -366,41 +366,51 @@ export function TerminalDisplay({
         </div>
       </div>
 
-      {/* Atmospheric effects - INSIDE terminal */}
-      <div class="terminal-film-grain"></div>
-
-      {/* Scanlines overlay - 80s retro feel (covers entire terminal including header) */}
-      <div class="scanlines"></div>
-
-      {/* Noise overlay */}
-      <div class="noise"></div>
-
       {/* Terminal Content Area - Fills remaining space */}
       <div
         class="flex-1 overflow-auto custom-scrollbar transition-all duration-700 terminal-content relative z-10"
-        style="padding: 18px; background-color: rgba(0, 0, 0, 0.82) !important; background: rgba(0, 0, 0, 0.82) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden;"
+        style="padding: 20px; background: rgba(10, 10, 14, 0.9) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 1px solid rgba(255, 255, 255, 0.04); box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.45);"
       >
         <style>
           {`
             .terminal-content {
-              background-color: rgba(0, 0, 0, 0.82) !important;
-              background: rgba(0, 0, 0, 0.82) !important;
+              background: rgba(10, 10, 14, 0.9) !important;
               overflow-x: hidden;
-              padding: 18px !important;
+              padding: 20px !important;
+              backdrop-filter: blur(18px) saturate(140%);
+              -webkit-backdrop-filter: blur(18px) saturate(140%);
+              border: 1px solid rgba(255, 255, 255, 0.04);
+              box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.45);
+            }
+            .terminal-overlays {
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              z-index: 25;
+            }
+            .terminal-text {
+              position: relative;
+              z-index: 20;
             }
             @media (min-width: 640px) {
               .terminal-content {
-                padding: 30px !important;
+                padding: 32px !important;
               }
             }
             @media (min-width: 1024px) {
               .terminal-content {
-                padding: 42px !important;
+                padding: 44px !important;
               }
             }
           `}
         </style>
-        {isLoading && !content
+        <div class="terminal-overlays">
+          <div class="scanlines"></div>
+          <div class="noise"></div>
+          <div class="terminal-film-grain"></div>
+        </div>
+        <div class="terminal-text relative z-20">
+          {isLoading && !content
           ? (
             <div class="flex items-start justify-start w-full pt-2 pl-2">
               <pre
@@ -433,7 +443,7 @@ export function TerminalDisplay({
                 style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
-              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(14px, 2.75vw, 24px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
+              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
             </div>
 
           )
@@ -447,10 +457,11 @@ export function TerminalDisplay({
               >
                 {content}
               </pre>
-              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(14px, 2.75vw, 24px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
+              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
             </div>
           )
           : null}
+        </div>
       </div>
 
       {/* Share Button - Commented out for now

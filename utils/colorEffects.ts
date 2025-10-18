@@ -132,8 +132,8 @@ export function applyColorToArt(art: string, effect: string): string {
       headerLineIndex++;
       const isTitleLine = headerLineIndex === 1;
       const fontSize = isTitleLine
-        ? "clamp(18px, 3vw, 32px)"
-        : "clamp(14px, 2.4vw, 22px)";
+        ? "clamp(20px, 5vw, 34px)"
+        : "clamp(16px, 4vw, 26px)";
       const letterSpacing = isTitleLine ? "0.18em" : "0.12em";
       // Header gets special bright color
       colorizedLines.push(
