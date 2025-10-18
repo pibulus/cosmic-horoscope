@@ -4,128 +4,224 @@
 // Based on ambient webpage backgrounds by Jack Rugile
 
 import { useEffect, useRef } from "preact/hooks";
-import { createNoise2D } from "simplex-noise";
+import { createNoise3D } from "simplex-noise";
+
+const TAU = Math.PI * 2;
+const rand = (n: number) => Math.random() * n;
+const randRange = (n: number) => n - rand(2 * n);
+const fadeInOut = (t: number, m: number) => {
+  const hm = 0.5 * m;
+  return Math.abs((t + hm) % m - hm) / hm;
+};
+const lerp = (n1: number, n2: number, speed: number) =>
+  (1 - speed) * n1 + speed * n2;
 
 export default function BackgroundCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    const ctx = canvas.getContext("2d", { alpha: false });
-    if (!ctx) return;
+    // Configuration
+    const particleCount = 700;
+    const particlePropCount = 9;
+    const particlePropsLength = particleCount * particlePropCount;
+    let rangeY = 400; // Updated dynamically on resize for broader spread
+    const baseTTL = 50;
+    const rangeTTL = 150;
+    const baseSpeed = 0.1;
+    const rangeSpeed = 2;
+    const baseRadius = 1;
+    const rangeRadius = 4;
+    const baseHue = 220;
+    const rangeHue = 100;
+    const noiseSteps = 8;
+    const xOff = 0.00125;
+    const yOff = 0.00125;
+    const zOff = 0.0005;
+    const backgroundColor = "rgba(6, 6, 8, 1)"; // Deep dark off black
 
-    // Create simplex noise generator
-    const simplex = createNoise2D();
+    // Create canvases
+    const canvasA = document.createElement("canvas");
+    const canvasB = document.createElement("canvas");
+    canvasB.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    `;
+    container.appendChild(canvasB);
 
+    const ctxA = canvasA.getContext("2d");
+    const ctxB = canvasB.getContext("2d");
+    if (!ctxA || !ctxB) return;
+
+    // Initialize
+    const particleProps = new Float32Array(particlePropsLength);
+    const simplex = createNoise3D();
+    let tick = 0;
     let animationId: number;
-    let time = 0;
-
-    // Offscreen canvas for blur effect
-    const offscreenCanvas = document.createElement("canvas");
-    const offscreenCtx = offscreenCanvas.getContext("2d");
-    if (!offscreenCtx) return;
+    let center: number[] = [];
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      offscreenCanvas.width = canvas.width;
-      offscreenCanvas.height = canvas.height;
+      const { innerWidth, innerHeight } = window;
+
+      canvasA.width = innerWidth;
+      canvasA.height = innerHeight;
+      ctxA.drawImage(canvasB, 0, 0);
+
+      canvasB.width = innerWidth;
+      canvasB.height = innerHeight;
+      ctxB.drawImage(canvasA, 0, 0);
+
+      center[0] = 0.5 * canvasA.width;
+      center[1] = 0.5 * canvasA.height;
+
+      rangeY = Math.max(canvasA.height * 0.6, 420);
     };
+
+    const initParticle = (i: number) => {
+      const x = rand(canvasA.width);
+      const y = center[1] + randRange(rangeY);
+      const vx = 0;
+      const vy = 0;
+      const life = 0;
+      const ttl = baseTTL + rand(rangeTTL);
+      const speed = baseSpeed + rand(rangeSpeed);
+      const radius = baseRadius + rand(rangeRadius);
+      const hue = baseHue + rand(rangeHue);
+
+      particleProps.set([x, y, vx, vy, life, ttl, speed, radius, hue], i);
+    };
+
+    const drawParticle = (
+      x: number,
+      y: number,
+      x2: number,
+      y2: number,
+      life: number,
+      ttl: number,
+      radius: number,
+      hue: number,
+    ) => {
+      ctxA.save();
+      ctxA.lineCap = "round";
+      ctxA.lineWidth = radius;
+      ctxA.strokeStyle = `hsla(${hue},100%,60%,${fadeInOut(life, ttl)})`;
+      ctxA.beginPath();
+      ctxA.moveTo(x, y);
+      ctxA.lineTo(x2, y2);
+      ctxA.stroke();
+      ctxA.closePath();
+      ctxA.restore();
+    };
+
+    const checkBounds = (x: number, y: number) => {
+      return (
+        x > canvasA.width ||
+        x < 0 ||
+        y > canvasA.height ||
+        y < 0
+      );
+    };
+
+    const updateParticle = (i: number) => {
+      const i2 = 1 + i, i3 = 2 + i, i4 = 3 + i, i5 = 4 + i;
+      const i6 = 5 + i, i7 = 6 + i, i8 = 7 + i, i9 = 8 + i;
+
+      const x = particleProps[i];
+      const y = particleProps[i2];
+      const n = simplex(x * xOff, y * yOff, tick * zOff) * noiseSteps * TAU;
+      const vx = lerp(particleProps[i3], Math.cos(n), 0.5);
+      const vy = lerp(particleProps[i4], Math.sin(n), 0.5);
+      let life = particleProps[i5];
+      const ttl = particleProps[i6];
+      const speed = particleProps[i7];
+      const x2 = x + vx * speed;
+      const y2 = y + vy * speed;
+      const radius = particleProps[i8];
+      const hue = particleProps[i9];
+
+      drawParticle(x, y, x2, y2, life, ttl, radius, hue);
+
+      life++;
+
+      particleProps[i] = x2;
+      particleProps[i2] = y2;
+      particleProps[i3] = vx;
+      particleProps[i4] = vy;
+      particleProps[i5] = life;
+
+      if (checkBounds(x, y) || life > ttl) {
+        initParticle(i);
+      }
+    };
+
+    const drawParticles = () => {
+      for (let i = 0; i < particlePropsLength; i += particlePropCount) {
+        updateParticle(i);
+      }
+    };
+
+    const renderGlow = () => {
+      ctxB.save();
+      ctxB.filter = "blur(8px) brightness(200%)";
+      ctxB.globalCompositeOperation = "lighter";
+      ctxB.drawImage(canvasA, 0, 0);
+      ctxB.restore();
+
+      ctxB.save();
+      ctxB.filter = "blur(4px) brightness(200%)";
+      ctxB.globalCompositeOperation = "lighter";
+      ctxB.drawImage(canvasA, 0, 0);
+      ctxB.restore();
+    };
+
+    const renderToScreen = () => {
+      ctxB.save();
+      ctxB.globalCompositeOperation = "lighter";
+      ctxB.drawImage(canvasA, 0, 0);
+      ctxB.restore();
+    };
+
+    const draw = () => {
+      tick++;
+
+      ctxA.clearRect(0, 0, canvasA.width, canvasA.height);
+
+      ctxB.fillStyle = backgroundColor;
+      ctxB.fillRect(0, 0, canvasA.width, canvasA.height);
+
+      drawParticles();
+      renderGlow();
+      renderToScreen();
+
+      animationId = requestAnimationFrame(draw);
+    };
+
+    // Initialize particles
+    for (let i = 0; i < particlePropsLength; i += particlePropCount) {
+      initParticle(i);
+    }
 
     resize();
     window.addEventListener("resize", resize);
-
-    // Swirl particles configuration
-    const particleCount = 300;
-    const tau = Math.PI * 2;
-    const noiseSteps = 8; // Creates the "banding" effect
-
-    const particles: Array<{
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      hue: number;
-    }> = [];
-
-    // Create particles
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: 0,
-        vy: 0,
-        size: 1 + Math.random() * 2,
-        hue: 200 + Math.random() * 60, // Cyan to blue range
-      });
-    }
-
-    const animate = () => {
-      time += 0.005;
-
-      // Clear offscreen canvas
-      offscreenCtx.fillStyle = "rgb(10, 10, 26)";
-      offscreenCtx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-
-      // Update and draw particles
-      particles.forEach((p) => {
-        // Get noise value at particle position
-        const noiseValue = simplex(p.x * 0.003, p.y * 0.003 + time);
-
-        // Convert noise to angle with stepped banding
-        const angle = noiseValue * tau * noiseSteps;
-
-        // Apply angle to velocity
-        const speed = 1.5;
-        p.vx = Math.cos(angle) * speed;
-        p.vy = Math.sin(angle) * speed;
-
-        // Update position
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Wrap around screen
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        // Draw particle
-        offscreenCtx.fillStyle = `hsla(${p.hue}, 70%, 60%, 0.8)`;
-        offscreenCtx.beginPath();
-        offscreenCtx.arc(p.x, p.y, p.size, 0, tau);
-        offscreenCtx.fill();
-      });
-
-      // Apply blur for glow effect
-      ctx.filter = "blur(12px)";
-      ctx.drawImage(offscreenCanvas, 0, 0);
-
-      // Draw again without blur and composite
-      ctx.filter = "none";
-      ctx.globalCompositeOperation = "lighter";
-      ctx.drawImage(offscreenCanvas, 0, 0);
-      ctx.globalCompositeOperation = "source-over";
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
+    draw();
 
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
+      container.removeChild(canvasB);
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
+      ref={containerRef}
       class="fixed inset-0 pointer-events-none"
-      style="z-index: 1; opacity: 0.4;"
+      style="z-index: 1; opacity: 0.3;"
     />
   );
 }

@@ -147,6 +147,24 @@ export function TerminalDisplay({
   };
 
   const hasContent = Boolean(content);
+  const baseTextStyle = [
+    "color: #1cff6b",
+    "font-size: clamp(14px, 2.75vw, 24px)",
+    "line-height: 1.55",
+    "white-space: pre-wrap",
+    "word-break: break-word",
+    "overflow-wrap: anywhere",
+    "margin: 0",
+    "padding: 0",
+    "display: block",
+    "max-width: 100%",
+    "box-sizing: border-box",
+    "text-align: left",
+    "text-indent: 0",
+    "font-weight: 900",
+    "filter: saturate(1.65) brightness(1.08)",
+    "text-shadow: 0 0 2px rgba(28, 255, 107, 0.7), 0 0 10px rgba(28, 255, 107, 0.28)",
+  ].join("; ");
 
   return (
     <div
@@ -155,38 +173,121 @@ export function TerminalDisplay({
         background-color: #000000 !important;
         background: #000000 !important;
         border: 6px solid var(--color-border, #a855f7);
-        box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.5);
-        max-width: 95vw;
-        max-height: 90vh;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 3 / 2;
+        box-shadow:
+          0 30px 60px rgba(0, 0, 0, 0.8),
+          0 15px 30px rgba(0, 0, 0, 0.6),
+          20px 20px 0 rgba(0, 0, 0, 0.5);
         opacity: 1 !important;
+        animation: float-breathe 6s ease-in-out infinite;
       "
     >
       <style>
         {`
           .terminal-window {
             opacity: 1 !important;
+            width: 76vw !important;
+            max-width: 76vw !important;
+            height: 60vh !important;
+            min-height: 60vh !important;
+            max-height: 60vh !important;
+            margin: 0 auto !important;
           }
+
+          .terminal-header {
+            position: relative;
+            overflow: hidden;
+            border-bottom-width: 6px !important;
+          }
+
+          .terminal-header::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+              0deg,
+              rgba(255, 255, 255, 0.08),
+              rgba(255, 255, 255, 0.08) 1px,
+              transparent 1px,
+              transparent 3px
+            );
+            opacity: 0.35;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: 1;
+          }
+
+          .terminal-header > * {
+            position: relative;
+            z-index: 2;
+          }
+
+          /* Mobile: Portrait, fixed dimensions */
+          @media (max-width: 639px) {
+            .terminal-window {
+              width: 92vw !important;
+              max-width: 92vw !important;
+              height: 75vh !important;
+              min-height: 75vh !important;
+              max-height: 75vh !important;
+              margin: 0 auto !important;
+            }
+          }
+
+          /* Tablet: Fixed aspect ratio */
           @media (min-width: 640px) {
             .terminal-window {
               border-width: 12px !important;
-              box-shadow: 16px 16px 0 rgba(0, 0, 0, 0.6) !important;
+              box-shadow:
+                0 40px 80px rgba(0, 0, 0, 0.9),
+                0 20px 40px rgba(0, 0, 0, 0.7),
+                24px 24px 0 rgba(0, 0, 0, 0.6) !important;
+              width: 85vw !important;
+              max-width: 85vw !important;
+              height: 65vh !important;
+              min-height: 65vh !important;
+              max-height: 65vh !important;
+              margin: 0 auto !important;
+            }
+            .terminal-header {
+              border-bottom-width: 12px !important;
             }
           }
+
+          /* Desktop: Fixed aspect ratio */
           @media (min-width: 1024px) {
             .terminal-window {
               border-width: 16px !important;
-              box-shadow: 20px 20px 0 rgba(0, 0, 0, 0.7) !important;
+              box-shadow:
+                0 50px 100px rgba(0, 0, 0, 1),
+                0 25px 50px rgba(0, 0, 0, 0.8),
+                28px 28px 0 rgba(0, 0, 0, 0.7) !important;
+              width: 76vw !important;
+              max-width: 76vw !important;
+              height: 60vh !important;
+              min-height: 60vh !important;
+              max-height: 60vh !important;
+              margin: 0 auto !important;
+            }
+            .terminal-header {
+              border-bottom-width: 16px !important;
+            }
+          }
+
+          /* Floating breathe animation */
+          @keyframes float-breathe {
+            0%, 100% {
+              transform: translateY(0) scale(1);
+            }
+            50% {
+              transform: translateY(-8px) scale(1.005);
             }
           }
         `}
       </style>
-      {/* Terminal Menu Bar */}
+      {/* Terminal Menu Bar - Semi-opaque to show scanlines */}
       <div
-        class="px-3 sm:px-4 py-2 sm:py-3 border-b-3 sm:border-b-4 flex items-center justify-between"
-        style="background-color: #1a1a1a; border-color: var(--color-border, #0A0A0A)"
+        class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
+        style="background-color: rgba(0, 0, 0, 0.85); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20; backdrop-filter: blur(6px);"
       >
         <div class="flex space-x-1.5 sm:space-x-2">
           <div
@@ -209,7 +310,7 @@ export function TerminalDisplay({
           {/* Only show terminal path when NOT in horoscope mode */}
           {!onPeriodChange && (
             <span
-              class="text-[10px] sm:text-xs font-mono opacity-60 hidden sm:inline"
+              class="text-xs sm:text-sm font-mono opacity-70 hidden sm:inline tracking-[0.2em]"
               style="color: #00FF41"
             >
               {terminalPath}
@@ -224,12 +325,12 @@ export function TerminalDisplay({
                 sounds.click();
                 onPeriodChange((e.target as HTMLSelectElement).value);
               }}
-              class="px-2 py-1 text-[10px] sm:text-xs font-mono font-bold border-2 rounded transition-all hover:scale-105 cursor-pointer"
-              style="background-color: rgba(0,0,0,0.8); color: #00FF41; border-color: #00FF41;"
+              class="px-3 py-2 text-xs sm:text-sm font-mono font-black border-2 rounded transition-all hover:scale-105 cursor-pointer tracking-[0.15em]"
+              style="background-color: rgba(0,255,65,0.18); color: #00FF41; border-color: #00FF41; font-weight: 900; box-shadow: 0 0 12px rgba(0,255,65,0.28);"
             >
-              <option style="background-color: #000; color: #00FF41;" value="daily">Daily</option>
-              <option style="background-color: #000; color: #00FF41;" value="weekly">Weekly</option>
-              <option style="background-color: #000; color: #00FF41;" value="monthly">Monthly</option>
+              <option style="background-color: #000; color: #00FF41; font-weight: 900;" value="daily">Daily</option>
+              <option style="background-color: #000; color: #00FF41; font-weight: 900;" value="weekly">Weekly</option>
+              <option style="background-color: #000; color: #00FF41; font-weight: 900;" value="monthly">Monthly</option>
             </select>
           )}
 
@@ -241,11 +342,11 @@ export function TerminalDisplay({
                 sounds.click();
                 onColorChange((e.target as HTMLSelectElement).value);
               }}
-              class="px-2 py-1 text-[10px] sm:text-xs font-mono font-bold border-2 rounded transition-all hover:scale-105 cursor-pointer"
-              style="background-color: rgba(0,0,0,0.8); color: #00FF41; border-color: #00FF41;"
+              class="px-3 py-2 text-xs sm:text-sm font-mono font-black border-2 rounded transition-all hover:scale-105 cursor-pointer tracking-[0.15em]"
+              style="background-color: rgba(0,255,65,0.18); color: #00FF41; border-color: #00FF41; font-weight: 900; box-shadow: 0 0 12px rgba(0,255,65,0.28);"
             >
               {COLOR_EFFECTS.map(effect => (
-                <option key={effect.value} value={effect.value} style="background-color: #000; color: #00FF41;">
+                <option key={effect.value} value={effect.value} style="background-color: #000; color: #00FF41; font-weight: 900;">
                   {effect.name}
                 </option>
               ))}
@@ -256,7 +357,7 @@ export function TerminalDisplay({
           {showShuffleButton && onShuffle && hasContent && (
             <button
               onClick={onShuffle}
-              class="px-2 py-1 text-xs font-mono font-bold transition-all hover:scale-110 active:scale-95 opacity-70 hover:opacity-100"
+              class="px-3 py-2 text-sm font-mono font-bold transition-all hover:scale-110 active:scale-95 opacity-80 hover:opacity-100 tracking-[0.1em]"
               style="color: #00FF41"
               title="Get a random ASCII art"
             >
@@ -266,7 +367,10 @@ export function TerminalDisplay({
         </div>
       </div>
 
-      {/* Scanlines overlay - 80s retro feel */}
+      {/* Atmospheric effects - INSIDE terminal */}
+      <div class="terminal-film-grain"></div>
+
+      {/* Scanlines overlay - 80s retro feel (covers entire terminal including header) */}
       <div class="scanlines"></div>
 
       {/* Noise overlay */}
@@ -275,22 +379,24 @@ export function TerminalDisplay({
       {/* Terminal Content Area - Fills remaining space */}
       <div
         class="flex-1 overflow-auto custom-scrollbar transition-all duration-700 terminal-content relative z-10"
-        style="padding: 12px; background-color: #000000 !important; background: #000000 !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        style="padding: 18px; background-color: rgba(0, 0, 0, 0.82) !important; background: rgba(0, 0, 0, 0.82) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden;"
       >
         <style>
           {`
             .terminal-content {
-              background-color: #000000 !important;
-              background: #000000 !important;
+              background-color: rgba(0, 0, 0, 0.82) !important;
+              background: rgba(0, 0, 0, 0.82) !important;
+              overflow-x: hidden;
+              padding: 18px !important;
             }
             @media (min-width: 640px) {
               .terminal-content {
-                padding: 24px !important;
+                padding: 30px !important;
               }
             }
             @media (min-width: 1024px) {
               .terminal-content {
-                padding: 36px !important;
+                padding: 42px !important;
               }
             }
           `}
@@ -315,130 +421,74 @@ export function TerminalDisplay({
               speed={typewriterSpeed}
               enabled={true}
               onComplete={() => setTypingComplete(true)}
-              className="ascii-display font-mono opacity-95"
-              style={`color: #00FF41; font-size: clamp(14px, 3.5vw, 32px); line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; word-break: break-word; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.02em; font-weight: 600; font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', monospace; ${
-                getVisualEffectStyle(visualEffect)
-              }`}
+              className="ascii-display font-mono opacity-90"
+              style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
             />
           )
           : htmlContent
           ? (
             // Static HTML mode
-            <pre
-              class="ascii-display font-mono opacity-95"
-              style={`color: #00FF41; font-size: clamp(14px, 3.5vw, 32px); line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; word-break: break-word; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.02em; font-weight: 600; font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', monospace; ${
-                getVisualEffectStyle(visualEffect)
-              }`}
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
+            <div class="relative">
+              <pre
+                class="ascii-display font-mono opacity-90"
+                style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
+              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(14px, 2.75vw, 24px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
+            </div>
 
           )
           : content
           ? (
             // Static text mode
-            <pre
-              class="ascii-display font-mono opacity-95"
-              style={`color: #00FF41; font-size: clamp(14px, 3.5vw, 32px); line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: anywhere; word-break: break-word; margin: 0; padding: 0; display: block; text-align: left; text-indent: 0; letter-spacing: 0.02em; font-weight: 600; font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', 'Monaco', monospace; ${
-                getVisualEffectStyle(visualEffect)
-              }`}
-            >
-              {content}
-            </pre>
+            <div class="relative">
+              <pre
+                class="ascii-display font-mono opacity-90"
+                style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+              >
+                {content}
+              </pre>
+              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(14px, 2.75vw, 24px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
+            </div>
           )
           : null}
       </div>
 
-      {/* Export Buttons - Show when content is ready (unless hidden) */}
+      {/* Share Button - Commented out for now
       {!hideExportButtons && hasContent && (
-        <>
-          {/* Mobile: Single Export Dropdown */}
-          <div class="sm:hidden absolute bottom-4 right-4 z-10 animate-pop-in">
-            <div class="relative">
-              <button
-                onClick={() => {
-                  sounds.click();
-                  setMobileExportOpen(!mobileExportOpen);
-                }}
-                class="px-4 py-3 border-3 rounded-xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl active:scale-95"
-                style="background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
-              >
-                📤 Export
-              </button>
-              {mobileExportOpen && (
-                <div
-                  class="absolute bottom-full right-0 mb-2 border-3 rounded-xl overflow-hidden shadow-brutal-lg animate-dropdown-open"
-                  style="background-color: var(--color-base, #FAF9F6); border-color: var(--color-border, #0A0A0A);"
-                >
-                  <button
-                    onClick={() => {
-                      handleDownloadPNG();
-                      setMobileExportOpen(false);
-                    }}
-                    class="w-full px-4 py-3 font-mono font-bold text-left hover:bg-opacity-80 transition-colors"
-                    style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6);"
-                  >
-                    🖼️ PNG
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleDownloadText();
-                      setMobileExportOpen(false);
-                    }}
-                    class="w-full px-4 py-3 font-mono font-bold text-left hover:bg-opacity-80 transition-colors border-t-2"
-                    style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
-                  >
-                    💾 TXT
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleCopy();
-                      setMobileExportOpen(false);
-                    }}
-                    class="w-full px-4 py-3 font-mono font-bold text-left hover:bg-opacity-80 transition-colors border-t-2"
-                    style={copiedToClipboard
-                      ? "background-color: #4ADE80; color: #0a0a0a; border-color: var(--color-border, #a855f7);"
-                      : "background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"}
-                  >
-                    {copiedToClipboard ? "✅ COPIED!" : "📋 COPY"}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Desktop: Three Button Layout */}
-          <div class="hidden sm:flex absolute bottom-6 right-6 z-10 gap-3 animate-pop-in">
-            <button
-              onClick={handleDownloadPNG}
-              class="px-5 py-3 border-4 rounded-2xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl hover:-translate-y-1 active:translate-y-0"
-              style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
-              title="Download as PNG image"
-            >
-              🖼️ PNG
-            </button>
-            <button
-              onClick={handleDownloadText}
-              class="px-5 py-3 border-4 rounded-2xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl hover:-translate-y-1 active:translate-y-0"
-              style="background-color: var(--color-secondary, #1a1a1a); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
-              title="Download as text file"
-            >
-              💾 TXT
-            </button>
-            <button
-              onClick={handleCopy}
-              class={`px-6 py-3 border-4 rounded-2xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl hover:-translate-y-1 active:translate-y-0 ${
-                copiedToClipboard ? "animate-bounce-once" : ""
-              }`}
-              style={copiedToClipboard
-                ? "background-color: #4ADE80; color: #0a0a0a; border-color: var(--color-border, #a855f7);"
-                : "background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"}
-              title="Copy to clipboard"
-            >
-              {copiedToClipboard ? "✅ COPIED!" : "📋 COPY"}
-            </button>
-          </div>
-        </>
+        <div class="absolute bottom-6 right-6 z-10 animate-pop-in">
+          <button
+            onClick={async () => {
+              sounds.click();
+              // Use Web Share API if available
+              if (navigator.share) {
+                try {
+                  await navigator.share({
+                    title: 'Cosmic Horoscope',
+                    text: content,
+                  });
+                } catch (err) {
+                  // User cancelled or error - fall back to copy
+                  handleCopy();
+                }
+              } else {
+                // Desktop - just copy
+                handleCopy();
+              }
+            }}
+            class={`px-6 py-3 border-4 rounded-2xl font-mono font-black shadow-brutal-lg transition-all hover:shadow-brutal-xl hover:-translate-y-1 active:translate-y-0 ${
+              copiedToClipboard ? "animate-bounce-once" : ""
+            }`}
+            style={copiedToClipboard
+              ? "background-color: #4ADE80; color: #0a0a0a; border-color: #4ADE80;"
+              : "background-color: #1a1a1a; color: #00FF41; border-color: #00FF41; box-shadow: 0 0 12px rgba(0,255,65,0.4);"}
+            title={navigator.share ? "Share horoscope" : "Copy to clipboard"}
+          >
+            {copiedToClipboard ? "✅ COPIED!" : "🔗 SHARE"}
+          </button>
+        </div>
       )}
+      */}
 
       <style>
         {`
@@ -570,7 +620,7 @@ export function TerminalDisplay({
             transparent 3px
           );
           pointer-events: none;
-          z-index: 5;
+          z-index: 15;
         }
 
         /* CRT Noise Effect */
@@ -582,7 +632,7 @@ export function TerminalDisplay({
           bottom: 0;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
           pointer-events: none;
-          z-index: 5;
+          z-index: 15;
           animation: noise-anim 0.2s steps(10) infinite;
         }
 
@@ -597,6 +647,59 @@ export function TerminalDisplay({
           70% { transform: translate(0, -1%); }
           80% { transform: translate(0, 1%); }
           90% { transform: translate(-1%, -1%); }
+        }
+
+        /* Film grain overlay - INSIDE terminal */
+        .terminal-film-grain {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+          opacity: 0.18;
+          pointer-events: none;
+          z-index: 100;
+          mix-blend-mode: overlay;
+          animation: grain-flow 8s steps(10) infinite;
+        }
+
+        @keyframes grain-flow {
+          0%, 100% { transform: translate(0, 0); }
+          10% { transform: translate(-5%, -10%); }
+          20% { transform: translate(-15%, 5%); }
+          30% { transform: translate(7%, -25%); }
+          40% { transform: translate(-5%, 25%); }
+          50% { transform: translate(15%, 5%); }
+          60% { transform: translate(5%, 15%); }
+          70% { transform: translate(-10%, -15%); }
+          80% { transform: translate(20%, 0%); }
+          90% { transform: translate(-20%, 10%); }
+        }
+
+        /* Responsive letter-spacing for ASCII display - matches asciifier-web */
+        .ascii-display {
+          letter-spacing: 0.2px;
+          white-space: pre-wrap;
+          word-break: break-word;
+          overflow-wrap: anywhere;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        @media (min-width: 640px) {
+          .ascii-display {
+            letter-spacing: 0.4px;
+          }
+        }
+        @media (min-width: 768px) {
+          .ascii-display {
+            letter-spacing: 0.6px;
+          }
+        }
+        @media (min-width: 1024px) {
+          .ascii-display {
+            letter-spacing: 0.8px;
+          }
         }
       `}
       </style>
