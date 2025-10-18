@@ -196,28 +196,12 @@ export function TerminalDisplay({
             position: relative;
             overflow: hidden;
             border-bottom-width: 6px !important;
-          }
-
-          .terminal-header::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-              0deg,
-              rgba(255, 255, 255, 0.08),
-              rgba(255, 255, 255, 0.08) 1px,
-              transparent 1px,
-              transparent 3px
-            );
-            opacity: 0.35;
-            mix-blend-mode: screen;
-            pointer-events: none;
-            z-index: 1;
-          }
-
-          .terminal-header > * {
-            position: relative;
-            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.92) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow:
+              inset 0 -2px 12px rgba(0, 0, 0, 0.35),
+              0 6px 18px rgba(12, 12, 12, 0.45);
           }
 
           /* Mobile: Portrait, fixed dimensions */
@@ -369,7 +353,7 @@ export function TerminalDisplay({
       {/* Terminal Content Area - Fills remaining space */}
       <div
         class="flex-1 overflow-auto custom-scrollbar transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background: rgba(10, 10, 14, 0.9) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 1px solid rgba(255, 255, 255, 0.04); box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.45);"
+        style="padding: 20px; background: rgba(12, 14, 24, 0.86) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable both-edges; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(16, 214, 96, 0.08);"
       >
         <style>
           {`
@@ -377,6 +361,8 @@ export function TerminalDisplay({
               position: relative;
               background: rgba(12, 14, 24, 0.86) !important;
               overflow-x: hidden;
+              overflow-y: auto;
+              scrollbar-gutter: stable both-edges;
               padding: 20px !important;
               backdrop-filter: blur(20px) saturate(150%);
               -webkit-backdrop-filter: blur(20px) saturate(150%);
