@@ -16,9 +16,7 @@ export default function Home() {
       {/* Animated canvas background */}
       <BackgroundCanvas />
 
-      {/* Global atmospheric effects - META LAYERING */}
-      <div class="global-film-grain"></div>
-      <div class="global-vignette"></div>
+      {/* Global atmospheric effects removed for crisper terminal */}
 
       {/* Check if first visit and show welcome */}
       <WelcomeChecker />

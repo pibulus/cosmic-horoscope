@@ -146,8 +146,8 @@ export function TerminalDisplay({
   const hasContent = Boolean(content);
   const baseTextStyle = [
     "color: #1cff6b",
-    "font-size: clamp(16px, 4vw, 26px)",
-    "line-height: 1.55",
+    "font-size: clamp(16px, 4.5vw, 26px)",
+    "line-height: 1.6",
     "white-space: pre-wrap",
     "word-break: break-word",
     "overflow-wrap: anywhere",
@@ -160,24 +160,24 @@ export function TerminalDisplay({
     "text-indent: 0",
     "font-weight: 900",
     "filter: saturate(1.65) brightness(1.08)",
-    "text-shadow: 0 0 2px rgba(28, 255, 107, 0.7), 0 0 10px rgba(28, 255, 107, 0.28)",
+    "text-shadow: 0 0 3px rgba(28, 255, 107, 0.55), 0 0 8px rgba(28, 255, 107, 0.18)",
   ].join("; ");
 
   return (
     <div
       class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
       style="
-        background-color: #000000 !important;
-        background: #000000 !important;
-        border: 6px solid var(--color-border, #a855f7);
+        background-color: #050509 !important;
+        background: #050509 !important;
+        border: 4px solid var(--color-border, #a855f7);
         box-shadow:
-          0 30px 60px rgba(0, 0, 0, 0.8),
-          0 15px 30px rgba(0, 0, 0, 0.6),
-          20px 20px 0 rgba(0, 0, 0, 0.5),
-          inset 0 0 40px rgba(168, 85, 247, 0.3),
-          inset 0 0 18px rgba(28, 255, 107, 0.22);
+          0 30px 50px rgba(0, 0, 0, 0.75),
+          0 12px 24px rgba(0, 0, 0, 0.55),
+          14px 14px 0 rgba(0, 0, 0, 0.45);
         opacity: 1 !important;
-        animation: float-breathe 6s ease-in-out infinite;
+        transform-origin: center;
+        transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease;
+        animation: float-breathe 7s ease-in-out infinite;
       "
     >
       <style>
@@ -186,83 +186,76 @@ export function TerminalDisplay({
             opacity: 1 !important;
             width: 76vw !important;
             max-width: 76vw !important;
-            height: 60vh !important;
             min-height: 60vh !important;
-            max-height: 60vh !important;
             margin: 0 auto !important;
+          }
+
+          .terminal-window:hover {
+            transform: translateY(-4px) scale(1.002);
+            box-shadow:
+              0 38px 65px rgba(0, 0, 0, 0.78),
+              0 18px 28px rgba(0, 0, 0, 0.6),
+              18px 18px 0 rgba(0, 0, 0, 0.4);
+            border-color: rgba(199, 120, 255, 0.95);
           }
 
           .terminal-header {
             position: relative;
-            overflow: hidden;
-            border-bottom-width: 6px !important;
+            overflow: visible;
+            border-bottom-width: 4px !important;
+            border-color: var(--color-border, #a855f7) !important;
             background-color: rgba(0, 0, 0, 0.92) !important;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow:
-              inset 0 -2px 12px rgba(0, 0, 0, 0.35),
-              0 6px 18px rgba(12, 12, 12, 0.45);
           }
 
-          /* Mobile: Portrait, fixed dimensions */
           @media (max-width: 639px) {
             .terminal-window {
               width: 92vw !important;
               max-width: 92vw !important;
-              height: 75vh !important;
-              min-height: 75vh !important;
-              max-height: 75vh !important;
-              margin: 0 auto !important;
+              min-height: 70vh !important;
+            }
+            .terminal-header {
+              border-bottom-width: 4px !important;
             }
           }
 
-          /* Tablet: Fixed aspect ratio */
           @media (min-width: 640px) {
             .terminal-window {
-              border-width: 12px !important;
-              box-shadow:
-                0 40px 80px rgba(0, 0, 0, 0.9),
-                0 20px 40px rgba(0, 0, 0, 0.7),
-                24px 24px 0 rgba(0, 0, 0, 0.6) !important;
+              border-width: 8px !important;
               width: 85vw !important;
               max-width: 85vw !important;
-              height: 65vh !important;
               min-height: 65vh !important;
-              max-height: 65vh !important;
-              margin: 0 auto !important;
             }
             .terminal-header {
-              border-bottom-width: 12px !important;
+              border-bottom-width: 6px !important;
             }
           }
 
-          /* Desktop: Fixed aspect ratio */
           @media (min-width: 1024px) {
             .terminal-window {
-              border-width: 16px !important;
-              box-shadow:
-                0 50px 100px rgba(0, 0, 0, 1),
-                0 25px 50px rgba(0, 0, 0, 0.8),
-                28px 28px 0 rgba(0, 0, 0, 0.7) !important;
+              border-width: 12px !important;
               width: 76vw !important;
               max-width: 76vw !important;
-              height: 60vh !important;
               min-height: 60vh !important;
-              max-height: 60vh !important;
-              margin: 0 auto !important;
             }
             .terminal-header {
-              border-bottom-width: 16px !important;
+              border-bottom-width: 8px !important;
             }
           }
 
-          /* Floating breathe animation */
           @keyframes float-breathe {
             0%, 100% {
               transform: translateY(0) scale(1);
+              box-shadow:
+                0 30px 50px rgba(0, 0, 0, 0.75),
+                0 12px 24px rgba(0, 0, 0, 0.55),
+                14px 14px 0 rgba(0, 0, 0, 0.45);
             }
             50% {
-              transform: translateY(-8px) scale(1.005);
+              transform: translateY(-6px) scale(1.004);
+              box-shadow:
+                0 40px 80px rgba(0, 0, 0, 0.88),
+                0 18px 32px rgba(0, 0, 0, 0.64),
+                18px 18px 0 rgba(0, 0, 0, 0.5);
             }
           }
         `}
@@ -313,7 +306,7 @@ export function TerminalDisplay({
                     class="hover:opacity-100 transition-all focus:outline-none active:scale-95"
                     style={`background: transparent; border: none; padding: 0; margin: 0; color: ${
                       value === currentPeriod ? "#1cff6b" : "rgba(0, 255, 65, 0.55)"
-                    }; font-weight: 900; letter-spacing: 0.3em; cursor: pointer;`}
+                    }; font-weight: 900; letter-spacing: 0.3em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35em;`}
                     onClick={() => {
                       if (value !== currentPeriod) {
                         sounds.click();
@@ -321,7 +314,12 @@ export function TerminalDisplay({
                       }
                     }}
                   >
-                    {label.toUpperCase()}
+                    {value === currentPeriod && (
+                      <span aria-hidden="true" style="letter-spacing: 0;">█</span>
+                    )}
+                    <span style="letter-spacing: inherit;">
+                      {label.toUpperCase()}
+                    </span>
                   </button>
                   {index < periodOptions.length - 1 && (
                     <span
@@ -350,57 +348,21 @@ export function TerminalDisplay({
         </div>
       </div>
 
-      {/* Terminal Content Area - Fills remaining space */}
+      {/* Terminal Content Area */}
       <div
-        class="flex-1 overflow-auto custom-scrollbar transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background: rgba(12, 14, 24, 0.86) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable both-edges; backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(16, 214, 96, 0.08);"
+        class="transition-all duration-700 terminal-content relative z-10"
+        style="padding: 20px; background: rgba(8, 12, 20, 0.78) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);"
       >
         <style>
           {`
             .terminal-content {
-              position: relative;
-              background: rgba(12, 14, 24, 0.86) !important;
+              background: rgba(8, 12, 20, 0.78) !important;
               overflow-x: hidden;
-              overflow-y: auto;
-              scrollbar-gutter: stable both-edges;
               padding: 20px !important;
-              backdrop-filter: blur(20px) saturate(150%);
-              -webkit-backdrop-filter: blur(20px) saturate(150%);
-              border: 1px solid rgba(255, 255, 255, 0.05);
-              box-shadow:
-                inset 0 0 40px rgba(0, 0, 0, 0.55),
-                0 0 30px rgba(16, 214, 96, 0.08);
-            }
-            .terminal-content::before {
-              content: "";
-              position: absolute;
-              inset: 0;
-              pointer-events: none;
-              background: repeating-linear-gradient(
-                0deg,
-                rgba(255, 255, 255, 0.12),
-                rgba(255, 255, 255, 0.12) 1px,
-                transparent 1px,
-                transparent 3px
-              );
-              opacity: 0.22;
-              mix-blend-mode: screen;
-              z-index: 5;
-            }
-            .terminal-content::after {
-              content: "";
-              position: absolute;
-              inset: 0;
-              pointer-events: none;
-              background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
-              mix-blend-mode: overlay;
-              opacity: 0.16;
-              animation: grain-flow 8s steps(10) infinite;
-              z-index: 6;
-            }
-            .terminal-text {
-              position: relative;
-              z-index: 10;
+              border: 1px solid rgba(255, 255, 255, 0.08);
+              box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55);
+              backdrop-filter: blur(18px) saturate(140%);
+              -webkit-backdrop-filter: blur(18px) saturate(140%);
             }
             @media (min-width: 640px) {
               .terminal-content {
@@ -448,7 +410,7 @@ export function TerminalDisplay({
                 style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
-              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
+              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4.5vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
             </div>
 
           )
@@ -462,7 +424,7 @@ export function TerminalDisplay({
               >
                 {content}
               </pre>
-              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
+              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4.5vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
             </div>
           )
           : null}
@@ -603,34 +565,6 @@ export function TerminalDisplay({
 
         .active\\:translate-y-0:active {
           transform: translateY(0);
-        }
-
-        /* Custom Scrollbar for output terminal */
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 12px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #1a1a1a;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #00FF41;
-          border-radius: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #00CC33;
-        }
-
-        @keyframes grain-flow {
-          0%, 100% { transform: translate(0, 0); }
-          10% { transform: translate(-5%, -10%); }
-          20% { transform: translate(-15%, 5%); }
-          30% { transform: translate(7%, -25%); }
-          40% { transform: translate(-5%, 25%); }
-          50% { transform: translate(15%, 5%); }
-          60% { transform: translate(5%, 15%); }
-          70% { transform: translate(-10%, -15%); }
-          80% { transform: translate(20%, 0%); }
-          90% { transform: translate(-20%, 10%); }
         }
 
         /* Responsive letter-spacing for ASCII display - matches asciifier-web */

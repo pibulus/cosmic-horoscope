@@ -27,6 +27,17 @@ interface HoroscopeDisplayProps {
 
 type Period = "daily" | "weekly" | "monthly";
 
+function getDisplayMeta(data: any, period: Period): string {
+  if (!data) return "";
+  if (period === "weekly") {
+    return data.week || data.date || "";
+  }
+  if (period === "monthly") {
+    return data.month || data.date || "";
+  }
+  return data.date || "";
+}
+
 export default function HoroscopeDisplay(
   { sign, onChangeSign }: HoroscopeDisplayProps,
 ) {
@@ -60,14 +71,14 @@ export default function HoroscopeDisplay(
   useEffect(() => {
     if (horoscopeData.value?.horoscope_data) {
       const text = horoscopeData.value.horoscope_data;
-      const date = horoscopeData.value.date || "";
+      const metaLabel = getDisplayMeta(horoscopeData.value, currentPeriod.value);
       // Generate ASCII art with sign name, period, and date
       const emoji = getZodiacEmoji(sign);
       const ascii = generateHoroscopeAscii(
         sign,
         text,
         currentPeriod.value,
-        date,
+        metaLabel,
         emoji,
       );
       asciiOutput.value = ascii;
