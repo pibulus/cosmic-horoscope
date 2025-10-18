@@ -14,14 +14,17 @@ export function generateHoroscopeAscii(
   horoscopeText: string,
   period: string = "daily",
   date: string = "",
+  emoji?: string,
 ): string {
   const signUpper = signName.toUpperCase();
   const periodUpper = period.toUpperCase();
+  const titleLine = emoji ? `${emoji}  ${signUpper}` : signUpper;
+  const metaLine = date ? `${periodUpper} • ${date}` : periodUpper;
 
   // Wrap header in special markers for colorization
   const header = `[HEADER_START]
-${signUpper} • ${periodUpper}
-${date}
+${titleLine}
+${metaLine}
 [HEADER_END]`;
 
   // Format horoscope text with nice line breaks (max 68 chars per line for better fit)

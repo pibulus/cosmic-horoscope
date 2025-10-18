@@ -95,6 +95,7 @@ export function applyColorToArt(art: string, effect: string): string {
   const lines = art.split("\n");
   const colorizedLines: string[] = [];
   let inHeader = false;
+  let headerLineIndex = 0;
 
   // Define header colors for each effect (brighter than body)
   const headerColors: Record<string, string> = {
@@ -117,18 +118,26 @@ export function applyColorToArt(art: string, effect: string): string {
     // Check for header markers
     if (line.includes("[HEADER_START]")) {
       inHeader = true;
+      headerLineIndex = 0;
       continue; // Skip the marker line
     }
     if (line.includes("[HEADER_END]")) {
       inHeader = false;
+      headerLineIndex = 0;
       continue; // Skip the marker line
     }
 
     // Apply header color or gradient color
     if (inHeader) {
+      headerLineIndex++;
+      const isTitleLine = headerLineIndex === 1;
+      const fontSize = isTitleLine
+        ? "clamp(18px, 3vw, 32px)"
+        : "clamp(14px, 2.4vw, 22px)";
+      const letterSpacing = isTitleLine ? "0.18em" : "0.12em";
       // Header gets special bright color
       colorizedLines.push(
-        `<span style="color: ${headerColor}; font-weight: 900; letter-spacing: 0.1em;">${
+        `<span style="color: ${headerColor}; font-weight: 900; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; text-transform: uppercase;">${
           escapeHtml(line)
         }</span>`,
       );

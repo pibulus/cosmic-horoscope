@@ -6,11 +6,9 @@ import { useSignal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 import { analytics } from "../utils/analytics.ts";
-import { getZodiacEmoji, getZodiacSign } from "../utils/zodiac.ts";
+import { getZodiacEmoji } from "../utils/zodiac.ts";
 import { COLOR_EFFECTS } from "../utils/constants.ts";
-import { MagicDropdown } from "../components/MagicDropdown.tsx";
 import { TerminalDisplay } from "../components/TerminalDisplay.tsx";
-import { CosmicHeader } from "../components/CosmicHeader.tsx";
 import { applyColorToArt } from "../utils/colorEffects.ts";
 import { generateHoroscopeAscii } from "../utils/asciiArtGenerator.ts";
 
@@ -56,11 +54,13 @@ export default function HoroscopeDisplay(
       const text = horoscopeData.value.horoscope_data;
       const date = horoscopeData.value.date || "";
       // Generate ASCII art with sign name, period, and date
+      const emoji = getZodiacEmoji(sign);
       const ascii = generateHoroscopeAscii(
         sign,
         text,
         currentPeriod.value,
         date,
+        emoji,
       );
       asciiOutput.value = ascii;
 
@@ -90,21 +90,30 @@ export default function HoroscopeDisplay(
     const lines = art.split("\n");
     const colorizedLines: string[] = [];
     let inHeader = false;
+    let headerLineIndex = 0;
 
     for (const line of lines) {
       if (line.includes("[HEADER_START]")) {
         inHeader = true;
+        headerLineIndex = 0;
         continue;
       }
       if (line.includes("[HEADER_END]")) {
         inHeader = false;
+        headerLineIndex = 0;
         continue;
       }
 
       if (inHeader) {
+        headerLineIndex++;
+        const isTitleLine = headerLineIndex === 1;
+        const fontSize = isTitleLine
+          ? "clamp(18px, 3vw, 32px)"
+          : "clamp(14px, 2.4vw, 22px)";
+        const letterSpacing = isTitleLine ? "0.18em" : "0.12em";
         // Header in gold/yellow
         colorizedLines.push(
-          `<span style="color: #FFD700; font-weight: 900; letter-spacing: 0.1em;">${
+          `<span style="color: #FFD700; font-weight: 900; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; text-transform: uppercase;">${
             escapeHtml(line)
           }</span>`,
         );
@@ -278,8 +287,6 @@ export default function HoroscopeDisplay(
     fetchHoroscope(sign, currentPeriod.value);
   };
 
-  const zodiacInfo = getZodiacSign(sign);
-  const emoji = getZodiacEmoji(sign);
 
   return (
     <div class="w-full h-screen flex items-center justify-center p-8 md:p-12">

@@ -176,7 +176,9 @@ export function TerminalDisplay({
         box-shadow:
           0 30px 60px rgba(0, 0, 0, 0.8),
           0 15px 30px rgba(0, 0, 0, 0.6),
-          20px 20px 0 rgba(0, 0, 0, 0.5);
+          20px 20px 0 rgba(0, 0, 0, 0.5),
+          inset 0 0 40px rgba(168, 85, 247, 0.3),
+          inset 0 0 18px rgba(28, 255, 107, 0.22);
         opacity: 1 !important;
         animation: float-breathe 6s ease-in-out infinite;
       "
