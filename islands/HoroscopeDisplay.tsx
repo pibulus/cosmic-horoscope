@@ -12,6 +12,14 @@ import { TerminalDisplay } from "../components/TerminalDisplay.tsx";
 import { applyColorToArt } from "../utils/colorEffects.ts";
 import { generateHoroscopeAscii } from "../utils/asciiArtGenerator.ts";
 
+const RANDOM_COLOR_EFFECTS = COLOR_EFFECTS.filter(effect => effect.value !== "none");
+
+function pickRandomColorEffect(): string {
+  if (!RANDOM_COLOR_EFFECTS.length) return "sunrise";
+  const randomIndex = Math.floor(Math.random() * RANDOM_COLOR_EFFECTS.length);
+  return RANDOM_COLOR_EFFECTS[randomIndex].value;
+}
+
 interface HoroscopeDisplayProps {
   sign: string;
   onChangeSign?: () => void;
@@ -28,7 +36,7 @@ export default function HoroscopeDisplay(
   const isBootingUp = useSignal(false);
   const bootComplete = useSignal(false);
   const bootMessages = useSignal<string[]>([]);
-  const colorEffect = useSignal("sunrise");
+  const colorEffect = useSignal(pickRandomColorEffect());
   const visualEffect = useSignal("neon"); // Hard-coded to neon
   const asciiOutput = useSignal("");
   const colorizedHtml = useSignal("");
@@ -232,6 +240,7 @@ export default function HoroscopeDisplay(
       }
 
       if (data.success) {
+        colorEffect.value = pickRandomColorEffect();
         horoscopeData.value = data.data;
         analytics.trackHoroscopeViewed(zodiacSign, period, colorEffect.value);
         sounds.success();
@@ -340,11 +349,6 @@ export default function HoroscopeDisplay(
               typewriterSpeed={60}
               currentPeriod={currentPeriod.value}
               onPeriodChange={handlePeriodChange}
-              colorEffect={colorEffect.value}
-              onColorChange={(val) => {
-                colorEffect.value = val;
-                sounds.success();
-              }}
             />
           )}
     </div>

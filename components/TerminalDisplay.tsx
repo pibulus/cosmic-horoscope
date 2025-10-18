@@ -11,7 +11,6 @@ import {
   downloadText,
 } from "../utils/exportUtils.ts";
 import { TypedWriter } from "./TypedWriter.tsx";
-import { COLOR_EFFECTS } from "../utils/constants.ts";
 
 /**
  * Get CSS filter string for visual effects
@@ -81,10 +80,6 @@ interface TerminalDisplayProps {
   currentPeriod?: string;
   /** Period change handler (for horoscope mode) */
   onPeriodChange?: (period: string) => void;
-  /** Current color effect (for horoscope mode) */
-  colorEffect?: string;
-  /** Color change handler (for horoscope mode) */
-  onColorChange?: (color: string) => void;
 }
 
 export function TerminalDisplay({
@@ -101,13 +96,15 @@ export function TerminalDisplay({
   typewriterSpeed = 60,
   currentPeriod,
   onPeriodChange,
-  colorEffect,
-  onColorChange,
 }: TerminalDisplayProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
-  const [mobileExportOpen, setMobileExportOpen] = useState(false);
   const [typingComplete, setTypingComplete] = useState(false);
   const copyTimeoutRef = useRef<number | null>(null);
+  const periodOptions = [
+    { value: "daily", label: "Daily" },
+    { value: "weekly", label: "Weekly" },
+    { value: "monthly", label: "Monthly" },
+  ];
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -319,40 +316,40 @@ export function TerminalDisplay({
             </span>
           )}
 
-          {/* Period dropdown (horoscope mode) */}
+          {/* Period toggle (horoscope mode) */}
           {onPeriodChange && currentPeriod && (
-            <select
-              value={currentPeriod}
-              onChange={(e) => {
-                sounds.click();
-                onPeriodChange((e.target as HTMLSelectElement).value);
-              }}
-              class="px-3 py-2 text-xs sm:text-sm font-mono font-black border-2 rounded transition-all hover:scale-105 cursor-pointer tracking-[0.15em]"
-              style="background-color: rgba(0,255,65,0.18); color: #00FF41; border-color: #00FF41; font-weight: 900; box-shadow: 0 0 12px rgba(0,255,65,0.28);"
+            <div
+              class="flex items-center gap-2 sm:gap-3 font-mono text-[11px] sm:text-sm uppercase tracking-[0.28em]"
+              style="color: rgba(0, 255, 65, 0.7); font-weight: 800;"
             >
-              <option style="background-color: #000; color: #00FF41; font-weight: 900;" value="daily">Daily</option>
-              <option style="background-color: #000; color: #00FF41; font-weight: 900;" value="weekly">Weekly</option>
-              <option style="background-color: #000; color: #00FF41; font-weight: 900;" value="monthly">Monthly</option>
-            </select>
-          )}
-
-          {/* Color dropdown (horoscope mode) */}
-          {onColorChange && colorEffect && (
-            <select
-              value={colorEffect}
-              onChange={(e) => {
-                sounds.click();
-                onColorChange((e.target as HTMLSelectElement).value);
-              }}
-              class="px-3 py-2 text-xs sm:text-sm font-mono font-black border-2 rounded transition-all hover:scale-105 cursor-pointer tracking-[0.15em]"
-              style="background-color: rgba(0,255,65,0.18); color: #00FF41; border-color: #00FF41; font-weight: 900; box-shadow: 0 0 12px rgba(0,255,65,0.28);"
-            >
-              {COLOR_EFFECTS.map(effect => (
-                <option key={effect.value} value={effect.value} style="background-color: #000; color: #00FF41; font-weight: 900;">
-                  {effect.name}
-                </option>
+              {periodOptions.map(({ value, label }, index) => (
+                <span class="flex items-center gap-2" key={value}>
+                  <button
+                    type="button"
+                    class="hover:opacity-100 transition-all focus:outline-none active:scale-95"
+                    style={`background: transparent; border: none; padding: 0; margin: 0; color: ${
+                      value === currentPeriod ? "#1cff6b" : "rgba(0, 255, 65, 0.55)"
+                    }; font-weight: 900; letter-spacing: 0.3em; cursor: pointer;`}
+                    onClick={() => {
+                      if (value !== currentPeriod) {
+                        sounds.click();
+                        onPeriodChange(value);
+                      }
+                    }}
+                  >
+                    {label.toUpperCase()}
+                  </button>
+                  {index < periodOptions.length - 1 && (
+                    <span
+                      class="opacity-40 text-[10px] sm:text-xs"
+                      style="color: rgba(0,255,65,0.4); letter-spacing: 0;"
+                    >
+                      •
+                    </span>
+                  )}
+                </span>
               ))}
-            </select>
+            </div>
           )}
 
           {/* Shuffle button in menu bar (gallery mode) */}
