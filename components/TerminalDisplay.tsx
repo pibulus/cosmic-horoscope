@@ -374,23 +374,47 @@ export function TerminalDisplay({
         <style>
           {`
             .terminal-content {
-              background: rgba(10, 10, 14, 0.9) !important;
+              position: relative;
+              background: rgba(12, 14, 24, 0.86) !important;
               overflow-x: hidden;
               padding: 20px !important;
-              backdrop-filter: blur(18px) saturate(140%);
-              -webkit-backdrop-filter: blur(18px) saturate(140%);
-              border: 1px solid rgba(255, 255, 255, 0.04);
-              box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.45);
+              backdrop-filter: blur(20px) saturate(150%);
+              -webkit-backdrop-filter: blur(20px) saturate(150%);
+              border: 1px solid rgba(255, 255, 255, 0.05);
+              box-shadow:
+                inset 0 0 40px rgba(0, 0, 0, 0.55),
+                0 0 30px rgba(16, 214, 96, 0.08);
             }
-            .terminal-overlays {
+            .terminal-content::before {
+              content: "";
               position: absolute;
               inset: 0;
               pointer-events: none;
-              z-index: 25;
+              background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.12),
+                rgba(255, 255, 255, 0.12) 1px,
+                transparent 1px,
+                transparent 3px
+              );
+              opacity: 0.22;
+              mix-blend-mode: screen;
+              z-index: 5;
+            }
+            .terminal-content::after {
+              content: "";
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+              mix-blend-mode: overlay;
+              opacity: 0.16;
+              animation: grain-flow 8s steps(10) infinite;
+              z-index: 6;
             }
             .terminal-text {
               position: relative;
-              z-index: 20;
+              z-index: 10;
             }
             @media (min-width: 640px) {
               .terminal-content {
@@ -404,11 +428,6 @@ export function TerminalDisplay({
             }
           `}
         </style>
-        <div class="terminal-overlays">
-          <div class="scanlines"></div>
-          <div class="noise"></div>
-          <div class="terminal-film-grain"></div>
-        </div>
         <div class="terminal-text relative z-20">
           {isLoading && !content
           ? (
@@ -613,65 +632,6 @@ export function TerminalDisplay({
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: #00CC33;
-        }
-
-        /* 80s Retro Scanlines Effect */
-        .scanlines {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: repeating-linear-gradient(
-            0deg,
-            rgba(255, 255, 255, 0.08),
-            rgba(255, 255, 255, 0.08) 1px,
-            transparent 1px,
-            transparent 3px
-          );
-          pointer-events: none;
-          z-index: 15;
-        }
-
-        /* CRT Noise Effect */
-        .noise {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-          pointer-events: none;
-          z-index: 15;
-          animation: noise-anim 0.2s steps(10) infinite;
-        }
-
-        @keyframes noise-anim {
-          0%, 100% { transform: translate(0, 0); }
-          10% { transform: translate(-1%, -1%); }
-          20% { transform: translate(1%, 1%); }
-          30% { transform: translate(-1%, 1%); }
-          40% { transform: translate(1%, -1%); }
-          50% { transform: translate(-1%, 0); }
-          60% { transform: translate(1%, 0); }
-          70% { transform: translate(0, -1%); }
-          80% { transform: translate(0, 1%); }
-          90% { transform: translate(-1%, -1%); }
-        }
-
-        /* Film grain overlay - INSIDE terminal */
-        .terminal-film-grain {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
-          opacity: 0.18;
-          pointer-events: none;
-          z-index: 100;
-          mix-blend-mode: overlay;
-          animation: grain-flow 8s steps(10) infinite;
         }
 
         @keyframes grain-flow {
