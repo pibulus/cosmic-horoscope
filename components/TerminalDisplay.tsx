@@ -421,7 +421,7 @@ export function TerminalDisplay({
             }
           `}
         </style>
-        <div class="terminal-text relative z-20">
+        <div class="terminal-text relative z-20" style="min-height: 100%;">
           {isLoading && !content
           ? (
             <div class="flex items-start justify-start w-full pt-2 pl-2">
