@@ -167,17 +167,18 @@ export function TerminalDisplay({
     <div
       class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
       style="
-        background-color: #050509 !important;
-        background: #050509 !important;
-        border: 4px solid var(--color-border, #a855f7);
+        background: radial-gradient(circle at 20% 15%, rgba(120, 74, 255, 0.14), transparent 45%), rgba(10, 12, 24, 0.58);
+        border: 3px solid var(--color-border, #a855f7);
         box-shadow:
-          0 30px 50px rgba(0, 0, 0, 0.75),
-          0 12px 24px rgba(0, 0, 0, 0.55),
-          14px 14px 0 rgba(0, 0, 0, 0.45);
+          0 26px 48px rgba(0, 0, 0, 0.7),
+          0 10px 22px rgba(0, 0, 0, 0.5),
+          12px 12px 0 rgba(0, 0, 0, 0.38);
+        backdrop-filter: blur(14px) saturate(120%);
+        -webkit-backdrop-filter: blur(14px) saturate(120%);
         opacity: 1 !important;
         transform-origin: center;
-        transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease;
-        animation: float-breathe 7s ease-in-out infinite;
+        transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
+        animation: float-breathe 8s ease-in-out infinite;
       "
     >
       <style>
@@ -190,55 +191,92 @@ export function TerminalDisplay({
             margin: 0 auto !important;
           }
 
+          .terminal-window::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            background:
+              radial-gradient(circle at 30% 20%, rgba(120, 74, 255, 0.25), transparent 55%),
+              radial-gradient(circle at 70% 80%, rgba(16, 214, 96, 0.18), transparent 60%);
+            opacity: 0.7;
+            mix-blend-mode: screen;
+            transition: opacity 0.45s ease;
+          }
+
+          .terminal-window::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            background:
+              repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.08),
+                rgba(255, 255, 255, 0.08) 1px,
+                transparent 1px,
+                transparent 3px
+              );
+            mix-blend-mode: screen;
+            opacity: 0.18;
+            animation: scanline-flicker 4s linear infinite;
+          }
+
           .terminal-window:hover {
-            transform: translateY(-4px) scale(1.002);
+            transform: translateY(-6px) scale(1.004);
             box-shadow:
-              0 38px 65px rgba(0, 0, 0, 0.78),
-              0 18px 28px rgba(0, 0, 0, 0.6),
+              0 42px 72px rgba(0, 0, 0, 0.8),
+              0 20px 32px rgba(0, 0, 0, 0.58),
               18px 18px 0 rgba(0, 0, 0, 0.4);
             border-color: rgba(199, 120, 255, 0.95);
+          }
+
+          .terminal-window:hover::before {
+            opacity: 0.85;
           }
 
           .terminal-header {
             position: relative;
             overflow: visible;
-            border-bottom-width: 4px !important;
+            border-bottom-width: 3px !important;
             border-color: var(--color-border, #a855f7) !important;
-            background-color: rgba(0, 0, 0, 0.92) !important;
+            background: rgba(0, 0, 0, 0.9) !important;
           }
 
           @media (max-width: 639px) {
             .terminal-window {
               width: 92vw !important;
               max-width: 92vw !important;
-              min-height: 70vh !important;
+              min-height: 72vh !important;
+            }
+            .terminal-header {
+              border-bottom-width: 3px !important;
+            }
+          }
+
+          @media (min-width: 640px) {
+            .terminal-window {
+              border-width: 6px !important;
+              width: 85vw !important;
+              max-width: 85vw !important;
+              min-height: 66vh !important;
             }
             .terminal-header {
               border-bottom-width: 4px !important;
             }
           }
 
-          @media (min-width: 640px) {
-            .terminal-window {
-              border-width: 8px !important;
-              width: 85vw !important;
-              max-width: 85vw !important;
-              min-height: 65vh !important;
-            }
-            .terminal-header {
-              border-bottom-width: 6px !important;
-            }
-          }
-
           @media (min-width: 1024px) {
             .terminal-window {
-              border-width: 12px !important;
+              border-width: 8px !important;
               width: 76vw !important;
               max-width: 76vw !important;
               min-height: 60vh !important;
             }
             .terminal-header {
-              border-bottom-width: 8px !important;
+              border-bottom-width: 5px !important;
             }
           }
 
@@ -246,17 +284,24 @@ export function TerminalDisplay({
             0%, 100% {
               transform: translateY(0) scale(1);
               box-shadow:
-                0 30px 50px rgba(0, 0, 0, 0.75),
-                0 12px 24px rgba(0, 0, 0, 0.55),
-                14px 14px 0 rgba(0, 0, 0, 0.45);
+                0 26px 48px rgba(0, 0, 0, 0.7),
+                0 10px 22px rgba(0, 0, 0, 0.5),
+                12px 12px 0 rgba(0, 0, 0, 0.38);
             }
             50% {
-              transform: translateY(-6px) scale(1.004);
+              transform: translateY(-5px) scale(1.003);
               box-shadow:
-                0 40px 80px rgba(0, 0, 0, 0.88),
-                0 18px 32px rgba(0, 0, 0, 0.64),
-                18px 18px 0 rgba(0, 0, 0, 0.5);
+                0 38px 68px rgba(0, 0, 0, 0.82),
+                0 18px 30px rgba(0, 0, 0, 0.6),
+                16px 16px 0 rgba(0, 0, 0, 0.45);
             }
+          }
+
+          @keyframes scanline-flicker {
+            0%, 100% { opacity: 0.18; }
+            40% { opacity: 0.22; }
+            50% { opacity: 0.28; }
+            60% { opacity: 0.18; }
           }
         `}
       </style>
