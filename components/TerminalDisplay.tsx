@@ -191,11 +191,7 @@ export function TerminalDisplay({
       ref={terminalRef}
       class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
       style="
-        background:
-          linear-gradient(135deg, rgba(197, 90, 17, 0.24) 0%, rgba(138, 43, 226, 0.22) 52%, rgba(30, 144, 255, 0.18) 100%),
-          radial-gradient(circle at 24% 20%, rgba(140, 82, 255, 0.12), transparent 55%),
-          radial-gradient(circle at 72% 82%, rgba(26, 214, 132, 0.08), transparent 70%),
-          rgba(1, 1, 6, 0.95);
+        background: rgba(3, 3, 10, 0.96);
         border: 3px solid var(--color-border, #a855f7);
         box-shadow:
           0 26px 48px rgba(0, 0, 0, 0.7),
@@ -225,7 +221,12 @@ export function TerminalDisplay({
           }
 
           .terminal-window.typing-pulse {
-            filter: saturate(1.12) brightness(1.05);
+            filter: saturate(1.28) brightness(1.08);
+            box-shadow:
+              0 38px 80px rgba(72, 25, 120, 0.75),
+              0 18px 42px rgba(187, 101, 255, 0.55),
+              18px 18px 0 rgba(18, 10, 32, 0.58);
+            border-color: rgba(229, 159, 255, 0.95);
           }
 
           .terminal-window:hover {
@@ -244,6 +245,7 @@ export function TerminalDisplay({
             inset: -20px;
             border-radius: inherit;
             background:
+              linear-gradient(135deg, rgba(197, 90, 17, 0.28) 0%, rgba(138, 43, 226, 0.24) 52%, rgba(30, 144, 255, 0.2) 100%),
               radial-gradient(120% 120% at 50% 18%, rgba(255, 120, 64, 0.2), transparent 62%),
               radial-gradient(110% 110% at 50% 82%, rgba(120, 74, 255, 0.24), transparent 64%);
             filter: blur(26px);
@@ -256,7 +258,8 @@ export function TerminalDisplay({
           }
 
           .terminal-window.typing-pulse::before {
-            opacity: 0.58;
+            opacity: 0.7;
+            transform: scale(1.03) translate3d(0, -3px, 0);
           }
 
           .terminal-window::after {
@@ -592,6 +595,45 @@ export function TerminalDisplay({
               opacity: 0.22;
               animation: scanline-flicker 4s linear infinite, chroma-shift 7.2s ease-in-out infinite;
               z-index: 10;
+            }
+
+            .terminal-text {
+              position: relative;
+              overflow: hidden;
+            }
+
+            .terminal-text::after {
+              content: "";
+              position: absolute;
+              left: -10%;
+              right: -10%;
+              bottom: 18%;
+              height: 42%;
+              pointer-events: none;
+              background: radial-gradient(80% 150% at 50% 100%, rgba(0, 255, 214, 0.32) 0%, rgba(255, 111, 64, 0.14) 52%, transparent 100%);
+              mix-blend-mode: screen;
+              opacity: 0;
+              transform: translateY(8px) scale(0.96);
+              transition: opacity 0.25s ease, transform 0.25s ease;
+              filter: blur(16px);
+              z-index: 5;
+            }
+
+            .terminal-window.typing-pulse .terminal-text::after {
+              opacity: 0.55;
+              transform: translateY(0) scale(1);
+            }
+
+            .ascii-display {
+              transition: text-shadow 0.25s ease, filter 0.25s ease;
+            }
+
+            .terminal-window.typing-pulse .ascii-display {
+              text-shadow:
+                0 0 6px rgba(0, 255, 214, 0.55),
+                0 0 16px rgba(255, 122, 47, 0.32),
+                0 0 24px rgba(120, 74, 255, 0.36);
+              filter: saturate(1.85) brightness(1.12);
             }
 
             .terminal-text .ascii-display.typing-trail {
