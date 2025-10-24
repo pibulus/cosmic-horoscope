@@ -173,7 +173,7 @@ export function TerminalDisplay({
       <div
         class="relative flex flex-col terminal-window"
         style="
-          background-color: rgba(10, 12, 20, 0.45);
+          background-color: rgba(10, 12, 20, 0.48);
           border: 3px solid var(--color-border, #a855f7);
           border-radius: 24px;
         "
@@ -188,32 +188,16 @@ export function TerminalDisplay({
           .terminal-wrapper::before {
             content: '';
             position: absolute;
-            inset: -24px;
-            padding: 24px;
-            box-sizing: border-box;
-            background: radial-gradient(
-              ellipse at center,
-              rgba(255, 120, 80, 0.4) 0%,
-              rgba(255, 80, 180, 0.32) 25%,
-              rgba(180, 70, 255, 0.28) 50%,
-              rgba(255, 150, 100, 0.18) 75%,
-              transparent 100%
-            );
-            border-radius: 48px;
-            filter: blur(32px);
-            z-index: 0;
-            opacity: 0.65;
+            inset: 0;
+            border-radius: 24px;
             pointer-events: none;
-            animation: aura-pulse 12s ease-in-out infinite, aura-drift 8s ease-in-out infinite;
-            mix-blend-mode: screen;
-            -webkit-mask:
-              linear-gradient(#000 0 0) content-box,
-              linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask:
-              linear-gradient(#000 0 0) content-box,
-              linear-gradient(#000 0 0);
-            mask-composite: exclude;
+            z-index: 0;
+            box-shadow:
+              0 0 40px 18px rgba(255, 120, 160, 0.28),
+              0 0 80px 26px rgba(200, 70, 255, 0.24),
+              0 0 120px 42px rgba(255, 150, 110, 0.18);
+            opacity: 0.9;
+            animation: aura-breathe 10s ease-in-out infinite;
           }
 
           .terminal-window {
@@ -222,7 +206,7 @@ export function TerminalDisplay({
             max-width: 76vw !important;
             min-height: 60vh !important;
             overflow: hidden;
-            background-color: rgba(10, 12, 20, 0.45);
+            background-color: rgba(10, 12, 20, 0.48);
             border-radius: 24px;
             border: inherit;
             box-shadow:
@@ -246,23 +230,18 @@ export function TerminalDisplay({
             }
           }
 
-          @keyframes aura-pulse {
+          @keyframes aura-breathe {
             0%, 100% {
-              opacity: 0.5;
-              filter: blur(30px) hue-rotate(0deg);
+              box-shadow:
+                0 0 40px 18px rgba(255, 120, 160, 0.26),
+                0 0 80px 26px rgba(200, 70, 255, 0.22),
+                0 0 120px 42px rgba(255, 150, 110, 0.16);
             }
             50% {
-              opacity: 0.7;
-              filter: blur(35px) hue-rotate(15deg);
-            }
-          }
-
-          @keyframes aura-drift {
-            0%, 100% {
-              transform: scale(1);
-            }
-            50% {
-              transform: scale(1.05);
+              box-shadow:
+                0 0 42px 20px rgba(255, 120, 160, 0.32),
+                0 0 86px 28px rgba(200, 70, 255, 0.26),
+                0 0 130px 48px rgba(255, 150, 110, 0.20);
             }
           }
 
