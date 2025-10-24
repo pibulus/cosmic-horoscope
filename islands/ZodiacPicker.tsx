@@ -60,7 +60,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                 background-color: ${
                 isSelected
                   ? "var(--color-accent, #a855f7)"
-                  : "var(--color-secondary, #1a1f3a)"
+                  : "rgba(10, 12, 20, 0.4)"
               };
                 border-color: ${
                 isSelected
@@ -69,6 +69,8 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
               };
                 box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.8);
                 color: var(--color-text, #faf9f6);
+                backdrop-filter: blur(8px) saturate(120%);
+                -webkit-backdrop-filter: blur(8px) saturate(120%);
               `}
             >
               {/* Emoji - Clean, no effects */}

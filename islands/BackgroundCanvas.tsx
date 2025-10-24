@@ -221,7 +221,7 @@ export default function BackgroundCanvas() {
     <div
       ref={containerRef}
       class="fixed inset-0 pointer-events-none"
-      style="z-index: 1; opacity: 0.3;"
+      style="z-index: 1; opacity: 1;"
     />
   );
 }

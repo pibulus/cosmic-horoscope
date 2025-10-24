@@ -170,15 +170,15 @@ export function TerminalDisplay({
 
   return (
     <div
-      class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
+      class="overflow-hidden relative flex flex-col mx-auto terminal-window"
       style="
-        background-color: rgba(14, 16, 30, 0.62);
+        background-color: rgba(10, 12, 20, 0.45);
         border: 3px solid var(--color-border, #a855f7);
         box-shadow:
           0 20px 36px rgba(0, 0, 0, 0.7),
           0 10px 18px rgba(0, 0, 0, 0.45);
-        backdrop-filter: blur(18px) saturate(135%);
-        -webkit-backdrop-filter: blur(18px) saturate(135%);
+        z-index: 10;
+        border-radius: 24px;
       "
     >
       <style>
@@ -190,14 +190,14 @@ export function TerminalDisplay({
             min-height: 60vh !important;
             margin: 0 auto !important;
             overflow: hidden;
-            background-color: rgba(14, 16, 30, 0.62);
-            border-radius: inherit;
+            background-color: rgba(10, 12, 20, 0.45);
+            border-radius: 24px;
             border: inherit;
             box-shadow:
               0 20px 36px rgba(0, 0, 0, 0.7),
               0 10px 18px rgba(0, 0, 0, 0.45);
-            backdrop-filter: blur(18px) saturate(135%);
-            -webkit-backdrop-filter: blur(18px) saturate(135%);
+            backdrop-filter: blur(10px) saturate(120%);
+            -webkit-backdrop-filter: blur(10px) saturate(120%);
           }
 
 
@@ -206,9 +206,7 @@ export function TerminalDisplay({
             overflow: visible;
             border-bottom-width: 3px !important;
             border-color: var(--color-border, #a855f7) !important;
-            background: rgba(10, 12, 22, 0.58) !important;
-            backdrop-filter: blur(12px) saturate(140%) !important;
-            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+            background: transparent !important;
           }
 
           @media (max-width: 639px) {
@@ -251,7 +249,7 @@ export function TerminalDisplay({
       {/* Terminal Menu Bar - Semi-opaque to show scanlines */}
       <div
         class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
-        style="background-color: rgba(10, 12, 22, 0.58); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20; backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%);"
+        style="background-color: transparent; border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20;"
       >
         <div class="flex space-x-1.5 sm:space-x-2">
           <div
@@ -336,19 +334,17 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background: linear-gradient(160deg, rgba(22, 8, 24, 0.96) 0%, rgba(8, 8, 20, 0.95) 55%, rgba(6, 12, 24, 0.93) 100%) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
+        style="padding: 20px; background: transparent !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); min-height: 55vh;"
       >
         <style>
           {`
             .terminal-content {
-              background-color: rgba(12, 14, 26, 0.6) !important;
               overflow-x: hidden;
               overflow-y: auto;
               padding: 20px !important;
               border: 1px solid rgba(255, 255, 255, 0.08);
               box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.5);
-              backdrop-filter: blur(14px) saturate(130%);
-              -webkit-backdrop-filter: blur(14px) saturate(130%);
+              background: transparent;
               position: relative;
               min-height: 55vh;
             }
