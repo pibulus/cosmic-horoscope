@@ -191,38 +191,6 @@ export function TerminalDisplay({
             margin: 0 auto !important;
           }
 
-          .terminal-window::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            pointer-events: none;
-            background:
-              radial-gradient(circle at 30% 20%, rgba(120, 74, 255, 0.25), transparent 55%),
-              radial-gradient(circle at 70% 80%, rgba(16, 214, 96, 0.18), transparent 60%);
-            opacity: 0.7;
-            mix-blend-mode: screen;
-            transition: opacity 0.45s ease;
-          }
-
-          .terminal-window::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            pointer-events: none;
-            background:
-              repeating-linear-gradient(
-                0deg,
-                rgba(255, 255, 255, 0.08),
-                rgba(255, 255, 255, 0.08) 1px,
-                transparent 1px,
-                transparent 3px
-              );
-            mix-blend-mode: screen;
-            opacity: 0.18;
-            animation: scanline-flicker 4s linear infinite;
-          }
 
           .terminal-window:hover {
             transform: translateY(-6px) scale(1.004);
@@ -233,9 +201,6 @@ export function TerminalDisplay({
             border-color: rgba(199, 120, 255, 0.95);
           }
 
-          .terminal-window:hover::before {
-            opacity: 0.85;
-          }
 
           .terminal-header {
             position: relative;
@@ -359,9 +324,6 @@ export function TerminalDisplay({
                       }
                     }}
                   >
-                    {value === currentPeriod && (
-                      <span aria-hidden="true" style="letter-spacing: 0;">█</span>
-                    )}
                     <span style="letter-spacing: inherit;">
                       {label.toUpperCase()}
                     </span>
@@ -396,27 +358,76 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background: rgba(8, 12, 20, 0.78) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);"
+        style="padding: 20px; background: rgba(8, 12, 20, 0.78) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
       >
         <style>
           {`
             .terminal-content {
               background: rgba(8, 12, 20, 0.78) !important;
               overflow-x: hidden;
+              overflow-y: auto;
               padding: 20px !important;
               border: 1px solid rgba(255, 255, 255, 0.08);
               box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55);
               backdrop-filter: blur(18px) saturate(140%);
               -webkit-backdrop-filter: blur(18px) saturate(140%);
+              position: relative;
+              min-height: 55vh;
+            }
+
+            .terminal-content::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              pointer-events: none;
+              background:
+                radial-gradient(circle at 30% 20%, rgba(120, 74, 255, 0.25), transparent 55%),
+                radial-gradient(circle at 70% 80%, rgba(16, 214, 96, 0.18), transparent 60%);
+              opacity: 0.7;
+              mix-blend-mode: screen;
+              transition: opacity 0.45s ease;
+              z-index: 10;
+            }
+
+            .terminal-content::after {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              pointer-events: none;
+              background:
+                repeating-linear-gradient(
+                  0deg,
+                  rgba(255, 255, 255, 0.08),
+                  rgba(255, 255, 255, 0.08) 1px,
+                  transparent 1px,
+                  transparent 3px
+                );
+              mix-blend-mode: screen;
+              opacity: 0.18;
+              animation: scanline-flicker 4s linear infinite;
+              z-index: 10;
+            }
+            @media (max-width: 639px) {
+              .terminal-content {
+                min-height: 68vh !important;
+              }
             }
             @media (min-width: 640px) {
               .terminal-content {
                 padding: 32px !important;
+                min-height: 62vh !important;
               }
             }
             @media (min-width: 1024px) {
               .terminal-content {
                 padding: 44px !important;
+                min-height: 55vh !important;
               }
             }
           `}
@@ -449,28 +460,21 @@ export function TerminalDisplay({
           : htmlContent
           ? (
             // Static HTML mode
-            <div class="relative">
-              <pre
-                class="ascii-display font-mono opacity-90"
-                style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-                dangerouslySetInnerHTML={{ __html: htmlContent }}
-              />
-              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4.5vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
-            </div>
-
+            <pre
+              class="ascii-display font-mono opacity-90"
+              style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
           )
           : content
           ? (
             // Static text mode
-            <div class="relative">
-              <pre
-                class="ascii-display font-mono opacity-90"
-                style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-              >
-                {content}
-              </pre>
-              <span class="blinking-cursor" style="color: #1cff6b; font-size: clamp(16px, 4.5vw, 26px); font-weight: 900; text-shadow: 0 0 4px rgba(28, 255, 107, 0.6);">█</span>
-            </div>
+            <pre
+              class="ascii-display font-mono opacity-90"
+              style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+            >
+              {content}
+            </pre>
           )
           : null}
         </div>

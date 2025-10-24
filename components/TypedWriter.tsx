@@ -125,8 +125,7 @@ export function TypedWriter({
     typedRef.current = new Typed(elementRef.current, {
       strings: [htmlText || text],
       typeSpeed: speed,
-      showCursor: true,
-      cursorChar: "█",
+      showCursor: false,
       contentType: htmlText ? "html" : "text",
       // Add randomness to typing speed (±30ms variation)
       onBegin: (self: Typed) => {
