@@ -100,8 +100,6 @@ export function TerminalDisplay({
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [typingComplete, setTypingComplete] = useState(false);
   const copyTimeoutRef = useRef<number | null>(null);
-  const terminalRef = useRef<HTMLDivElement>(null);
-  const pulseTimeoutRef = useRef<number | null>(null);
   const periodOptions = [
     { value: "daily", label: "Daily" },
     { value: "weekly", label: "Weekly" },
@@ -114,28 +112,12 @@ export function TerminalDisplay({
       if (copyTimeoutRef.current !== null) {
         clearTimeout(copyTimeoutRef.current);
       }
-      if (pulseTimeoutRef.current !== null) {
-        clearTimeout(pulseTimeoutRef.current);
-      }
     };
   }, []);
 
-  const triggerTypingPulse = () => {
-    if (!terminalRef.current) return;
-    terminalRef.current.classList.remove("typing-pulse");
-    // Force reflow to restart transition
-    void terminalRef.current.offsetWidth;
-    terminalRef.current.classList.add("typing-pulse");
-    if (pulseTimeoutRef.current !== null) {
-      clearTimeout(pulseTimeoutRef.current);
-    }
-    pulseTimeoutRef.current = window.setTimeout(() => {
-      if (terminalRef.current) {
-        terminalRef.current.classList.remove("typing-pulse");
-      }
-      pulseTimeoutRef.current = null;
-    }, 280);
-  };
+  useEffect(() => {
+    setTypingComplete(false);
+  }, [content, htmlContent, enableTypewriter]);
 
   const handleCopy = async () => {
     const success = await copyToClipboard(
@@ -188,25 +170,15 @@ export function TerminalDisplay({
 
   return (
     <div
-      ref={terminalRef}
       class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
       style="
-        background: rgba(3, 3, 10, 0.96);
+        background-color: rgba(14, 16, 30, 0.62);
         border: 3px solid var(--color-border, #a855f7);
         box-shadow:
-          0 26px 48px rgba(0, 0, 0, 0.7),
-          0 10px 22px rgba(0, 0, 0, 0.5),
-          12px 12px 0 rgba(0, 0, 0, 0.38);
-        backdrop-filter: blur(14px) saturate(120%);
-        -webkit-backdrop-filter: blur(14px) saturate(120%);
-        opacity: 1 !important;
-        transform-origin: center;
-        transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease, filter 0.35s ease;
-        animation:
-          float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite,
-          vhs-wobble 6s ease-in-out infinite;
-        will-change: transform, box-shadow;
-        filter: saturate(1) brightness(1);
+          0 20px 36px rgba(0, 0, 0, 0.7),
+          0 10px 18px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(18px) saturate(135%);
+        -webkit-backdrop-filter: blur(18px) saturate(135%);
       "
     >
       <style>
@@ -217,78 +189,15 @@ export function TerminalDisplay({
             max-width: 76vw !important;
             min-height: 60vh !important;
             margin: 0 auto !important;
-            overflow: visible;
-          }
-
-          .terminal-window.typing-pulse {
-            filter: saturate(1.28) brightness(1.08);
-            box-shadow:
-              0 38px 80px rgba(72, 25, 120, 0.75),
-              0 18px 42px rgba(187, 101, 255, 0.55),
-              18px 18px 0 rgba(18, 10, 32, 0.58);
-            border-color: rgba(229, 159, 255, 0.95);
-          }
-
-          .terminal-window:hover {
-            transform: translateY(-6px) scale(1.004);
-            box-shadow:
-              0 42px 72px rgba(0, 0, 0, 0.8),
-              0 20px 32px rgba(0, 0, 0, 0.58),
-              18px 18px 0 rgba(0, 0, 0, 0.4);
-            border-color: rgba(199, 120, 255, 0.95);
-            animation-play-state: paused, paused;
-          }
-
-          .terminal-window::before {
-            content: "";
-            position: absolute;
-            inset: -20px;
+            overflow: hidden;
+            background-color: rgba(14, 16, 30, 0.62);
             border-radius: inherit;
-            background:
-              linear-gradient(135deg, rgba(197, 90, 17, 0.28) 0%, rgba(138, 43, 226, 0.24) 52%, rgba(30, 144, 255, 0.2) 100%),
-              radial-gradient(120% 120% at 50% 18%, rgba(255, 120, 64, 0.2), transparent 62%),
-              radial-gradient(110% 110% at 50% 82%, rgba(120, 74, 255, 0.24), transparent 64%);
-            filter: blur(26px);
-            opacity: 0.4;
-            transform-origin: center;
-            animation: aura-pulse 14s ease-in-out infinite;
-            pointer-events: none;
-            mix-blend-mode: screen;
-            z-index: 0;
-          }
-
-          .terminal-window.typing-pulse::before {
-            opacity: 0.7;
-            transform: scale(1.03) translate3d(0, -3px, 0);
-          }
-
-          .terminal-window::after {
-            content: "";
-            position: absolute;
-            inset: -4px;
-            border-radius: inherit;
-            pointer-events: none;
-            background-image:
-              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"),
-              repeating-linear-gradient(
-                120deg,
-                rgba(255, 255, 255, 0.02),
-                rgba(255, 255, 255, 0.02) 1px,
-                transparent 1px,
-                transparent 3px
-              ),
-              repeating-linear-gradient(
-                45deg,
-                rgba(0, 0, 0, 0.025),
-                rgba(0, 0, 0, 0.025) 1px,
-                transparent 1px,
-                transparent 2px
-              );
-            background-blend-mode: screen, overlay, overlay;
-            opacity: 0.24;
-            mix-blend-mode: overlay;
-            animation: grain-shift 1.6s steps(6) infinite;
-            z-index: 1;
+            border: inherit;
+            box-shadow:
+              0 20px 36px rgba(0, 0, 0, 0.7),
+              0 10px 18px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(18px) saturate(135%);
+            -webkit-backdrop-filter: blur(18px) saturate(135%);
           }
 
 
@@ -297,7 +206,9 @@ export function TerminalDisplay({
             overflow: visible;
             border-bottom-width: 3px !important;
             border-color: var(--color-border, #a855f7) !important;
-            background: rgba(0, 0, 0, 0.9) !important;
+            background: rgba(10, 12, 22, 0.58) !important;
+            backdrop-filter: blur(12px) saturate(140%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
           }
 
           @media (max-width: 639px) {
@@ -335,128 +246,12 @@ export function TerminalDisplay({
             }
           }
 
-          @keyframes float-breathe {
-            0% {
-              transform: translateY(0) scale(1) rotate(-0.45deg);
-              box-shadow:
-                0 22px 40px rgba(0, 0, 0, 0.64),
-                0 12px 26px rgba(65, 32, 128, 0.45),
-                12px 12px 0 rgba(0, 0, 0, 0.34);
-            }
-            22% {
-              transform: translateY(-10px) scale(1.008) rotate(0.25deg);
-              box-shadow:
-                0 32px 58px rgba(0, 0, 0, 0.76),
-                0 20px 38px rgba(109, 40, 217, 0.4),
-                15px 15px 0 rgba(12, 10, 32, 0.5);
-            }
-            50% {
-              transform: translateY(-18px) scale(1.016) rotate(0.75deg);
-              box-shadow:
-                0 44px 78px rgba(0, 0, 0, 0.88),
-                0 28px 48px rgba(168, 85, 247, 0.42),
-                20px 20px 0 rgba(18, 16, 48, 0.55);
-            }
-            78% {
-              transform: translateY(-9px) scale(1.01) rotate(-0.05deg);
-              box-shadow:
-                0 34px 62px rgba(0, 0, 0, 0.8),
-                0 18px 32px rgba(88, 28, 135, 0.42),
-                15px 15px 0 rgba(10, 8, 28, 0.48);
-            }
-            100% {
-              transform: translateY(0) scale(1) rotate(-0.45deg);
-              box-shadow:
-                0 22px 40px rgba(0, 0, 0, 0.64),
-                0 12px 26px rgba(65, 32, 128, 0.45),
-                12px 12px 0 rgba(0, 0, 0, 0.34);
-            }
-          }
-
-          @keyframes vhs-wobble {
-            0%, 100% {
-              transform: rotate(-0.4deg) translate3d(0, 0, 0);
-              filter: hue-rotate(0deg);
-            }
-            30% {
-              transform: rotate(0.35deg) translate3d(1px, 0, 0);
-              filter: hue-rotate(-2deg);
-            }
-            58% {
-              transform: rotate(0.15deg) translate3d(-1px, -0.5px, 0);
-              filter: hue-rotate(1deg);
-            }
-            74% {
-              transform: rotate(-0.2deg) translate3d(0.5px, 0, 0);
-              filter: hue-rotate(-1deg);
-            }
-          }
-
-          @keyframes scanline-flicker {
-            0%, 100% { opacity: 0.18; }
-            40% { opacity: 0.22; }
-            50% { opacity: 0.28; }
-            60% { opacity: 0.18; }
-          }
-
-          @keyframes chroma-shift {
-            0%, 100% {
-              transform: translate3d(0, 0, 0);
-            }
-            30% {
-              transform: translate3d(-1px, 0, 0);
-            }
-            55% {
-              transform: translate3d(1px, 0, 0);
-            }
-            70% {
-              transform: translate3d(-0.5px, 0, 0);
-            }
-          }
-
-
-          @keyframes aura-pulse {
-            0%, 100% {
-              opacity: 0.36;
-              transform: scale(1) translate3d(0, 0, 0);
-            }
-            48% {
-              opacity: 0.52;
-              transform: scale(1.06) translate3d(0, -6px, 0);
-            }
-            72% {
-              opacity: 0.4;
-              transform: scale(0.98) translate3d(0, 3px, 0);
-            }
-          }
-
-          @keyframes grain-shift {
-            0% {
-              background-position: 0 0, 0 0;
-            }
-            50% {
-              background-position: 11px 7px, -7px -12px;
-            }
-            100% {
-              background-position: -5px 10px, 9px -8px;
-            }
-          }
-
-          @media (prefers-reduced-motion: reduce) {
-            .terminal-window,
-            .terminal-window::before,
-            .terminal-window::after,
-            .terminal-content::after {
-              animation: none !important;
-              transition: none !important;
-            }
-          }
         `}
       </style>
       {/* Terminal Menu Bar - Semi-opaque to show scanlines */}
       <div
         class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
-        style="background-color: rgba(0, 0, 0, 0.85); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20; backdrop-filter: blur(6px);"
+        style="background-color: rgba(10, 12, 22, 0.58); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20; backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%);"
       >
         <div class="flex space-x-1.5 sm:space-x-2">
           <div
@@ -546,111 +341,36 @@ export function TerminalDisplay({
         <style>
           {`
             .terminal-content {
-              background: linear-gradient(160deg, rgba(18, 6, 24, 0.96) 0%, rgba(6, 8, 20, 0.97) 58%, rgba(2, 5, 12, 0.96) 100%) !important;
+              background-color: rgba(12, 14, 26, 0.6) !important;
               overflow-x: hidden;
               overflow-y: auto;
               padding: 20px !important;
               border: 1px solid rgba(255, 255, 255, 0.08);
-              box-shadow: inset 0 0 32px rgba(0, 0, 0, 0.6);
-              backdrop-filter: blur(18px) saturate(140%);
-              -webkit-backdrop-filter: blur(18px) saturate(140%);
+              box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.5);
+              backdrop-filter: blur(14px) saturate(130%);
+              -webkit-backdrop-filter: blur(14px) saturate(130%);
               position: relative;
               min-height: 55vh;
             }
 
-            .terminal-content::before {
-              content: "";
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              pointer-events: none;
-              background:
-                radial-gradient(circle at 28% 18%, rgba(247, 118, 43, 0.2), transparent 58%),
-                radial-gradient(circle at 72% 78%, rgba(120, 74, 255, 0.16), transparent 62%);
-              opacity: 0.48;
-              mix-blend-mode: screen;
-              transition: opacity 0.45s ease;
-              z-index: 10;
-            }
-
-            .terminal-content::after {
-              content: "";
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              pointer-events: none;
-              background:
-                linear-gradient(90deg, rgba(0, 255, 242, 0.1), rgba(255, 71, 178, 0.1)),
-                linear-gradient(
-                  to bottom,
-                  rgba(255, 255, 255, 0.03) 50%,
-                  rgba(0, 0, 0, 0.12) 50%
-                );
-              background-size: auto, 100% 4px;
-              mix-blend-mode: screen;
-              opacity: 0.22;
-              animation: scanline-flicker 4s linear infinite, chroma-shift 7.2s ease-in-out infinite;
-              z-index: 10;
-            }
-
             .terminal-text {
               position: relative;
-              overflow: hidden;
-            }
-
-            .terminal-text::after {
-              content: "";
-              position: absolute;
-              left: -10%;
-              right: -10%;
-              bottom: 18%;
-              height: 42%;
-              pointer-events: none;
-              background: radial-gradient(80% 150% at 50% 100%, rgba(0, 255, 214, 0.32) 0%, rgba(255, 111, 64, 0.14) 52%, transparent 100%);
-              mix-blend-mode: screen;
-              opacity: 0;
-              transform: translateY(8px) scale(0.96);
-              transition: opacity 0.25s ease, transform 0.25s ease;
-              filter: blur(16px);
-              z-index: 5;
-            }
-
-            .terminal-window.typing-pulse .terminal-text::after {
-              opacity: 0.55;
-              transform: translateY(0) scale(1);
             }
 
             .ascii-display {
-              transition: text-shadow 0.25s ease, filter 0.25s ease;
+              letter-spacing: 0.2px;
+              white-space: pre-wrap;
+              word-break: break-word;
+              overflow-wrap: anywhere;
+              max-width: 100%;
+              box-sizing: border-box;
+            }
+            .ascii-display .cursor-inline {
+              display: inline-block;
+              margin-left: 0.1em;
+              vertical-align: baseline;
             }
 
-            .terminal-window.typing-pulse .ascii-display {
-              text-shadow:
-                0 0 6px rgba(0, 255, 214, 0.55),
-                0 0 16px rgba(255, 122, 47, 0.32),
-                0 0 24px rgba(120, 74, 255, 0.36);
-              filter: saturate(1.85) brightness(1.12);
-            }
-
-            .terminal-text .ascii-display.typing-trail {
-              animation: text-trail 0.34s ease-out;
-            }
-
-            .terminal-text .ascii-display.typing-trail::after {
-              content: "";
-              position: absolute;
-              inset: -2px;
-              pointer-events: none;
-              background: linear-gradient(90deg, rgba(255, 122, 47, 0.22), rgba(0, 255, 214, 0.16));
-              opacity: 0.22;
-              filter: blur(6px);
-              mix-blend-mode: screen;
-              animation: text-wash 0.34s ease-out;
-            }
             @media (max-width: 639px) {
               .terminal-content {
                 min-height: 68vh !important;
@@ -682,7 +402,7 @@ export function TerminalDisplay({
               </pre>
             </div>
           )
-          : (htmlContent || content) && enableTypewriter
+          : (htmlContent || content) && enableTypewriter && !typingComplete
           ? (
             // Typewriter mode
             <TypedWriter
@@ -690,7 +410,6 @@ export function TerminalDisplay({
               htmlText={htmlContent}
               speed={typewriterSpeed}
               enabled={true}
-              onPulse={triggerTypingPulse}
               onComplete={() => setTypingComplete(true)}
               className="ascii-display font-mono opacity-90"
               style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
@@ -702,7 +421,9 @@ export function TerminalDisplay({
             <pre
               class="ascii-display font-mono opacity-90"
               style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
+              dangerouslySetInnerHTML={{
+                __html: htmlContent || "",
+              }}
             />
           )
           : content
@@ -755,132 +476,6 @@ export function TerminalDisplay({
       )}
       */}
 
-      <style>
-        {`
-        /* Blinking cursor animation */
-        @keyframes blink {
-          0%, 49% { opacity: 1; }
-          50%, 100% { opacity: 0; }
-        }
-
-        .blinking-cursor {
-          animation: blink 1s infinite;
-        }
-
-        /* Pop-in animation for export button */
-        @keyframes popIn {
-          0% {
-            opacity: 0;
-            transform: scale(0.8) translateY(10px);
-          }
-          60% {
-            transform: scale(1.05) translateY(0);
-          }
-          100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-
-        .animate-pop-in {
-          animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Dropdown open animation - light bounce */
-        @keyframes dropdownOpen {
-          0% {
-            opacity: 0;
-            transform: translateY(-8px) scale(0.95);
-          }
-          60% {
-            opacity: 1;
-            transform: translateY(2px) scale(1.01);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        .animate-dropdown-open {
-          animation: dropdownOpen 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Brutal Shadows - Chunky and bold */
-        .shadow-brutal {
-          box-shadow: 4px 4px 0 var(--color-border, #0A0A0A);
-        }
-
-        .shadow-brutal-lg {
-          box-shadow: 6px 6px 0 var(--color-border, #0A0A0A);
-        }
-
-        .shadow-brutal-xl {
-          box-shadow: 8px 8px 0 var(--color-border, #0A0A0A);
-        }
-
-        .hover\\:shadow-brutal-xl:hover {
-          box-shadow: 8px 8px 0 var(--color-border, #0A0A0A);
-        }
-
-        /* Bounce once animation for copy success */
-        @keyframes bounceOnce {
-          0%, 100% { transform: translateY(0); }
-          25% { transform: translateY(-10px); }
-          50% { transform: translateY(0); }
-          75% { transform: translateY(-5px); }
-        }
-
-        .animate-bounce-once {
-          animation: bounceOnce 0.5s ease-out;
-        }
-
-        /* Loading cursor animation */
-        @keyframes loadingCursor {
-          0% { transform: translateX(0); }
-          50% { transform: translateX(40px); }
-          100% { transform: translateX(40px); }
-        }
-
-        .animate-loading-cursor {
-          animation: loadingCursor 1.5s ease-out;
-        }
-
-        /* Transform utilities */
-        .hover\\:-translate-y-1:hover {
-          transform: translateY(-4px);
-        }
-
-        .active\\:translate-y-0:active {
-          transform: translateY(0);
-        }
-
-        /* Responsive letter-spacing for ASCII display - matches asciifier-web */
-        .ascii-display {
-          letter-spacing: 0.2px;
-          white-space: pre-wrap;
-          word-break: break-word;
-          overflow-wrap: anywhere;
-          max-width: 100%;
-          box-sizing: border-box;
-        }
-        @media (min-width: 640px) {
-          .ascii-display {
-            letter-spacing: 0.4px;
-          }
-        }
-        @media (min-width: 768px) {
-          .ascii-display {
-            letter-spacing: 0.6px;
-          }
-        }
-        @media (min-width: 1024px) {
-          .ascii-display {
-            letter-spacing: 0.8px;
-          }
-        }
-      `}
-      </style>
     </div>
   );
 }

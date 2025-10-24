@@ -21,8 +21,6 @@ interface TypedWriterProps {
   className?: string;
   /** Inline styles */
   style?: string;
-  /** Optional pulse callback for ambient effects */
-  onPulse?: () => void;
 }
 
 export function TypedWriter({
@@ -33,7 +31,6 @@ export function TypedWriter({
   onComplete,
   className = "",
   style = "",
-  onPulse,
 }: TypedWriterProps) {
   const elementRef = useRef<HTMLDivElement>(null);
   const typedRef = useRef<Typed | null>(null);
@@ -97,10 +94,6 @@ export function TypedWriter({
           });
         }
 
-        if (onPulse) {
-          onPulse();
-        }
-
         if (lastChar === "." || lastChar === "!" || lastChar === "?") {
           typedRef.current.stop();
           setTimeout(() => {
@@ -150,15 +143,6 @@ export function TypedWriter({
           jitterTimer = null;
         }
 
-        if (elementRef.current) {
-          const cursor = document.createElement("span");
-          cursor.className = "blinking-cursor";
-          cursor.textContent = "█";
-          cursor.style.cssText =
-            "color: #00FF41; font-size: inherit; font-weight: 900; margin-left: 0;";
-          elementRef.current.appendChild(cursor);
-        }
-
         if (onComplete) onComplete();
       },
     });
@@ -173,7 +157,7 @@ export function TypedWriter({
         jitterTimer = null;
       }
     };
-  }, [text, htmlText, speed, enabled, onComplete, onPulse]);
+  }, [text, htmlText, speed, enabled, onComplete]);
 
   return (
     <div
