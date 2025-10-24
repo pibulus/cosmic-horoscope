@@ -21,6 +21,8 @@ interface TypedWriterProps {
   className?: string;
   /** Inline styles */
   style?: string;
+  /** Optional pulse callback for ambient effects */
+  onPulse?: () => void;
 }
 
 export function TypedWriter({
@@ -31,18 +33,18 @@ export function TypedWriter({
   onComplete,
   className = "",
   style = "",
+  onPulse,
 }: TypedWriterProps) {
   const elementRef = useRef<HTMLDivElement>(null);
   const typedRef = useRef<Typed | null>(null);
   const soundsRef = useRef<SimpleTypeWriter | null>(null);
-  const lastContentRef = useRef<string>(""); // Track what we last typed
-  const trailTimeoutRef = useRef<number | null>(null);
+  const lastContentRef = useRef<string>(""); // Track last rendered payload
 
   useEffect(() => {
-    // Initialize keyboard sounds (quieter)
+    // Initialize keyboard sounds once
     if (!soundsRef.current) {
       soundsRef.current = new SimpleTypeWriter({
-        volume: 0.08, // Quieter
+        volume: 0.08,
         enabled: true,
         pack: "cherry-mx-black",
       });
@@ -59,45 +61,35 @@ export function TypedWriter({
   useEffect(() => {
     if (!elementRef.current) return;
 
-    // Don't restart if content hasn't changed
     const contentKey = `${text}|${htmlText || ""}`;
     if (lastContentRef.current === contentKey && typedRef.current) {
-      // Same content, don't restart typing
+      // Same content rendered already; keep existing typing instance
       return;
     }
     lastContentRef.current = contentKey;
 
-    // Cleanup previous instance
     if (typedRef.current) {
       typedRef.current.destroy();
     }
 
-    if (trailTimeoutRef.current) {
-      clearTimeout(trailTimeoutRef.current);
-      trailTimeoutRef.current = null;
-    }
-
     if (!enabled) {
-      // Show full text immediately
       elementRef.current.innerHTML = htmlText || text;
       if (onComplete) onComplete();
       return;
     }
 
-    // Watch for DOM changes to play sounds and add natural pauses
     let lastLength = 0;
     let lastChar = "";
+
     const observer = new MutationObserver(() => {
       if (!elementRef.current || !typedRef.current) return;
 
       const currentText = elementRef.current.textContent || "";
       const newLength = currentText.length;
 
-      // Character was added
       if (newLength > lastLength) {
         const newChar = currentText[newLength - 1] || "a";
 
-        // Play keyboard sound
         if (soundsRef.current) {
           soundsRef.current.play({
             key: newChar,
@@ -105,29 +97,17 @@ export function TypedWriter({
           });
         }
 
-        if (elementRef.current) {
-          elementRef.current.classList.remove("typing-trail");
-          void elementRef.current.offsetWidth;
-          elementRef.current.classList.add("typing-trail");
-          if (trailTimeoutRef.current) {
-            clearTimeout(trailTimeoutRef.current);
-          }
-          trailTimeoutRef.current = window.setTimeout(() => {
-            if (elementRef.current) {
-              elementRef.current.classList.remove("typing-trail");
-            }
-            trailTimeoutRef.current = null;
-          }, 320);
+        if (onPulse) {
+          onPulse();
         }
 
-        // Add natural pause after punctuation
-        if (lastChar === '.' || lastChar === '!' || lastChar === '?') {
+        if (lastChar === "." || lastChar === "!" || lastChar === "?") {
           typedRef.current.stop();
           setTimeout(() => {
             if (typedRef.current) {
               typedRef.current.start();
             }
-          }, 400); // Pause for 400ms after sentence end
+          }, 400);
         }
 
         lastChar = newChar;
@@ -142,33 +122,40 @@ export function TypedWriter({
       subtree: true,
     });
 
-    // Start typing with typed.js - with human-like variation
+    let jitterTimer: number | null = null;
+
     typedRef.current = new Typed(elementRef.current, {
       strings: [htmlText || text],
       typeSpeed: speed,
       showCursor: false,
       contentType: htmlText ? "html" : "text",
-      // Add randomness to typing speed (±30ms variation)
       onBegin: (self: Typed) => {
-        // Override typeSpeed dynamically for human feel
         const originalSpeed = speed;
-        setInterval(() => {
+        jitterTimer = window.setInterval(() => {
           if (self && !self.typingComplete) {
-            // Vary speed between 70-130% of base speed
             const variation = 0.7 + Math.random() * 0.6;
             self.typeSpeed = Math.floor(originalSpeed * variation);
+          } else {
+            if (jitterTimer !== null) {
+              clearInterval(jitterTimer);
+              jitterTimer = null;
+            }
           }
         }, 100);
       },
       onComplete: () => {
         observer.disconnect();
+        if (jitterTimer !== null) {
+          clearInterval(jitterTimer);
+          jitterTimer = null;
+        }
 
-        // Add persistent blinking cursor after typing completes
         if (elementRef.current) {
-          const cursor = document.createElement('span');
-          cursor.className = 'blinking-cursor';
-          cursor.textContent = '█';
-          cursor.style.cssText = 'color: #00FF41; font-size: inherit; font-weight: 900; margin-left: 0;';
+          const cursor = document.createElement("span");
+          cursor.className = "blinking-cursor";
+          cursor.textContent = "█";
+          cursor.style.cssText =
+            "color: #00FF41; font-size: inherit; font-weight: 900; margin-left: 0;";
           elementRef.current.appendChild(cursor);
         }
 
@@ -181,12 +168,12 @@ export function TypedWriter({
       if (typedRef.current) {
         typedRef.current.destroy();
       }
-      if (trailTimeoutRef.current) {
-        clearTimeout(trailTimeoutRef.current);
-        trailTimeoutRef.current = null;
+      if (jitterTimer !== null) {
+        clearInterval(jitterTimer);
+        jitterTimer = null;
       }
     };
-  }, [text, htmlText, speed, enabled]);
+  }, [text, htmlText, speed, enabled, onComplete, onPulse]);
 
   return (
     <div

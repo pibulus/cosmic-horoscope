@@ -100,6 +100,8 @@ export function TerminalDisplay({
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [typingComplete, setTypingComplete] = useState(false);
   const copyTimeoutRef = useRef<number | null>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
+  const pulseTimeoutRef = useRef<number | null>(null);
   const periodOptions = [
     { value: "daily", label: "Daily" },
     { value: "weekly", label: "Weekly" },
@@ -112,8 +114,28 @@ export function TerminalDisplay({
       if (copyTimeoutRef.current !== null) {
         clearTimeout(copyTimeoutRef.current);
       }
+      if (pulseTimeoutRef.current !== null) {
+        clearTimeout(pulseTimeoutRef.current);
+      }
     };
   }, []);
+
+  const triggerTypingPulse = () => {
+    if (!terminalRef.current) return;
+    terminalRef.current.classList.remove("typing-pulse");
+    // Force reflow to restart transition
+    void terminalRef.current.offsetWidth;
+    terminalRef.current.classList.add("typing-pulse");
+    if (pulseTimeoutRef.current !== null) {
+      clearTimeout(pulseTimeoutRef.current);
+    }
+    pulseTimeoutRef.current = window.setTimeout(() => {
+      if (terminalRef.current) {
+        terminalRef.current.classList.remove("typing-pulse");
+      }
+      pulseTimeoutRef.current = null;
+    }, 280);
+  };
 
   const handleCopy = async () => {
     const success = await copyToClipboard(
@@ -166,13 +188,14 @@ export function TerminalDisplay({
 
   return (
     <div
+      ref={terminalRef}
       class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
       style="
         background:
-          linear-gradient(135deg, rgba(255, 122, 47, 0.18) 0%, rgba(238, 34, 131, 0.16) 46%, rgba(120, 70, 255, 0.2) 100%),
-          radial-gradient(circle at 22% 18%, rgba(140, 82, 255, 0.14), transparent 52%),
-          radial-gradient(circle at 74% 82%, rgba(28, 214, 144, 0.1), transparent 68%),
-          rgba(2, 4, 12, 0.94);
+          linear-gradient(135deg, rgba(197, 90, 17, 0.24) 0%, rgba(138, 43, 226, 0.22) 52%, rgba(30, 144, 255, 0.18) 100%),
+          radial-gradient(circle at 24% 20%, rgba(140, 82, 255, 0.12), transparent 55%),
+          radial-gradient(circle at 72% 82%, rgba(26, 214, 132, 0.08), transparent 70%),
+          rgba(1, 1, 6, 0.95);
         border: 3px solid var(--color-border, #a855f7);
         box-shadow:
           0 26px 48px rgba(0, 0, 0, 0.7),
@@ -182,11 +205,12 @@ export function TerminalDisplay({
         -webkit-backdrop-filter: blur(14px) saturate(120%);
         opacity: 1 !important;
         transform-origin: center;
-        transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
+        transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease, filter 0.35s ease;
         animation:
           float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite,
           vhs-wobble 6s ease-in-out infinite;
         will-change: transform, box-shadow;
+        filter: saturate(1) brightness(1);
       "
     >
       <style>
@@ -200,6 +224,9 @@ export function TerminalDisplay({
             overflow: visible;
           }
 
+          .terminal-window.typing-pulse {
+            filter: saturate(1.12) brightness(1.05);
+          }
 
           .terminal-window:hover {
             transform: translateY(-6px) scale(1.004);
@@ -217,15 +244,19 @@ export function TerminalDisplay({
             inset: -20px;
             border-radius: inherit;
             background:
-              radial-gradient(120% 120% at 50% 18%, rgba(255, 120, 64, 0.18), transparent 62%),
-              radial-gradient(110% 110% at 50% 82%, rgba(120, 74, 255, 0.2), transparent 64%);
+              radial-gradient(120% 120% at 50% 18%, rgba(255, 120, 64, 0.2), transparent 62%),
+              radial-gradient(110% 110% at 50% 82%, rgba(120, 74, 255, 0.24), transparent 64%);
             filter: blur(26px);
-            opacity: 0.42;
+            opacity: 0.4;
             transform-origin: center;
             animation: aura-pulse 14s ease-in-out infinite;
             pointer-events: none;
             mix-blend-mode: screen;
             z-index: 0;
+          }
+
+          .terminal-window.typing-pulse::before {
+            opacity: 0.58;
           }
 
           .terminal-window::after {
@@ -234,7 +265,8 @@ export function TerminalDisplay({
             inset: -4px;
             border-radius: inherit;
             pointer-events: none;
-            background:
+            background-image:
+              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"),
               repeating-linear-gradient(
                 120deg,
                 rgba(255, 255, 255, 0.02),
@@ -249,7 +281,8 @@ export function TerminalDisplay({
                 transparent 1px,
                 transparent 2px
               );
-            opacity: 0.22;
+            background-blend-mode: screen, overlay, overlay;
+            opacity: 0.24;
             mix-blend-mode: overlay;
             animation: grain-shift 1.6s steps(6) infinite;
             z-index: 1;
@@ -378,43 +411,6 @@ export function TerminalDisplay({
             }
           }
 
-          @keyframes text-trail {
-            0% {
-              text-shadow:
-                0 0 6px rgba(255, 122, 47, 0.55),
-                0 0 14px rgba(0, 255, 214, 0.45),
-                0 0 22px rgba(120, 74, 255, 0.4);
-              filter: saturate(1.8) brightness(1.12);
-            }
-            70% {
-              text-shadow:
-                0 0 4px rgba(255, 122, 47, 0.32),
-                0 0 12px rgba(0, 255, 214, 0.32),
-                0 0 18px rgba(120, 74, 255, 0.28);
-              filter: saturate(1.3) brightness(1.05);
-            }
-            100% {
-              text-shadow:
-                0 0 3px rgba(28, 255, 107, 0.55),
-                0 0 8px rgba(28, 255, 107, 0.18);
-              filter: saturate(1.65) brightness(1.08);
-            }
-          }
-
-          @keyframes text-wash {
-            0% {
-              opacity: 0.26;
-              transform: translateX(-5px) skewX(-0.8deg);
-            }
-            70% {
-              opacity: 0.1;
-              transform: translateX(2px) skewX(0.4deg);
-            }
-            100% {
-              opacity: 0;
-              transform: translateX(6px) skewX(1deg);
-            }
-          }
 
           @keyframes aura-pulse {
             0%, 100% {
@@ -447,8 +443,7 @@ export function TerminalDisplay({
             .terminal-window,
             .terminal-window::before,
             .terminal-window::after,
-            .terminal-content::after,
-            .terminal-text .ascii-display.typing-trail {
+            .terminal-content::after {
               animation: none !important;
               transition: none !important;
             }
@@ -548,12 +543,12 @@ export function TerminalDisplay({
         <style>
           {`
             .terminal-content {
-              background: linear-gradient(160deg, rgba(22, 8, 24, 0.96) 0%, rgba(8, 8, 20, 0.95) 55%, rgba(6, 12, 24, 0.93) 100%) !important;
+              background: linear-gradient(160deg, rgba(18, 6, 24, 0.96) 0%, rgba(6, 8, 20, 0.97) 58%, rgba(2, 5, 12, 0.96) 100%) !important;
               overflow-x: hidden;
               overflow-y: auto;
               padding: 20px !important;
               border: 1px solid rgba(255, 255, 255, 0.08);
-              box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55);
+              box-shadow: inset 0 0 32px rgba(0, 0, 0, 0.6);
               backdrop-filter: blur(18px) saturate(140%);
               -webkit-backdrop-filter: blur(18px) saturate(140%);
               position: relative;
@@ -569,9 +564,9 @@ export function TerminalDisplay({
               bottom: 0;
               pointer-events: none;
               background:
-                radial-gradient(circle at 28% 18%, rgba(247, 118, 43, 0.22), transparent 58%),
-                radial-gradient(circle at 72% 78%, rgba(120, 74, 255, 0.18), transparent 62%);
-              opacity: 0.5;
+                radial-gradient(circle at 28% 18%, rgba(247, 118, 43, 0.2), transparent 58%),
+                radial-gradient(circle at 72% 78%, rgba(120, 74, 255, 0.16), transparent 62%);
+              opacity: 0.48;
               mix-blend-mode: screen;
               transition: opacity 0.45s ease;
               z-index: 10;
@@ -586,16 +581,15 @@ export function TerminalDisplay({
               bottom: 0;
               pointer-events: none;
               background:
-                linear-gradient(90deg, rgba(0, 255, 242, 0.12), rgba(255, 71, 178, 0.12)),
-                repeating-linear-gradient(
-                  0deg,
-                  rgba(255, 255, 255, 0.09),
-                  rgba(255, 255, 255, 0.09) 1px,
-                  transparent 1px,
-                  transparent 3px
+                linear-gradient(90deg, rgba(0, 255, 242, 0.1), rgba(255, 71, 178, 0.1)),
+                linear-gradient(
+                  to bottom,
+                  rgba(255, 255, 255, 0.03) 50%,
+                  rgba(0, 0, 0, 0.12) 50%
                 );
+              background-size: auto, 100% 4px;
               mix-blend-mode: screen;
-              opacity: 0.2;
+              opacity: 0.22;
               animation: scanline-flicker 4s linear infinite, chroma-shift 7.2s ease-in-out infinite;
               z-index: 10;
             }
@@ -654,6 +648,7 @@ export function TerminalDisplay({
               htmlText={htmlContent}
               speed={typewriterSpeed}
               enabled={true}
+              onPulse={triggerTypingPulse}
               onComplete={() => setTypingComplete(true)}
               className="ascii-display font-mono opacity-90"
               style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
