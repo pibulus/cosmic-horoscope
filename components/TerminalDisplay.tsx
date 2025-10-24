@@ -169,41 +169,106 @@ export function TerminalDisplay({
   ].join("; ");
 
   return (
-    <div
-      class="overflow-hidden relative flex flex-col mx-auto terminal-window"
-      style="
-        background-color: rgba(10, 12, 20, 0.45);
-        border: 3px solid var(--color-border, #a855f7);
-        box-shadow:
-          0 20px 36px rgba(0, 0, 0, 0.7),
-          0 10px 18px rgba(0, 0, 0, 0.45);
-        z-index: 10;
-        border-radius: 24px;
-      "
-    >
+    <div class="relative mx-auto terminal-wrapper" style="z-index: 10; width: fit-content;">
+      <div
+        class="relative flex flex-col terminal-window"
+        style="
+          background-color: rgba(10, 12, 20, 0.45);
+          border: 3px solid var(--color-border, #a855f7);
+          border-radius: 24px;
+        "
+      >
       <style>
         {`
+          .terminal-wrapper {
+            position: relative;
+            animation: cosmic-breath 10s ease-in-out infinite;
+          }
+
+          .terminal-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -24px;
+            padding: 24px;
+            box-sizing: border-box;
+            background: radial-gradient(
+              ellipse at center,
+              rgba(255, 120, 80, 0.4) 0%,
+              rgba(255, 80, 180, 0.32) 25%,
+              rgba(180, 70, 255, 0.28) 50%,
+              rgba(255, 150, 100, 0.18) 75%,
+              transparent 100%
+            );
+            border-radius: 48px;
+            filter: blur(32px);
+            z-index: 0;
+            opacity: 0.65;
+            pointer-events: none;
+            animation: aura-pulse 12s ease-in-out infinite, aura-drift 8s ease-in-out infinite;
+            mix-blend-mode: screen;
+            -webkit-mask:
+              linear-gradient(#000 0 0) content-box,
+              linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask:
+              linear-gradient(#000 0 0) content-box,
+              linear-gradient(#000 0 0);
+            mask-composite: exclude;
+          }
+
           .terminal-window {
             opacity: 1 !important;
             width: 76vw !important;
             max-width: 76vw !important;
             min-height: 60vh !important;
-            margin: 0 auto !important;
             overflow: hidden;
             background-color: rgba(10, 12, 20, 0.45);
             border-radius: 24px;
             border: inherit;
             box-shadow:
+              0 0 20px rgba(255, 100, 150, 0.3),
+              0 0 40px rgba(200, 80, 255, 0.2),
+              0 0 60px rgba(255, 150, 100, 0.15),
               0 20px 36px rgba(0, 0, 0, 0.7),
               0 10px 18px rgba(0, 0, 0, 0.45);
             backdrop-filter: blur(10px) saturate(120%);
             -webkit-backdrop-filter: blur(10px) saturate(120%);
+            position: relative;
+            z-index: 1;
+          }
+
+          @keyframes cosmic-breath {
+            0%, 100% {
+              transform: scale(1) translateY(0);
+            }
+            50% {
+              transform: scale(1.01) translateY(-4px);
+            }
+          }
+
+          @keyframes aura-pulse {
+            0%, 100% {
+              opacity: 0.5;
+              filter: blur(30px) hue-rotate(0deg);
+            }
+            50% {
+              opacity: 0.7;
+              filter: blur(35px) hue-rotate(15deg);
+            }
+          }
+
+          @keyframes aura-drift {
+            0%, 100% {
+              transform: scale(1);
+            }
+            50% {
+              transform: scale(1.05);
+            }
           }
 
 
           .terminal-header {
             position: relative;
-            overflow: visible;
             border-bottom-width: 3px !important;
             border-color: var(--color-border, #a855f7) !important;
             background: transparent !important;
@@ -249,7 +314,7 @@ export function TerminalDisplay({
       {/* Terminal Menu Bar - Semi-opaque to show scanlines */}
       <div
         class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
-        style="background-color: transparent; border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20;"
+        style="background-color: transparent; border-color: rgba(168, 85, 247, 0.45); position: relative;"
       >
         <div class="flex space-x-1.5 sm:space-x-2">
           <div
@@ -333,7 +398,7 @@ export function TerminalDisplay({
 
       {/* Terminal Content Area */}
       <div
-        class="transition-all duration-700 terminal-content relative z-10"
+        class="transition-all duration-700 terminal-content relative"
         style="padding: 20px; background: transparent !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); min-height: 55vh;"
       >
         <style>
@@ -472,6 +537,7 @@ export function TerminalDisplay({
       )}
       */}
 
+      </div>
     </div>
   );
 }
