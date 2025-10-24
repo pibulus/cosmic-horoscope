@@ -154,6 +154,7 @@ export function TerminalDisplay({
     "margin: 0",
     "padding: 0",
     "display: block",
+    "position: relative",
     "max-width: 100%",
     "box-sizing: border-box",
     "text-align: left",
@@ -167,7 +168,11 @@ export function TerminalDisplay({
     <div
       class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
       style="
-        background: radial-gradient(circle at 20% 15%, rgba(120, 74, 255, 0.14), transparent 45%), rgba(10, 12, 24, 0.58);
+        background:
+          linear-gradient(135deg, rgba(255, 122, 47, 0.18) 0%, rgba(238, 34, 131, 0.16) 46%, rgba(120, 70, 255, 0.2) 100%),
+          radial-gradient(circle at 22% 18%, rgba(140, 82, 255, 0.14), transparent 52%),
+          radial-gradient(circle at 74% 82%, rgba(28, 214, 144, 0.1), transparent 68%),
+          rgba(2, 4, 12, 0.94);
         border: 3px solid var(--color-border, #a855f7);
         box-shadow:
           0 26px 48px rgba(0, 0, 0, 0.7),
@@ -178,7 +183,9 @@ export function TerminalDisplay({
         opacity: 1 !important;
         transform-origin: center;
         transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
-        animation: float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite;
+        animation:
+          float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite,
+          vhs-wobble 6s ease-in-out infinite;
         will-change: transform, box-shadow;
       "
     >
@@ -190,6 +197,7 @@ export function TerminalDisplay({
             max-width: 76vw !important;
             min-height: 60vh !important;
             margin: 0 auto !important;
+            overflow: visible;
           }
 
 
@@ -200,6 +208,51 @@ export function TerminalDisplay({
               0 20px 32px rgba(0, 0, 0, 0.58),
               18px 18px 0 rgba(0, 0, 0, 0.4);
             border-color: rgba(199, 120, 255, 0.95);
+            animation-play-state: paused, paused;
+          }
+
+          .terminal-window::before {
+            content: "";
+            position: absolute;
+            inset: -20px;
+            border-radius: inherit;
+            background:
+              radial-gradient(120% 120% at 50% 18%, rgba(255, 120, 64, 0.18), transparent 62%),
+              radial-gradient(110% 110% at 50% 82%, rgba(120, 74, 255, 0.2), transparent 64%);
+            filter: blur(26px);
+            opacity: 0.42;
+            transform-origin: center;
+            animation: aura-pulse 14s ease-in-out infinite;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            z-index: 0;
+          }
+
+          .terminal-window::after {
+            content: "";
+            position: absolute;
+            inset: -4px;
+            border-radius: inherit;
+            pointer-events: none;
+            background:
+              repeating-linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0.02),
+                rgba(255, 255, 255, 0.02) 1px,
+                transparent 1px,
+                transparent 3px
+              ),
+              repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.025),
+                rgba(0, 0, 0, 0.025) 1px,
+                transparent 1px,
+                transparent 2px
+              );
+            opacity: 0.22;
+            mix-blend-mode: overlay;
+            animation: grain-shift 1.6s steps(6) infinite;
+            z-index: 1;
           }
 
 
@@ -284,11 +337,121 @@ export function TerminalDisplay({
             }
           }
 
+          @keyframes vhs-wobble {
+            0%, 100% {
+              transform: rotate(-0.4deg) translate3d(0, 0, 0);
+              filter: hue-rotate(0deg);
+            }
+            30% {
+              transform: rotate(0.35deg) translate3d(1px, 0, 0);
+              filter: hue-rotate(-2deg);
+            }
+            58% {
+              transform: rotate(0.15deg) translate3d(-1px, -0.5px, 0);
+              filter: hue-rotate(1deg);
+            }
+            74% {
+              transform: rotate(-0.2deg) translate3d(0.5px, 0, 0);
+              filter: hue-rotate(-1deg);
+            }
+          }
+
           @keyframes scanline-flicker {
             0%, 100% { opacity: 0.18; }
             40% { opacity: 0.22; }
             50% { opacity: 0.28; }
             60% { opacity: 0.18; }
+          }
+
+          @keyframes chroma-shift {
+            0%, 100% {
+              transform: translate3d(0, 0, 0);
+            }
+            30% {
+              transform: translate3d(-1px, 0, 0);
+            }
+            55% {
+              transform: translate3d(1px, 0, 0);
+            }
+            70% {
+              transform: translate3d(-0.5px, 0, 0);
+            }
+          }
+
+          @keyframes text-trail {
+            0% {
+              text-shadow:
+                0 0 6px rgba(255, 122, 47, 0.55),
+                0 0 14px rgba(0, 255, 214, 0.45),
+                0 0 22px rgba(120, 74, 255, 0.4);
+              filter: saturate(1.8) brightness(1.12);
+            }
+            70% {
+              text-shadow:
+                0 0 4px rgba(255, 122, 47, 0.32),
+                0 0 12px rgba(0, 255, 214, 0.32),
+                0 0 18px rgba(120, 74, 255, 0.28);
+              filter: saturate(1.3) brightness(1.05);
+            }
+            100% {
+              text-shadow:
+                0 0 3px rgba(28, 255, 107, 0.55),
+                0 0 8px rgba(28, 255, 107, 0.18);
+              filter: saturate(1.65) brightness(1.08);
+            }
+          }
+
+          @keyframes text-wash {
+            0% {
+              opacity: 0.26;
+              transform: translateX(-5px) skewX(-0.8deg);
+            }
+            70% {
+              opacity: 0.1;
+              transform: translateX(2px) skewX(0.4deg);
+            }
+            100% {
+              opacity: 0;
+              transform: translateX(6px) skewX(1deg);
+            }
+          }
+
+          @keyframes aura-pulse {
+            0%, 100% {
+              opacity: 0.36;
+              transform: scale(1) translate3d(0, 0, 0);
+            }
+            48% {
+              opacity: 0.52;
+              transform: scale(1.06) translate3d(0, -6px, 0);
+            }
+            72% {
+              opacity: 0.4;
+              transform: scale(0.98) translate3d(0, 3px, 0);
+            }
+          }
+
+          @keyframes grain-shift {
+            0% {
+              background-position: 0 0, 0 0;
+            }
+            50% {
+              background-position: 11px 7px, -7px -12px;
+            }
+            100% {
+              background-position: -5px 10px, 9px -8px;
+            }
+          }
+
+          @media (prefers-reduced-motion: reduce) {
+            .terminal-window,
+            .terminal-window::before,
+            .terminal-window::after,
+            .terminal-content::after,
+            .terminal-text .ascii-display.typing-trail {
+              animation: none !important;
+              transition: none !important;
+            }
           }
         `}
       </style>
@@ -380,12 +543,12 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background: rgba(8, 12, 20, 0.78) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
+        style="padding: 20px; background: linear-gradient(160deg, rgba(22, 8, 24, 0.96) 0%, rgba(8, 8, 20, 0.95) 55%, rgba(6, 12, 24, 0.93) 100%) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
       >
         <style>
           {`
             .terminal-content {
-              background: rgba(8, 12, 20, 0.78) !important;
+              background: linear-gradient(160deg, rgba(22, 8, 24, 0.96) 0%, rgba(8, 8, 20, 0.95) 55%, rgba(6, 12, 24, 0.93) 100%) !important;
               overflow-x: hidden;
               overflow-y: auto;
               padding: 20px !important;
@@ -406,9 +569,9 @@ export function TerminalDisplay({
               bottom: 0;
               pointer-events: none;
               background:
-                radial-gradient(circle at 30% 20%, rgba(120, 74, 255, 0.25), transparent 55%),
-                radial-gradient(circle at 70% 80%, rgba(16, 214, 96, 0.18), transparent 60%);
-              opacity: 0.7;
+                radial-gradient(circle at 28% 18%, rgba(247, 118, 43, 0.22), transparent 58%),
+                radial-gradient(circle at 72% 78%, rgba(120, 74, 255, 0.18), transparent 62%);
+              opacity: 0.5;
               mix-blend-mode: screen;
               transition: opacity 0.45s ease;
               z-index: 10;
@@ -423,17 +586,34 @@ export function TerminalDisplay({
               bottom: 0;
               pointer-events: none;
               background:
+                linear-gradient(90deg, rgba(0, 255, 242, 0.12), rgba(255, 71, 178, 0.12)),
                 repeating-linear-gradient(
                   0deg,
-                  rgba(255, 255, 255, 0.08),
-                  rgba(255, 255, 255, 0.08) 1px,
+                  rgba(255, 255, 255, 0.09),
+                  rgba(255, 255, 255, 0.09) 1px,
                   transparent 1px,
                   transparent 3px
                 );
               mix-blend-mode: screen;
-              opacity: 0.18;
-              animation: scanline-flicker 4s linear infinite;
+              opacity: 0.2;
+              animation: scanline-flicker 4s linear infinite, chroma-shift 7.2s ease-in-out infinite;
               z-index: 10;
+            }
+
+            .terminal-text .ascii-display.typing-trail {
+              animation: text-trail 0.34s ease-out;
+            }
+
+            .terminal-text .ascii-display.typing-trail::after {
+              content: "";
+              position: absolute;
+              inset: -2px;
+              pointer-events: none;
+              background: linear-gradient(90deg, rgba(255, 122, 47, 0.22), rgba(0, 255, 214, 0.16));
+              opacity: 0.22;
+              filter: blur(6px);
+              mix-blend-mode: screen;
+              animation: text-wash 0.34s ease-out;
             }
             @media (max-width: 639px) {
               .terminal-content {

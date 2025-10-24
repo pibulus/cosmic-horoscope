@@ -36,6 +36,7 @@ export function TypedWriter({
   const typedRef = useRef<Typed | null>(null);
   const soundsRef = useRef<SimpleTypeWriter | null>(null);
   const lastContentRef = useRef<string>(""); // Track what we last typed
+  const trailTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     // Initialize keyboard sounds (quieter)
@@ -71,6 +72,11 @@ export function TypedWriter({
       typedRef.current.destroy();
     }
 
+    if (trailTimeoutRef.current) {
+      clearTimeout(trailTimeoutRef.current);
+      trailTimeoutRef.current = null;
+    }
+
     if (!enabled) {
       // Show full text immediately
       elementRef.current.innerHTML = htmlText || text;
@@ -97,6 +103,21 @@ export function TypedWriter({
             key: newChar,
             keyCode: newChar.charCodeAt(0),
           });
+        }
+
+        if (elementRef.current) {
+          elementRef.current.classList.remove("typing-trail");
+          void elementRef.current.offsetWidth;
+          elementRef.current.classList.add("typing-trail");
+          if (trailTimeoutRef.current) {
+            clearTimeout(trailTimeoutRef.current);
+          }
+          trailTimeoutRef.current = window.setTimeout(() => {
+            if (elementRef.current) {
+              elementRef.current.classList.remove("typing-trail");
+            }
+            trailTimeoutRef.current = null;
+          }, 320);
         }
 
         // Add natural pause after punctuation
@@ -159,6 +180,10 @@ export function TypedWriter({
       observer.disconnect();
       if (typedRef.current) {
         typedRef.current.destroy();
+      }
+      if (trailTimeoutRef.current) {
+        clearTimeout(trailTimeoutRef.current);
+        trailTimeoutRef.current = null;
       }
     };
   }, [text, htmlText, speed, enabled]);
