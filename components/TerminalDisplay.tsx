@@ -178,7 +178,8 @@ export function TerminalDisplay({
         opacity: 1 !important;
         transform-origin: center;
         transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
-        animation: float-breathe 8s ease-in-out infinite;
+        animation: float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite;
+        will-change: transform, box-shadow;
       "
     >
       <style>
@@ -246,19 +247,40 @@ export function TerminalDisplay({
           }
 
           @keyframes float-breathe {
-            0%, 100% {
-              transform: translateY(0) scale(1);
+            0% {
+              transform: translateY(0) scale(1) rotate(-0.45deg);
               box-shadow:
-                0 26px 48px rgba(0, 0, 0, 0.7),
-                0 10px 22px rgba(0, 0, 0, 0.5),
-                12px 12px 0 rgba(0, 0, 0, 0.38);
+                0 22px 40px rgba(0, 0, 0, 0.64),
+                0 12px 26px rgba(65, 32, 128, 0.45),
+                12px 12px 0 rgba(0, 0, 0, 0.34);
+            }
+            22% {
+              transform: translateY(-10px) scale(1.008) rotate(0.25deg);
+              box-shadow:
+                0 32px 58px rgba(0, 0, 0, 0.76),
+                0 20px 38px rgba(109, 40, 217, 0.4),
+                15px 15px 0 rgba(12, 10, 32, 0.5);
             }
             50% {
-              transform: translateY(-5px) scale(1.003);
+              transform: translateY(-18px) scale(1.016) rotate(0.75deg);
               box-shadow:
-                0 38px 68px rgba(0, 0, 0, 0.82),
-                0 18px 30px rgba(0, 0, 0, 0.6),
-                16px 16px 0 rgba(0, 0, 0, 0.45);
+                0 44px 78px rgba(0, 0, 0, 0.88),
+                0 28px 48px rgba(168, 85, 247, 0.42),
+                20px 20px 0 rgba(18, 16, 48, 0.55);
+            }
+            78% {
+              transform: translateY(-9px) scale(1.01) rotate(-0.05deg);
+              box-shadow:
+                0 34px 62px rgba(0, 0, 0, 0.8),
+                0 18px 32px rgba(88, 28, 135, 0.42),
+                15px 15px 0 rgba(10, 8, 28, 0.48);
+            }
+            100% {
+              transform: translateY(0) scale(1) rotate(-0.45deg);
+              box-shadow:
+                0 22px 40px rgba(0, 0, 0, 0.64),
+                0 12px 26px rgba(65, 32, 128, 0.45),
+                12px 12px 0 rgba(0, 0, 0, 0.34);
             }
           }
 
