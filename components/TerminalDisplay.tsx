@@ -180,6 +180,7 @@ export function TerminalDisplay({
       >
       <style>
         {`
+          /* Keep exterior glow on wrapper pseudo-element so the clipped window stays frosted */
           .terminal-wrapper {
             position: relative;
             animation: cosmic-breath 10s ease-in-out infinite;
