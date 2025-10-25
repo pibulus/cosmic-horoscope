@@ -145,7 +145,7 @@ export function TerminalDisplay({
 
   const hasContent = Boolean(content);
   const baseTextStyle = [
-    "color: #1cff6b",
+    "color: var(--terminal-text-color, #1cff6b)",
     "font-size: clamp(16px, 4.5vw, 26px)",
     "line-height: 1.6",
     "white-space: pre-wrap",
@@ -160,67 +160,133 @@ export function TerminalDisplay({
     "text-align: left",
     "text-indent: 0",
     "font-weight: 900",
-    "filter: saturate(1.65) brightness(1.08)",
-    "text-shadow: 0 0 3px rgba(28, 255, 107, 0.55), 0 0 8px rgba(28, 255, 107, 0.18)",
+    "filter: var(--terminal-text-filter, saturate(1.65) brightness(1.08))",
+    "text-shadow: var(--terminal-text-shadow, 0 0 3px rgba(28, 255, 107, 0.55), 0 0 8px rgba(28, 255, 107, 0.18))",
   ].join("; ");
 
   return (
     <div
       class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
-      style="
-        background:
-          linear-gradient(135deg, rgba(255, 122, 47, 0.18) 0%, rgba(238, 34, 131, 0.16) 46%, rgba(120, 70, 255, 0.2) 100%),
-          radial-gradient(circle at 22% 18%, rgba(140, 82, 255, 0.14), transparent 52%),
-          radial-gradient(circle at 74% 82%, rgba(28, 214, 144, 0.1), transparent 68%),
-          rgba(2, 4, 12, 0.94);
-        border: 3px solid var(--color-border, #a855f7);
-        box-shadow:
-          0 26px 48px rgba(0, 0, 0, 0.7),
-          0 10px 22px rgba(0, 0, 0, 0.5),
-          12px 12px 0 rgba(0, 0, 0, 0.38);
-        backdrop-filter: blur(14px) saturate(120%);
-        -webkit-backdrop-filter: blur(14px) saturate(120%);
-        opacity: 1 !important;
-        transform-origin: center;
-        transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
-        animation:
-          float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite,
-          vhs-wobble 6s ease-in-out infinite;
-        will-change: transform, box-shadow;
-      "
     >
       <style>
         {`
           .terminal-window {
+            /* Palette tokens */
+            --terminal-color-mauveine-rgb: 128 0 150;
+            --terminal-color-veronica-rgb: 178 0 209;
+            --terminal-color-rose-rgb: 255 0 132;
+            --terminal-color-pumpkin-rgb: 255 106 0;
+            --terminal-color-orange-peel-rgb: 255 162 0;
+            --terminal-color-neon-rgb: 28 255 107;
+
+            /* Derived tokens */
+            --terminal-border-color: var(--color-border, rgb(var(--terminal-color-veronica-rgb)));
+            --terminal-bg-base: rgb(2 4 12 / 0.94);
+            --terminal-bg-layer-sunset: linear-gradient(
+              135deg,
+              rgb(var(--terminal-color-pumpkin-rgb) / 0.24) 0%,
+              rgb(var(--terminal-color-rose-rgb) / 0.2) 38%,
+              rgb(var(--terminal-color-veronica-rgb) / 0.22) 68%,
+              rgb(var(--terminal-color-mauveine-rgb) / 0.28) 100%
+            );
+            --terminal-bg-layer-north: radial-gradient(
+              circle at 20% 16%,
+              rgb(var(--terminal-color-rose-rgb) / 0.18),
+              transparent 56%
+            );
+            --terminal-bg-layer-south: radial-gradient(
+              circle at 78% 86%,
+              rgb(var(--terminal-color-orange-peel-rgb) / 0.18),
+              transparent 62%
+            );
+            --terminal-shadow-midnight: rgb(0 0 0 / 0.7);
+            --terminal-shadow-soft: rgb(0 0 0 / 0.5);
+            --terminal-shadow-offset: rgb(0 0 0 / 0.38);
+            --terminal-shadow-hover-midnight: rgb(0 0 0 / 0.8);
+            --terminal-shadow-hover-soft: rgb(0 0 0 / 0.58);
+            --terminal-shadow-hover-offset: rgb(0 0 0 / 0.4);
+            --terminal-shadow-breathe-a: rgb(0 0 0 / 0.64);
+            --terminal-shadow-breathe-b: rgb(65 32 128 / 0.45);
+            --terminal-shadow-breathe-offset: rgb(0 0 0 / 0.34);
+            --terminal-shadow-breathe-a-strong: rgb(0 0 0 / 0.76);
+            --terminal-shadow-breathe-accent: rgb(109 40 217 / 0.4);
+            --terminal-shadow-breathe-offset-strong: rgb(12 10 32 / 0.5);
+            --terminal-shadow-breathe-max: rgb(0 0 0 / 0.88);
+            --terminal-shadow-breathe-highlight: rgb(168 85 247 / 0.42);
+            --terminal-shadow-breathe-offset-max: rgb(18 16 48 / 0.55);
+            --terminal-shadow-breathe-a-hover: rgb(0 0 0 / 0.8);
+            --terminal-shadow-breathe-deep: rgb(88 28 135 / 0.42);
+            --terminal-shadow-breathe-offset-soft: rgb(10 8 28 / 0.48);
+            --terminal-text-color: rgb(var(--terminal-color-neon-rgb));
+            --terminal-text-filter: saturate(1.65) brightness(1.08);
+            --terminal-text-shadow: 0 0 3px rgb(var(--terminal-color-neon-rgb) / 0.55),
+              0 0 8px rgb(var(--terminal-color-neon-rgb) / 0.18);
+            --terminal-glow-magenta: rgb(var(--terminal-color-rose-rgb) / 0.28);
+            --terminal-glow-violet: rgb(var(--terminal-color-veronica-rgb) / 0.24);
+            --terminal-glow-amber: rgb(var(--terminal-color-orange-peel-rgb) / 0.18);
+            --terminal-border-hover: rgb(var(--terminal-color-veronica-rgb) / 0.95);
+            --terminal-overlay-light: rgb(255 255 255 / 0.02);
+            --terminal-overlay-dark: rgb(0 0 0 / 0.025);
+
             opacity: 1 !important;
             width: 76vw !important;
             max-width: 76vw !important;
             min-height: 60vh !important;
             margin: 0 auto !important;
             overflow: visible;
+            background:
+              var(--terminal-bg-layer-sunset),
+              var(--terminal-bg-layer-north),
+              var(--terminal-bg-layer-south),
+              var(--terminal-bg-base);
+            border: 3px solid var(--terminal-border-color);
+            box-shadow:
+              0 26px 48px var(--terminal-shadow-midnight),
+              0 10px 22px var(--terminal-shadow-soft),
+              12px 12px 0 var(--terminal-shadow-offset);
+            backdrop-filter: blur(14px) saturate(120%);
+            -webkit-backdrop-filter: blur(14px) saturate(120%);
+            transform-origin: center;
+            transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
+            animation:
+              float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite,
+              vhs-wobble 6s ease-in-out infinite;
+            will-change: transform, box-shadow;
           }
 
 
           .terminal-window:hover {
             transform: translateY(-6px) scale(1.004);
             box-shadow:
-              0 42px 72px rgba(0, 0, 0, 0.8),
-              0 20px 32px rgba(0, 0, 0, 0.58),
-              18px 18px 0 rgba(0, 0, 0, 0.4);
-            border-color: rgba(199, 120, 255, 0.95);
+              0 42px 72px var(--terminal-shadow-hover-midnight),
+              0 20px 32px var(--terminal-shadow-hover-soft),
+              18px 18px 0 var(--terminal-shadow-hover-offset);
+            border-color: var(--terminal-border-hover);
             animation-play-state: paused, paused;
           }
 
+          /* Aura is rendered via ::before; keep gradients edge-weighted so the frosted interior stays clear */
           .terminal-window::before {
             content: "";
             position: absolute;
-            inset: -20px;
+            inset: -28px;
             border-radius: inherit;
             background:
-              radial-gradient(120% 120% at 50% 18%, rgba(255, 120, 64, 0.18), transparent 62%),
-              radial-gradient(110% 110% at 50% 82%, rgba(120, 74, 255, 0.2), transparent 64%);
-            filter: blur(26px);
-            opacity: 0.42;
+              radial-gradient(140% 140% at 50% 12%,
+                rgb(var(--terminal-color-pumpkin-rgb) / 0.32),
+                rgb(var(--terminal-color-orange-peel-rgb) / 0.28) 28%,
+                transparent 58%),
+              radial-gradient(130% 130% at 50% 88%,
+                rgb(var(--terminal-color-veronica-rgb) / 0.36),
+                rgb(var(--terminal-color-mauveine-rgb) / 0.32) 32%,
+                transparent 62%),
+              radial-gradient(ellipse 110% 150% at 18% 50%,
+                rgb(var(--terminal-color-rose-rgb) / 0.24),
+                transparent 54%),
+              radial-gradient(ellipse 110% 150% at 82% 50%,
+                rgb(var(--terminal-color-orange-peel-rgb) / 0.22),
+                transparent 52%);
+            opacity: 0.48;
             transform-origin: center;
             animation: aura-pulse 14s ease-in-out infinite;
             pointer-events: none;
@@ -231,30 +297,36 @@ export function TerminalDisplay({
           .terminal-window::after {
             content: "";
             position: absolute;
-            inset: -4px;
+            inset: 0;
             border-radius: inherit;
             pointer-events: none;
             background:
               repeating-linear-gradient(
                 120deg,
-                rgba(255, 255, 255, 0.02),
-                rgba(255, 255, 255, 0.02) 1px,
+                var(--terminal-overlay-light),
+                var(--terminal-overlay-light) 1px,
                 transparent 1px,
                 transparent 3px
               ),
               repeating-linear-gradient(
                 45deg,
-                rgba(0, 0, 0, 0.025),
-                rgba(0, 0, 0, 0.025) 1px,
+                var(--terminal-overlay-dark),
+                var(--terminal-overlay-dark) 1px,
                 transparent 1px,
                 transparent 2px
+              ),
+              repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 1px,
+                rgb(255 255 255 / 0.015) 2px,
+                transparent 3px
               );
-            opacity: 0.22;
+            opacity: 0.28;
             mix-blend-mode: overlay;
-            animation: grain-shift 1.6s steps(6) infinite;
+            animation: grain-shift 1.8s steps(8) infinite;
             z-index: 1;
           }
-
 
           .terminal-header {
             position: relative;
@@ -303,56 +375,60 @@ export function TerminalDisplay({
             0% {
               transform: translateY(0) scale(1) rotate(-0.45deg);
               box-shadow:
-                0 22px 40px rgba(0, 0, 0, 0.64),
-                0 12px 26px rgba(65, 32, 128, 0.45),
-                12px 12px 0 rgba(0, 0, 0, 0.34);
+                0 22px 40px var(--terminal-shadow-breathe-a),
+                0 12px 26px var(--terminal-shadow-breathe-b),
+                12px 12px 0 var(--terminal-shadow-breathe-offset);
             }
             22% {
               transform: translateY(-10px) scale(1.008) rotate(0.25deg);
               box-shadow:
-                0 32px 58px rgba(0, 0, 0, 0.76),
-                0 20px 38px rgba(109, 40, 217, 0.4),
-                15px 15px 0 rgba(12, 10, 32, 0.5);
+                0 32px 58px var(--terminal-shadow-breathe-a-strong),
+                0 20px 38px var(--terminal-shadow-breathe-accent),
+                15px 15px 0 var(--terminal-shadow-breathe-offset-strong);
             }
             50% {
               transform: translateY(-18px) scale(1.016) rotate(0.75deg);
               box-shadow:
-                0 44px 78px rgba(0, 0, 0, 0.88),
-                0 28px 48px rgba(168, 85, 247, 0.42),
-                20px 20px 0 rgba(18, 16, 48, 0.55);
+                0 44px 78px var(--terminal-shadow-breathe-max),
+                0 28px 48px var(--terminal-shadow-breathe-highlight),
+                20px 20px 0 var(--terminal-shadow-breathe-offset-max);
             }
             78% {
               transform: translateY(-9px) scale(1.01) rotate(-0.05deg);
               box-shadow:
-                0 34px 62px rgba(0, 0, 0, 0.8),
-                0 18px 32px rgba(88, 28, 135, 0.42),
-                15px 15px 0 rgba(10, 8, 28, 0.48);
+                0 34px 62px var(--terminal-shadow-breathe-a-hover),
+                0 18px 32px var(--terminal-shadow-breathe-deep),
+                15px 15px 0 var(--terminal-shadow-breathe-offset-soft);
             }
             100% {
               transform: translateY(0) scale(1) rotate(-0.45deg);
               box-shadow:
-                0 22px 40px rgba(0, 0, 0, 0.64),
-                0 12px 26px rgba(65, 32, 128, 0.45),
-                12px 12px 0 rgba(0, 0, 0, 0.34);
+                0 22px 40px var(--terminal-shadow-breathe-a),
+                0 12px 26px var(--terminal-shadow-breathe-b),
+                12px 12px 0 var(--terminal-shadow-breathe-offset);
             }
           }
 
           @keyframes vhs-wobble {
             0%, 100% {
-              transform: rotate(-0.4deg) translate3d(0, 0, 0);
-              filter: hue-rotate(0deg);
+              transform: rotate(-0.4deg) translate3d(0, 0, 0) scale(1);
+              filter: hue-rotate(0deg) brightness(1);
             }
-            30% {
-              transform: rotate(0.35deg) translate3d(1px, 0, 0);
-              filter: hue-rotate(-2deg);
+            22% {
+              transform: rotate(0.4deg) translate3d(1.2px, 0, 0) scale(1.001);
+              filter: hue-rotate(-3deg) brightness(0.998);
             }
-            58% {
-              transform: rotate(0.15deg) translate3d(-1px, -0.5px, 0);
-              filter: hue-rotate(1deg);
+            46% {
+              transform: rotate(-0.25deg) translate3d(-0.8px, 0.5px, 0) scale(0.9995);
+              filter: hue-rotate(4deg) brightness(1.002);
             }
-            74% {
-              transform: rotate(-0.2deg) translate3d(0.5px, 0, 0);
-              filter: hue-rotate(-1deg);
+            68% {
+              transform: rotate(0.2deg) translate3d(0.5px, -0.3px, 0) scale(1.0005);
+              filter: hue-rotate(-2deg) brightness(0.999);
+            }
+            84% {
+              transform: rotate(-0.15deg) translate3d(-0.4px, 0, 0) scale(1);
+              filter: hue-rotate(1deg) brightness(1.001);
             }
           }
 
@@ -418,28 +494,45 @@ export function TerminalDisplay({
 
           @keyframes aura-pulse {
             0%, 100% {
-              opacity: 0.36;
-              transform: scale(1) translate3d(0, 0, 0);
+              opacity: 0.42;
+              transform: scale(1) translate3d(0, 0, 0) rotate(0deg);
+              filter: blur(32px) saturate(140%) hue-rotate(0deg);
             }
-            48% {
-              opacity: 0.52;
-              transform: scale(1.06) translate3d(0, -6px, 0);
+            28% {
+              opacity: 0.48;
+              transform: scale(1.04) translate3d(0, -4px, 0) rotate(0.5deg);
+              filter: blur(36px) saturate(155%) hue-rotate(3deg);
             }
-            72% {
-              opacity: 0.4;
-              transform: scale(0.98) translate3d(0, 3px, 0);
+            52% {
+              opacity: 0.56;
+              transform: scale(1.08) translate3d(0, -8px, 0) rotate(-0.3deg);
+              filter: blur(38px) saturate(165%) hue-rotate(-2deg);
+            }
+            74% {
+              opacity: 0.44;
+              transform: scale(0.98) translate3d(0, 2px, 0) rotate(0.2deg);
+              filter: blur(30px) saturate(135%) hue-rotate(1deg);
             }
           }
 
           @keyframes grain-shift {
             0% {
-              background-position: 0 0, 0 0;
+              background-position: 0 0, 0 0, 0 0;
             }
             50% {
-              background-position: 11px 7px, -7px -12px;
+              background-position: 11px 7px, -7px -12px, 4px -3px;
             }
             100% {
-              background-position: -5px 10px, 9px -8px;
+              background-position: -5px 10px, 9px -8px, -6px 5px;
+            }
+          }
+
+          @keyframes scanline-scroll {
+            0% {
+              background-position: 0 0;
+            }
+            100% {
+              background-position: 0 4px;
             }
           }
 
@@ -447,6 +540,7 @@ export function TerminalDisplay({
             .terminal-window,
             .terminal-window::before,
             .terminal-window::after,
+            .terminal-content::before,
             .terminal-content::after,
             .terminal-text .ascii-display.typing-trail {
               animation: none !important;
