@@ -131,25 +131,22 @@ export function applyColorToArt(art: string, effect: string): string {
     if (inHeader) {
       headerLineIndex++;
       const isTitleLine = headerLineIndex === 1;
-      // Typography improvements: larger titles, better spacing
+      // Terminal-authentic typography: tighter spacing
       const fontSize = isTitleLine
-        ? "clamp(24px, 5.5vw, 38px)" // 1.6-1.9rem equivalent
-        : "clamp(14px, 3.5vw, 22px)"; // 0.9-1rem equivalent
-      const letterSpacing = isTitleLine ? "0.22em" : "0.16em"; // More breathing
-      const marginBottom = isTitleLine ? "0.8em" : "0.5em"; // Add rhythm
-      const fontFamily = "'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace";
-      const textShadow = isTitleLine
-        ? "0 0 4px currentColor, 0 0 12px rgba(255, 215, 0, 0.25)" // Stronger glow for titles
-        : "0 0 2px currentColor, 0 0 6px rgba(255, 215, 0, 0.15)"; // Subtle for subtitles
+        ? "clamp(20px, 5vw, 32px)"
+        : "clamp(14px, 3.5vw, 20px)";
+      const letterSpacing = isTitleLine ? "0.15em" : "0.1em";
+      const marginBottom = isTitleLine ? "0.3em" : "0.2em"; // Tighter rhythm
+      const fontFamily = "'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace";
 
-      // Header gets special bright color
+      // Header gets special bright color - minimal glow
       colorizedLines.push(
-        `<span style="color: ${headerColor}; font-weight: 900; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; font-family: ${fontFamily}; text-transform: uppercase; display: block; margin-bottom: ${marginBottom}; text-shadow: ${textShadow};">${
+        `<span style="color: ${headerColor}; font-weight: 700; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; font-family: ${fontFamily}; text-transform: uppercase; display: block; margin-bottom: ${marginBottom}; line-height: 1.3;">${
           escapeHtml(line)
         }</span>`,
       );
     } else if (line.trim()) {
-      // Body gets gradient effect with reduced glow
+      // Body gets gradient effect - NO glow for readability
       const color = getEffectColor(
         effect,
         Math.floor(line.length / 2),
@@ -157,9 +154,9 @@ export function applyColorToArt(art: string, effect: string): string {
         line.length,
         lines.length,
       );
-      // Body text: 0.95rem, better line-height, reduced glow by ~40%
+      // Terminal-like body text: tight spacing, no glow
       colorizedLines.push(
-        `<span style="color: ${color}; font-size: clamp(14px, 3.8vw, 19px); line-height: 1.75; text-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 0 4px currentColor; opacity: 0.92;">${escapeHtml(line)}</span>`,
+        `<span style="color: ${color}; font-size: clamp(13px, 3.5vw, 17px); line-height: 1.4; font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;">${escapeHtml(line)}</span>`,
       );
     } else {
       // Empty lines stay empty

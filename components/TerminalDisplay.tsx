@@ -189,8 +189,8 @@ export function TerminalDisplay({
             --terminal-color-neon-rgb: 28 255 107;
 
             /* Derived tokens */
-            --terminal-border-color: rgb(var(--terminal-color-veronica-rgb) / 0.75); /* Reduced saturation ~20% */
-            --terminal-bg-base: rgb(2 4 12 / 0.35);
+            --terminal-border-color: rgb(var(--terminal-color-veronica-rgb));
+            --terminal-bg-base: rgb(2 4 12 / 0.88);
             --terminal-bg-layer-sunset: linear-gradient(
               135deg,
               rgb(var(--terminal-color-pumpkin-rgb) / 0.12) 0%,
@@ -247,7 +247,7 @@ export function TerminalDisplay({
               var(--terminal-bg-layer-north),
               var(--terminal-bg-layer-south),
               var(--terminal-bg-base);
-            border: 2px solid var(--terminal-border-color);
+            border: 4px solid var(--terminal-border-color);
             box-shadow:
               0 26px 48px var(--terminal-shadow-midnight),
               0 10px 22px var(--terminal-shadow-soft),
@@ -348,37 +348,37 @@ export function TerminalDisplay({
 
           @media (max-width: 639px) {
             .terminal-window {
-              border-width: 2px !important;
+              border-width: 4px !important;
               width: 92vw !important;
               max-width: 92vw !important;
               min-height: 72vh !important;
             }
             .terminal-header {
-              border-bottom-width: 2px !important;
+              border-bottom-width: 4px !important;
             }
           }
 
           @media (min-width: 640px) {
             .terminal-window {
-              border-width: 2px !important;
+              border-width: 4px !important;
               width: 85vw !important;
               max-width: 85vw !important;
               min-height: 66vh !important;
             }
             .terminal-header {
-              border-bottom-width: 2px !important;
+              border-bottom-width: 4px !important;
             }
           }
 
           @media (min-width: 1024px) {
             .terminal-window {
-              border-width: 3px !important;
+              border-width: 4px !important;
               width: 76vw !important;
               max-width: 76vw !important;
               min-height: 60vh !important;
             }
             .terminal-header {
-              border-bottom-width: 3px !important;
+              border-bottom-width: 4px !important;
             }
           }
 
@@ -626,13 +626,13 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="padding: 52px 40px 64px; background-color: rgba(0, 0, 0, 0.35) !important; background: rgba(0, 0, 0, 0.35) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
+        style="padding: 52px 40px 64px; background-color: rgba(0, 0, 0, 0.78) !important; background: rgba(0, 0, 0, 0.78) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
       >
         <style>
           {`
             .terminal-content {
-              background-color: rgba(0, 0, 0, 0.35) !important;
-              background: rgba(0, 0, 0, 0.35) !important;
+              background-color: rgba(0, 0, 0, 0.78) !important;
+              background: rgba(0, 0, 0, 0.78) !important;
               overflow-x: hidden;
               overflow-y: auto;
               padding: 52px 40px 64px !important;
