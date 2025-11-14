@@ -464,44 +464,6 @@ export function TerminalDisplay({
             }
           }
 
-          @keyframes text-trail {
-            0% {
-              text-shadow:
-                0 0 6px rgba(255, 122, 47, 0.55),
-                0 0 14px rgba(0, 255, 214, 0.45),
-                0 0 22px rgba(120, 74, 255, 0.4);
-              filter: saturate(1.8) brightness(1.12);
-            }
-            70% {
-              text-shadow:
-                0 0 4px rgba(255, 122, 47, 0.32),
-                0 0 12px rgba(0, 255, 214, 0.32),
-                0 0 18px rgba(120, 74, 255, 0.28);
-              filter: saturate(1.3) brightness(1.05);
-            }
-            100% {
-              text-shadow:
-                0 0 3px rgba(28, 255, 107, 0.55),
-                0 0 8px rgba(28, 255, 107, 0.18);
-              filter: saturate(1.65) brightness(1.08);
-            }
-          }
-
-          @keyframes text-wash {
-            0% {
-              opacity: 0.26;
-              transform: translateX(-5px) skewX(-0.8deg);
-            }
-            70% {
-              opacity: 0.1;
-              transform: translateX(2px) skewX(0.4deg);
-            }
-            100% {
-              opacity: 0;
-              transform: translateX(6px) skewX(1deg);
-            }
-          }
-
           @keyframes aura-pulse {
             0%, 100% {
               opacity: 0.42;
@@ -551,8 +513,7 @@ export function TerminalDisplay({
             .terminal-window::before,
             .terminal-window::after,
             .terminal-content::before,
-            .terminal-content::after,
-            .terminal-text .ascii-display.typing-trail {
+            .terminal-content::after {
               animation: none !important;
               transition: none !important;
             }
@@ -707,21 +668,6 @@ export function TerminalDisplay({
               z-index: 10;
             }
 
-            .terminal-text .ascii-display.typing-trail {
-              animation: text-trail 0.34s ease-out;
-            }
-
-            .terminal-text .ascii-display.typing-trail::after {
-              content: "";
-              position: absolute;
-              inset: -2px;
-              pointer-events: none;
-              background: linear-gradient(90deg, rgba(255, 122, 47, 0.22), rgba(0, 255, 214, 0.16));
-              opacity: 0.22;
-              filter: blur(6px);
-              mix-blend-mode: screen;
-              animation: text-wash 0.34s ease-out;
-            }
             @media (max-width: 639px) {
               .terminal-content {
                 min-height: 68vh !important;
@@ -762,7 +708,7 @@ export function TerminalDisplay({
               speed={typewriterSpeed}
               enabled={true}
               onComplete={() => setTypingComplete(true)}
-              className="ascii-display font-mono opacity-90 typing-trail"
+              className="ascii-display font-mono opacity-90"
               style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
             />
           )
