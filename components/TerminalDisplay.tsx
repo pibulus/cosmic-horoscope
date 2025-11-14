@@ -154,9 +154,11 @@ export function TerminalDisplay({
 
   const hasContent = Boolean(content);
   const baseTextStyle = [
-    "color: var(--terminal-text-color, #1cff6b)",
-    "font-size: clamp(16px, 4.5vw, 26px)",
-    "line-height: 1.6",
+    "font-family: var(--mono)",
+    "color: var(--accent-soft, #ffdfb5)",
+    "font-size: 14px",
+    "line-height: 1.7",
+    "letter-spacing: 0.04em",
     "white-space: pre-wrap",
     "word-break: break-word",
     "overflow-wrap: anywhere",
@@ -164,13 +166,13 @@ export function TerminalDisplay({
     "padding: 0",
     "display: block",
     "position: relative",
-    "max-width: 100%",
+    "max-width: 42ch",
     "box-sizing: border-box",
     "text-align: left",
     "text-indent: 0",
-    "font-weight: 900",
-    "filter: var(--terminal-text-filter, saturate(1.65) brightness(1.08))",
-    "text-shadow: var(--terminal-text-shadow, 0 0 3px rgba(28, 255, 107, 0.55), 0 0 8px rgba(28, 255, 107, 0.18))",
+    "font-weight: 400",
+    "filter: var(--terminal-text-filter, saturate(1.1) brightness(1.0))",
+    "text-shadow: none",
   ].join("; ");
 
   return (
@@ -182,124 +184,59 @@ export function TerminalDisplay({
           .terminal-window {
             /* Palette tokens */
             --terminal-color-mauveine-rgb: 128 0 150;
-            --terminal-color-veronica-rgb: 178 0 209;
-            --terminal-color-rose-rgb: 255 0 132;
+            --terminal-color-veronica-rgb: 255 79 212;
+            --terminal-color-rose-rgb: 255 0 200;
             --terminal-color-pumpkin-rgb: 255 106 0;
             --terminal-color-orange-peel-rgb: 255 162 0;
             --terminal-color-neon-rgb: 28 255 107;
 
             /* Derived tokens */
-            --terminal-border-color: var(--color-border, rgb(var(--terminal-color-veronica-rgb)));
-            --terminal-bg-base: rgb(2 4 12 / 0.98);
-            --terminal-bg-layer-sunset: linear-gradient(
-              135deg,
-              rgb(var(--terminal-color-pumpkin-rgb) / 0.12) 0%,
-              rgb(var(--terminal-color-rose-rgb) / 0.1) 38%,
-              rgb(var(--terminal-color-veronica-rgb) / 0.11) 68%,
-              rgb(var(--terminal-color-mauveine-rgb) / 0.14) 100%
-            );
-            --terminal-bg-layer-north: radial-gradient(
-              circle at 20% 16%,
-              rgb(var(--terminal-color-rose-rgb) / 0.09),
-              transparent 56%
-            );
-            --terminal-bg-layer-south: radial-gradient(
-              circle at 78% 86%,
-              rgb(var(--terminal-color-orange-peel-rgb) / 0.09),
-              transparent 62%
-            );
-            --terminal-shadow-midnight: rgb(0 0 0 / 0.7);
-            --terminal-shadow-soft: rgb(0 0 0 / 0.5);
-            --terminal-shadow-offset: rgb(0 0 0 / 0.38);
-            --terminal-shadow-hover-midnight: rgb(0 0 0 / 0.8);
-            --terminal-shadow-hover-soft: rgb(0 0 0 / 0.58);
-            --terminal-shadow-hover-offset: rgb(0 0 0 / 0.4);
-            --terminal-shadow-breathe-a: rgb(0 0 0 / 0.64);
-            --terminal-shadow-breathe-b: rgb(65 32 128 / 0.45);
-            --terminal-shadow-breathe-offset: rgb(0 0 0 / 0.34);
-            --terminal-shadow-breathe-a-strong: rgb(0 0 0 / 0.76);
-            --terminal-shadow-breathe-accent: rgb(109 40 217 / 0.4);
-            --terminal-shadow-breathe-offset-strong: rgb(12 10 32 / 0.5);
-            --terminal-shadow-breathe-max: rgb(0 0 0 / 0.88);
-            --terminal-shadow-breathe-highlight: rgb(168 85 247 / 0.42);
-            --terminal-shadow-breathe-offset-max: rgb(18 16 48 / 0.55);
-            --terminal-shadow-breathe-a-hover: rgb(0 0 0 / 0.8);
-            --terminal-shadow-breathe-deep: rgb(88 28 135 / 0.42);
-            --terminal-shadow-breathe-offset-soft: rgb(10 8 28 / 0.48);
-            --terminal-text-color: rgb(var(--terminal-color-neon-rgb));
-            --terminal-text-filter: saturate(1.65) brightness(1.08);
-            --terminal-text-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 0 4px currentColor;
-            --terminal-glow-magenta: rgb(var(--terminal-color-rose-rgb) / 0.28);
-            --terminal-glow-violet: rgb(var(--terminal-color-veronica-rgb) / 0.24);
-            --terminal-glow-amber: rgb(var(--terminal-color-orange-peel-rgb) / 0.18);
-            --terminal-border-hover: rgb(var(--terminal-color-veronica-rgb) / 0.95);
-            --terminal-overlay-light: rgb(255 255 255 / 0.02);
-            --terminal-overlay-dark: rgb(0 0 0 / 0.025);
+            --terminal-border-color: #ff4fd4;
+            --terminal-bg-base: radial-gradient(circle at top, #130014 0, #050007 55%, #020006 100%);
+            --terminal-text-color: var(--accent-soft, #ffdfb5);
+            --terminal-text-filter: saturate(1.1) brightness(1.0);
+            --terminal-text-shadow: none;
 
+            position: relative;
             opacity: 1 !important;
             width: 76vw !important;
             max-width: 76vw !important;
             min-height: 60vh !important;
             margin: 0 auto !important;
             overflow: visible;
-            background:
-              var(--terminal-bg-layer-sunset),
-              var(--terminal-bg-layer-north),
-              var(--terminal-bg-layer-south),
-              var(--terminal-bg-base);
-            border: 3px solid var(--terminal-border-color);
+            background: var(--terminal-bg-base);
+            border-radius: 18px;
+            border: 2px solid var(--terminal-border-color);
             box-shadow:
-              0 26px 48px var(--terminal-shadow-midnight),
-              0 10px 22px var(--terminal-shadow-soft),
-              12px 12px 0 var(--terminal-shadow-offset);
+              0 0 25px rgba(255, 0, 200, 0.55),
+              0 0 0 1px rgba(0, 0, 0, 0.9);
+            padding: 3rem 4rem;
             backdrop-filter: blur(14px) saturate(120%);
             -webkit-backdrop-filter: blur(14px) saturate(120%);
             transform-origin: center;
-            transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
-            animation:
-              float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite,
-              vhs-wobble 6s ease-in-out infinite;
+            transition: transform 200ms ease-out, box-shadow 200ms ease-out;
             will-change: transform, box-shadow;
           }
 
 
-          .terminal-window:hover {
-            transform: translateY(-6px) scale(1.004);
-            box-shadow:
-              0 42px 72px var(--terminal-shadow-hover-midnight),
-              0 20px 32px var(--terminal-shadow-hover-soft),
-              18px 18px 0 var(--terminal-shadow-hover-offset);
-            border-color: var(--terminal-border-hover);
-            animation-play-state: paused, paused;
+          @media (hover:hover) {
+            .terminal-window:hover {
+              transform: translateY(-4px);
+              box-shadow:
+                0 0 35px rgba(255, 0, 200, 0.8),
+                0 18px 40px rgba(0, 0, 0, 0.8);
+            }
           }
 
-          /* Aura is rendered via ::before; keep gradients edge-weighted so the frosted interior stays clear */
+          /* Inner border for glass effect */
           .terminal-window::before {
             content: "";
             position: absolute;
-            inset: -28px;
-            border-radius: inherit;
-            background:
-              radial-gradient(140% 140% at 50% 12%,
-                rgb(var(--terminal-color-pumpkin-rgb) / 0.32),
-                rgb(var(--terminal-color-orange-peel-rgb) / 0.28) 28%,
-                transparent 58%),
-              radial-gradient(130% 130% at 50% 88%,
-                rgb(var(--terminal-color-veronica-rgb) / 0.36),
-                rgb(var(--terminal-color-mauveine-rgb) / 0.32) 32%,
-                transparent 62%),
-              radial-gradient(ellipse 110% 150% at 18% 50%,
-                rgb(var(--terminal-color-rose-rgb) / 0.24),
-                transparent 54%),
-              radial-gradient(ellipse 110% 150% at 82% 50%,
-                rgb(var(--terminal-color-orange-peel-rgb) / 0.22),
-                transparent 52%);
-            opacity: 0.48;
-            transform-origin: center;
-            animation: aura-pulse 14s ease-in-out infinite;
+            inset: 2px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             pointer-events: none;
-            mix-blend-mode: screen;
-            z-index: 0;
+            z-index: 1;
           }
 
           /* Film grain overlay - sits behind content, only affects window chrome */
@@ -525,22 +462,42 @@ export function TerminalDisplay({
         class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
         style="background-color: rgba(0, 0, 0, 1); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20;"
       >
-        <div class="flex space-x-1.5 sm:space-x-2">
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Close (jk)"
-          >
-          </div>
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-yellow-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Minimize (nope)"
-          >
-          </div>
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Full screen (maybe)"
-          >
-          </div>
+        <div class="traffic-lights">
+          <style>
+            {`
+              .traffic-lights {
+                display: flex;
+                gap: 6px;
+              }
+
+              .traffic-light {
+                width: 8px;
+                height: 8px;
+                border-radius: 999px;
+                background: #ff5f57;
+                box-shadow: 0 0 6px rgba(255,95,87,0.7);
+              }
+
+              .traffic-light:nth-child(2) {
+                background: #ffbd2e;
+                box-shadow: 0 0 6px rgba(255,189,46,0.7);
+              }
+
+              .traffic-light:nth-child(3) {
+                background: #28c840;
+                box-shadow: 0 0 6px rgba(40,200,64,0.7);
+                animation: breathe 2.6s ease-in-out infinite;
+              }
+
+              @keyframes breathe {
+                0%, 100% { box-shadow: 0 0 4px rgba(40,200,64,0.3); }
+                50% { box-shadow: 0 0 14px rgba(40,200,64,0.9); }
+              }
+            `}
+          </style>
+          <div class="traffic-light" title="Close"></div>
+          <div class="traffic-light" title="Minimize"></div>
+          <div class="traffic-light" title="Maximize"></div>
         </div>
         <div class="flex items-center gap-2 sm:gap-4">
           {/* Only show terminal path when NOT in horoscope mode */}
@@ -555,38 +512,71 @@ export function TerminalDisplay({
 
           {/* Period toggle (horoscope mode) */}
           {onPeriodChange && currentPeriod && (
-            <div
-              class="flex items-center gap-2 sm:gap-3 font-mono text-[11px] sm:text-sm uppercase tracking-[0.28em]"
-              style="color: rgba(0, 255, 65, 0.7); font-weight: 800;"
-            >
-              {periodOptions.map(({ value, label }, index) => (
-                <span class="flex items-center gap-2" key={value}>
-                  <button
-                    type="button"
-                    class="hover:opacity-100 transition-all focus:outline-none active:scale-95"
-                    style={`background: transparent; border: none; padding: 0; margin: 0; color: ${
-                      value === currentPeriod ? "#1cff6b" : "rgba(0, 255, 65, 0.55)"
-                    }; font-weight: 900; letter-spacing: 0.3em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35em;`}
-                    onClick={() => {
-                      if (value !== currentPeriod) {
-                        sounds.click();
-                        onPeriodChange(value);
-                      }
-                    }}
-                  >
-                    <span style="letter-spacing: inherit;">
-                      {label.toUpperCase()}
-                    </span>
-                  </button>
-                  {index < periodOptions.length - 1 && (
-                    <span
-                      class="opacity-40 text-[10px] sm:text-xs"
-                      style="color: rgba(0,255,65,0.4); letter-spacing: 0;"
-                    >
-                      •
-                    </span>
-                  )}
-                </span>
+            <div class="horoscope-nav">
+              <style>
+                {`
+                  .horoscope-nav {
+                    display: flex;
+                    gap: 1.5rem;
+                    font-family: var(--sans);
+                    font-size: 11px;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                  }
+
+                  .horoscope-nav button {
+                    position: relative;
+                    background: none;
+                    border: none;
+                    color: #3cff8f;
+                    padding: 0;
+                    cursor: pointer;
+                    opacity: 0.6;
+                    transition: opacity 160ms ease-out, transform 120ms ease-out;
+                  }
+
+                  .horoscope-nav button::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: -4px;
+                    height: 2px;
+                    background: linear-gradient(90deg, #3cff8f, #a3ffcf);
+                    transform-origin: center;
+                    transform: scaleX(0);
+                    transition: transform 160ms ease-out;
+                  }
+
+                  .horoscope-nav button:hover {
+                    opacity: 1;
+                    transform: translateY(-1px);
+                  }
+
+                  .horoscope-nav button:hover::after,
+                  .horoscope-nav button.is-active::after {
+                    transform: scaleX(1);
+                  }
+
+                  .horoscope-nav button.is-active {
+                    opacity: 1;
+                  }
+                `}
+              </style>
+              {periodOptions.map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  class={value === currentPeriod ? "is-active" : ""}
+                  onClick={() => {
+                    if (value !== currentPeriod) {
+                      sounds.click();
+                      onPeriodChange(value);
+                    }
+                  }}
+                >
+                  {label.toUpperCase()}
+                </button>
               ))}
             </div>
           )}
@@ -894,6 +884,23 @@ export function TerminalDisplay({
           .ascii-display {
             letter-spacing: 0.8px;
           }
+        }
+
+        /* Blinking cursor at the end of text */
+        .ascii-display::after {
+          content: "";
+          display: inline-block;
+          width: 0.6em;
+          height: 1.1em;
+          margin-left: 0.1em;
+          background: var(--accent-soft, #ffdfb5);
+          vertical-align: -0.1em;
+          animation: cursor-blink 1s steps(1) infinite;
+        }
+
+        @keyframes cursor-blink {
+          0%, 50% { opacity: 1; }
+          50.01%, 100% { opacity: 0; }
         }
       `}
       </style>

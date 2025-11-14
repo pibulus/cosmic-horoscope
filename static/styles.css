@@ -15,13 +15,25 @@
   initial-value: 45deg;
 }
 
-/* Root variables for theming - Neo-brutalist minimal */
+/* Root variables for theming - Neo-brutalist minimal + Horoscope Terminal */
 :root {
   --color-base: #0a0a0a;
   --color-secondary: #1a1a1a;
   --color-accent: #a855f7;
   --color-text: #faf9f6;
   --color-border: #a855f7;
+
+  /* Horoscope terminal palette */
+  --bg: #05030a;
+  --card-bg: #050007;
+  --accent: #ffb347;       /* gold/orange */
+  --accent-soft: #ffdfb5;  /* softer text */
+  --danger: #ff6584;       /* pinky red */
+  --neon-green: #7BFF7B;
+
+  /* Font stacks */
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* Force scrollbar to prevent layout shift */

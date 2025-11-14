@@ -51,6 +51,8 @@ export default function BackgroundCanvas() {
       left: 0;
       width: 100%;
       height: 100%;
+      transition: transform 160ms ease-out;
+      will-change: transform;
     `;
     container.appendChild(canvasB);
 
@@ -210,9 +212,20 @@ export default function BackgroundCanvas() {
     window.addEventListener("resize", resize);
     draw();
 
+    // Parallax effect on mousemove
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 8; // range ~ -4 to 4
+      const y = (e.clientY / window.innerHeight - 0.5) * 8;
+      canvasB.style.transform = `translate(${x}px, ${y}px)`;
+    };
+
+    // Add parallax listener
+    document.addEventListener("mousemove", handleMouseMove);
+
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", resize);
+      document.removeEventListener("mousemove", handleMouseMove);
       container.removeChild(canvasB);
     };
   }, []);
@@ -220,7 +233,7 @@ export default function BackgroundCanvas() {
   return (
     <div
       ref={containerRef}
-      class="fixed inset-0 pointer-events-none"
+      class="fixed inset-0 pointer-events-none stars-layer"
       style="z-index: 1; opacity: 1;"
     />
   );
