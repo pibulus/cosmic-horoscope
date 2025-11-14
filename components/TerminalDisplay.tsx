@@ -120,6 +120,10 @@ export function TerminalDisplay({
     };
   }, []);
 
+  useEffect(() => {
+    setTypingComplete(false);
+  }, [content, htmlContent, enableTypewriter]);
+
   const handleCopy = async () => {
     const success = await copyToClipboard(
       content,
@@ -749,7 +753,7 @@ export function TerminalDisplay({
               </pre>
             </div>
           )
-          : (htmlContent || content) && enableTypewriter
+          : (htmlContent || content) && enableTypewriter && !typingComplete
           ? (
             // Typewriter mode
             <TypedWriter
@@ -758,7 +762,7 @@ export function TerminalDisplay({
               speed={typewriterSpeed}
               enabled={true}
               onComplete={() => setTypingComplete(true)}
-              className="ascii-display font-mono opacity-90"
+              className="ascii-display font-mono opacity-90 typing-trail"
               style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
             />
           )

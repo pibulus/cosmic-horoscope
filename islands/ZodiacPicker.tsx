@@ -107,7 +107,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
         class="text-center mt-6 font-mono"
         style="color: var(--color-text, #faf9f6); opacity: 0.6;"
       >
-        <p class="text-sm md:text-base">✨ Choose wisely, the cosmos is watching ✨</p>
+        <p class="text-sm md:text-base">✨ Pick your star sign and dial in ✨</p>
       </div>
     </div>
   );
