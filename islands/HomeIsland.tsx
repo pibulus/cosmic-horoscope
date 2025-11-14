@@ -87,7 +87,7 @@ export default function HomeIsland() {
       <main
         id="main-content"
         class="w-full h-screen flex items-center justify-center overflow-hidden"
-        style="position: relative; z-index: 10;"
+        style="position: relative; z-index: 1;"
       >
         <div class="w-full h-full flex items-center justify-center">
           {selectedSign.value

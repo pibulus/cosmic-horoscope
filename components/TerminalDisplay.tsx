@@ -190,7 +190,7 @@ export function TerminalDisplay({
 
             /* Derived tokens */
             --terminal-border-color: var(--color-border, rgb(var(--terminal-color-veronica-rgb)));
-            --terminal-bg-base: rgb(2 4 12 / 0.98);
+            --terminal-bg-base: rgb(2 4 12 / 0.35);
             --terminal-bg-layer-sunset: linear-gradient(
               135deg,
               rgb(var(--terminal-color-pumpkin-rgb) / 0.12) 0%,
@@ -342,7 +342,7 @@ export function TerminalDisplay({
             overflow: visible;
             border-bottom-width: 3px !important;
             border-color: var(--color-border, #a855f7) !important;
-            background: rgba(0, 0, 0, 1) !important;
+            background: rgba(0, 0, 0, 0.85) !important;
             border-radius: 0 !important;
           }
 
@@ -523,7 +523,7 @@ export function TerminalDisplay({
       {/* Terminal Menu Bar - Fully opaque to match content */}
       <div
         class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
-        style="background-color: rgba(0, 0, 0, 1); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20;"
+        style="background-color: rgba(0, 0, 0, 0.85); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20;"
       >
         <div class="flex space-x-1.5 sm:space-x-2">
           <div
@@ -608,13 +608,13 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background-color: #000000 !important; background: #000000 !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
+        style="padding: 20px; background-color: rgba(0, 0, 0, 0.35) !important; background: rgba(0, 0, 0, 0.35) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
       >
         <style>
           {`
             .terminal-content {
-              background-color: #000000 !important;
-              background: #000000 !important;
+              background-color: rgba(0, 0, 0, 0.35) !important;
+              background: rgba(0, 0, 0, 0.35) !important;
               overflow-x: hidden;
               overflow-y: auto;
               padding: 20px !important;
