@@ -338,8 +338,7 @@ export function TerminalDisplay({
             overflow: visible;
             border-bottom-width: 3px !important;
             border-color: var(--color-border, #a855f7) !important;
-            background: rgba(0, 0, 0, 1) !important;
-            border-radius: 0 !important;
+            background: rgba(0, 0, 0, 0.9) !important;
           }
 
           @media (max-width: 639px) {
