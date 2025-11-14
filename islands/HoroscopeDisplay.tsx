@@ -126,20 +126,27 @@ export default function HoroscopeDisplay(
       if (inHeader) {
         headerLineIndex++;
         const isTitleLine = headerLineIndex === 1;
+        // Typography improvements: larger titles, better spacing
         const fontSize = isTitleLine
-          ? "clamp(20px, 5vw, 34px)"
-          : "clamp(16px, 4vw, 26px)";
-        const letterSpacing = isTitleLine ? "0.18em" : "0.12em";
+          ? "clamp(24px, 5.5vw, 38px)" // 1.6-1.9rem equivalent
+          : "clamp(14px, 3.5vw, 22px)"; // 0.9-1rem equivalent
+        const letterSpacing = isTitleLine ? "0.22em" : "0.16em"; // More breathing
+        const marginBottom = isTitleLine ? "0.8em" : "0.5em"; // Add rhythm
+        const fontFamily = "'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace";
+        const textShadow = isTitleLine
+          ? "0 0 4px currentColor, 0 0 12px rgba(255, 215, 0, 0.25)" // Stronger glow for titles
+          : "0 0 2px currentColor, 0 0 6px rgba(255, 215, 0, 0.15)"; // Subtle for subtitles
+
         // Header in gold/yellow
         colorizedLines.push(
-          `<span style="color: #FFD700; font-weight: 900; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; text-transform: uppercase;">${
+          `<span style="color: #FFD700; font-weight: 900; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; font-family: ${fontFamily}; text-transform: uppercase; display: block; margin-bottom: ${marginBottom}; text-shadow: ${textShadow};">${
             escapeHtml(line)
           }</span>`,
         );
       } else if (line.trim()) {
-        // Body in terminal green
+        // Body text: 0.95rem, better line-height, reduced glow by ~40%
         colorizedLines.push(
-          `<span style="color: #00FF41;">${escapeHtml(line)}</span>`,
+          `<span style="color: #00FF41; font-size: clamp(14px, 3.8vw, 19px); line-height: 1.75; text-shadow: 0 0 2px rgba(0, 0, 0, 0.3), 0 0 4px currentColor; opacity: 0.92;">${escapeHtml(line)}</span>`,
         );
       } else {
         colorizedLines.push(line);
@@ -309,7 +316,7 @@ export default function HoroscopeDisplay(
 
 
   return (
-    <div class="w-full h-screen flex items-center justify-center p-8 md:p-12">
+    <div class="w-full h-screen flex items-center justify-center p-8 md:p-12" style="transform: translateY(-30px);">
       {/* Always show terminal */}
       {errorMessage.value
           ? (

@@ -189,7 +189,7 @@ export function TerminalDisplay({
             --terminal-color-neon-rgb: 28 255 107;
 
             /* Derived tokens */
-            --terminal-border-color: var(--color-border, rgb(var(--terminal-color-veronica-rgb)));
+            --terminal-border-color: rgb(var(--terminal-color-veronica-rgb) / 0.75); /* Reduced saturation ~20% */
             --terminal-bg-base: rgb(2 4 12 / 0.35);
             --terminal-bg-layer-sunset: linear-gradient(
               135deg,
@@ -247,7 +247,7 @@ export function TerminalDisplay({
               var(--terminal-bg-layer-north),
               var(--terminal-bg-layer-south),
               var(--terminal-bg-base);
-            border: 3px solid var(--terminal-border-color);
+            border: 2px solid var(--terminal-border-color);
             box-shadow:
               0 26px 48px var(--terminal-shadow-midnight),
               0 10px 22px var(--terminal-shadow-soft),
@@ -348,36 +348,37 @@ export function TerminalDisplay({
 
           @media (max-width: 639px) {
             .terminal-window {
+              border-width: 2px !important;
               width: 92vw !important;
               max-width: 92vw !important;
               min-height: 72vh !important;
             }
             .terminal-header {
-              border-bottom-width: 3px !important;
+              border-bottom-width: 2px !important;
             }
           }
 
           @media (min-width: 640px) {
             .terminal-window {
-              border-width: 6px !important;
+              border-width: 2px !important;
               width: 85vw !important;
               max-width: 85vw !important;
               min-height: 66vh !important;
             }
             .terminal-header {
-              border-bottom-width: 4px !important;
+              border-bottom-width: 2px !important;
             }
           }
 
           @media (min-width: 1024px) {
             .terminal-window {
-              border-width: 8px !important;
+              border-width: 3px !important;
               width: 76vw !important;
               max-width: 76vw !important;
               min-height: 60vh !important;
             }
             .terminal-header {
-              border-bottom-width: 5px !important;
+              border-bottom-width: 3px !important;
             }
           }
 
@@ -556,37 +557,54 @@ export function TerminalDisplay({
           {/* Period toggle (horoscope mode) */}
           {onPeriodChange && currentPeriod && (
             <div
-              class="flex items-center gap-2 sm:gap-3 font-mono text-[11px] sm:text-sm uppercase tracking-[0.28em]"
-              style="color: rgba(0, 255, 65, 0.7); font-weight: 800;"
+              class="flex items-center gap-5 sm:gap-6 font-mono text-xs sm:text-sm uppercase"
+              style="color: rgba(0, 255, 65, 0.7); font-weight: 600;"
             >
-              {periodOptions.map(({ value, label }, index) => (
-                <span class="flex items-center gap-2" key={value}>
-                  <button
-                    type="button"
-                    class="hover:opacity-100 transition-all focus:outline-none active:scale-95"
-                    style={`background: transparent; border: none; padding: 0; margin: 0; color: ${
-                      value === currentPeriod ? "#1cff6b" : "rgba(0, 255, 65, 0.55)"
-                    }; font-weight: 900; letter-spacing: 0.3em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35em;`}
-                    onClick={() => {
-                      if (value !== currentPeriod) {
-                        sounds.click();
-                        onPeriodChange(value);
-                      }
-                    }}
-                  >
-                    <span style="letter-spacing: inherit;">
-                      {label.toUpperCase()}
-                    </span>
-                  </button>
-                  {index < periodOptions.length - 1 && (
+              {periodOptions.map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  class="hover:opacity-100 transition-all focus:outline-none active:scale-95 relative"
+                  style={`
+                    background: transparent;
+                    border: none;
+                    padding: 8px 4px;
+                    margin: 0;
+                    color: ${value === currentPeriod ? "#1cff6b" : "rgba(0, 255, 65, 0.55)"};
+                    font-weight: 600;
+                    letter-spacing: 0.18em;
+                    cursor: pointer;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 68px;
+                    position: relative;
+                  `}
+                  onClick={() => {
+                    if (value !== currentPeriod) {
+                      sounds.click();
+                      onPeriodChange(value);
+                    }
+                  }}
+                >
+                  <span style="letter-spacing: inherit; position: relative; z-index: 1;">
+                    {label.toUpperCase()}
+                  </span>
+                  {value === currentPeriod && (
                     <span
-                      class="opacity-40 text-[10px] sm:text-xs"
-                      style="color: rgba(0,255,65,0.4); letter-spacing: 0;"
-                    >
-                      •
-                    </span>
+                      style="
+                        position: absolute;
+                        bottom: 2px;
+                        left: 0;
+                        right: 0;
+                        height: 2px;
+                        background: linear-gradient(90deg, transparent, #1cff6b 20%, #1cff6b 80%, transparent);
+                        box-shadow: 0 0 6px rgba(28, 255, 107, 0.5);
+                        border-radius: 1px;
+                      "
+                    />
                   )}
-                </span>
+                </button>
               ))}
             </div>
           )}
@@ -608,7 +626,7 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background-color: rgba(0, 0, 0, 0.35) !important; background: rgba(0, 0, 0, 0.35) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
+        style="padding: 52px 40px 64px; background-color: rgba(0, 0, 0, 0.35) !important; background: rgba(0, 0, 0, 0.35) !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
       >
         <style>
           {`
@@ -617,7 +635,7 @@ export function TerminalDisplay({
               background: rgba(0, 0, 0, 0.35) !important;
               overflow-x: hidden;
               overflow-y: auto;
-              padding: 20px !important;
+              padding: 52px 40px 64px !important;
               border: 1px solid rgba(255, 255, 255, 0.08);
               box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55);
               backdrop-filter: blur(18px) saturate(140%);
@@ -670,18 +688,19 @@ export function TerminalDisplay({
 
             @media (max-width: 639px) {
               .terminal-content {
+                padding: 40px 24px 48px !important;
                 min-height: 68vh !important;
               }
             }
             @media (min-width: 640px) {
               .terminal-content {
-                padding: 32px !important;
+                padding: 48px 36px 56px !important;
                 min-height: 62vh !important;
               }
             }
             @media (min-width: 1024px) {
               .terminal-content {
-                padding: 44px !important;
+                padding: 52px 40px 64px !important;
                 min-height: 55vh !important;
               }
             }
