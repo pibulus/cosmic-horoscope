@@ -212,10 +212,10 @@ export default function BackgroundCanvas() {
     window.addEventListener("resize", resize);
     draw();
 
-    // Parallax effect on mousemove
+    // Parallax effect on mousemove - increased range for more dramatic effect
     const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 8; // range ~ -4 to 4
-      const y = (e.clientY / window.innerHeight - 0.5) * 8;
+      const x = (e.clientX / window.innerWidth - 0.5) * 20; // range ~ -10 to 10
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
       canvasB.style.transform = `translate(${x}px, ${y}px)`;
     };
 

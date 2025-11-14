@@ -95,16 +95,16 @@ export default function App({ Component }: PageProps) {
           href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>"
         />
 
-        {/* Fonts - Two-font system for horoscope terminal */}
+        {/* Fonts - Cosmic terminal system */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
-        {/* IBM Plex Mono for terminal body text */}
+        {/* VT323 for cosmic terminal body text */}
         <link
-          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=VT323&display=swap"
           rel="stylesheet"
         />
         {/* Space Grotesk for headings, nav, labels */}
@@ -112,9 +112,9 @@ export default function App({ Component }: PageProps) {
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        {/* JetBrains Mono as fallback */}
+        {/* IBM Plex Mono as fallback */}
         <link
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
 

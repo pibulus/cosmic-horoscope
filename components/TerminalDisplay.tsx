@@ -156,23 +156,23 @@ export function TerminalDisplay({
   const baseTextStyle = [
     "font-family: var(--mono)",
     "color: var(--accent-soft, #ffdfb5)",
-    "font-size: 14px",
-    "line-height: 1.7",
-    "letter-spacing: 0.04em",
+    "font-size: 20px",
+    "line-height: 1.5",
+    "letter-spacing: 0.02em",
     "white-space: pre-wrap",
     "word-break: break-word",
     "overflow-wrap: anywhere",
-    "margin: 0",
+    "margin: 0 auto",
     "padding: 0",
     "display: block",
     "position: relative",
-    "max-width: 42ch",
+    "max-width: 85%",
     "box-sizing: border-box",
-    "text-align: left",
+    "text-align: center",
     "text-indent: 0",
     "font-weight: 400",
-    "filter: var(--terminal-text-filter, saturate(1.1) brightness(1.0))",
-    "text-shadow: none",
+    "filter: var(--terminal-text-filter, saturate(1.2) brightness(1.1))",
+    "text-shadow: 0 0 8px rgba(255, 223, 181, 0.4)",
   ].join("; ");
 
   return (
@@ -183,95 +183,108 @@ export function TerminalDisplay({
         {`
           .terminal-window {
             /* Palette tokens */
-            --terminal-color-mauveine-rgb: 128 0 150;
-            --terminal-color-veronica-rgb: 255 79 212;
-            --terminal-color-rose-rgb: 255 0 200;
-            --terminal-color-pumpkin-rgb: 255 106 0;
-            --terminal-color-orange-peel-rgb: 255 162 0;
+            --terminal-color-orange: 255 106 0;
+            --terminal-color-purple: 168 85 247;
+            --terminal-color-pink: 255 79 212;
             --terminal-color-neon-rgb: 28 255 107;
 
             /* Derived tokens */
-            --terminal-border-color: #ff4fd4;
-            --terminal-bg-base: radial-gradient(circle at top, #130014 0, #050007 55%, #020006 100%);
+            --terminal-bg-base: radial-gradient(circle at top, #0a0312 0, #030005 60%, #000000 100%);
             --terminal-text-color: var(--accent-soft, #ffdfb5);
-            --terminal-text-filter: saturate(1.1) brightness(1.0);
-            --terminal-text-shadow: none;
+            --terminal-text-filter: saturate(1.2) brightness(1.1);
 
             position: relative;
             opacity: 1 !important;
-            width: 76vw !important;
-            max-width: 76vw !important;
-            min-height: 60vh !important;
+            width: 88vw !important;
+            max-width: 1400px !important;
+            min-height: auto !important;
             margin: 0 auto !important;
             overflow: visible;
             background: var(--terminal-bg-base);
-            border-radius: 18px;
-            border: 2px solid var(--terminal-border-color);
-            box-shadow:
-              0 0 25px rgba(255, 0, 200, 0.55),
-              0 0 0 1px rgba(0, 0, 0, 0.9);
-            padding: 3rem 4rem;
-            backdrop-filter: blur(14px) saturate(120%);
-            -webkit-backdrop-filter: blur(14px) saturate(120%);
+            border-radius: 20px;
+            border: none;
+            box-shadow: none;
+            padding: 2.5rem 3rem;
+            backdrop-filter: blur(16px) saturate(130%);
+            -webkit-backdrop-filter: blur(16px) saturate(130%);
             transform-origin: center;
-            transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+            transition: transform 300ms ease-out, box-shadow 300ms ease-out, filter 300ms ease-out;
             will-change: transform, box-shadow;
+            animation: terminal-float 8s ease-in-out infinite;
+          }
+
+          @keyframes terminal-float {
+            0%, 100% {
+              transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+              transform: translateY(-12px) rotate(0.3deg);
+            }
+            50% {
+              transform: translateY(-18px) rotate(-0.2deg);
+            }
+            75% {
+              transform: translateY(-8px) rotate(0.1deg);
+            }
           }
 
 
           @media (hover:hover) {
             .terminal-window:hover {
-              transform: translateY(-4px);
-              box-shadow:
-                0 0 35px rgba(255, 0, 200, 0.8),
-                0 18px 40px rgba(0, 0, 0, 0.8);
+              transform: translateY(-8px) scale(1.01);
+              filter: brightness(1.05);
+            }
+            .terminal-window:hover::before {
+              opacity: 0.9;
+              filter: blur(60px) saturate(150%);
             }
           }
 
-          /* Inner border for glass effect */
+          /* Underglow - orange to purple to pink */
           .terminal-window::before {
             content: "";
             position: absolute;
-            inset: 2px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            inset: -80px;
+            border-radius: 50%;
+            background:
+              radial-gradient(ellipse at 30% 20%, rgba(255, 106, 0, 0.4), transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.5), transparent 50%),
+              radial-gradient(ellipse at 50% 50%, rgba(255, 79, 212, 0.3), transparent 60%);
             pointer-events: none;
-            z-index: 1;
+            z-index: -1;
+            opacity: 0.7;
+            filter: blur(50px) saturate(140%);
+            animation: glow-pulse 6s ease-in-out infinite;
           }
 
-          /* Film grain overlay - sits behind content, only affects window chrome */
+          @keyframes glow-pulse {
+            0%, 100% {
+              opacity: 0.65;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 0.85;
+              transform: scale(1.05);
+            }
+          }
+
+          /* Scanline CRT texture */
           .terminal-window::after {
             content: "";
             position: absolute;
             inset: 0;
             border-radius: inherit;
             pointer-events: none;
-            background:
-              repeating-linear-gradient(
-                120deg,
-                var(--terminal-overlay-light),
-                var(--terminal-overlay-light) 1px,
-                transparent 1px,
-                transparent 3px
-              ),
-              repeating-linear-gradient(
-                45deg,
-                var(--terminal-overlay-dark),
-                var(--terminal-overlay-dark) 1px,
-                transparent 1px,
-                transparent 2px
-              ),
-              repeating-linear-gradient(
-                90deg,
-                transparent,
-                transparent 1px,
-                rgb(255 255 255 / 0.015) 2px,
-                transparent 3px
-              );
-            opacity: 0.18;
+            background: repeating-linear-gradient(
+              to bottom,
+              rgba(255, 255, 255, 0.03) 0px,
+              rgba(255, 255, 255, 0.03) 1px,
+              transparent 2px,
+              transparent 4px
+            );
+            opacity: 0.08;
             mix-blend-mode: overlay;
-            animation: grain-shift 1.8s steps(8) infinite;
-            z-index: 1;
+            z-index: 10;
           }
 
           .terminal-header {
@@ -285,165 +298,37 @@ export function TerminalDisplay({
 
           @media (max-width: 639px) {
             .terminal-window {
-              width: 92vw !important;
-              max-width: 92vw !important;
-              min-height: 72vh !important;
+              width: 94vw !important;
+              max-width: 94vw !important;
+              padding: 1.5rem 1.25rem;
+            }
+            .terminal-header {
+              border-bottom-width: 2px !important;
+            }
+          }
+
+          @media (min-width: 640px) {
+            .terminal-window {
+              width: 90vw !important;
+              max-width: 1300px !important;
+              padding: 2rem 2.5rem;
             }
             .terminal-header {
               border-bottom-width: 3px !important;
             }
           }
 
-          @media (min-width: 640px) {
-            .terminal-window {
-              border-width: 6px !important;
-              width: 85vw !important;
-              max-width: 85vw !important;
-              min-height: 66vh !important;
-            }
-            .terminal-header {
-              border-bottom-width: 4px !important;
-            }
-          }
-
           @media (min-width: 1024px) {
             .terminal-window {
-              border-width: 8px !important;
-              width: 76vw !important;
-              max-width: 76vw !important;
-              min-height: 60vh !important;
+              width: 88vw !important;
+              max-width: 1400px !important;
+              padding: 2.5rem 3rem;
             }
             .terminal-header {
-              border-bottom-width: 5px !important;
+              border-bottom-width: 3px !important;
             }
           }
 
-          @keyframes float-breathe {
-            0% {
-              transform: translateY(0) scale(1) rotate(-0.45deg);
-              box-shadow:
-                0 22px 40px var(--terminal-shadow-breathe-a),
-                0 12px 26px var(--terminal-shadow-breathe-b),
-                12px 12px 0 var(--terminal-shadow-breathe-offset);
-            }
-            22% {
-              transform: translateY(-10px) scale(1.008) rotate(0.25deg);
-              box-shadow:
-                0 32px 58px var(--terminal-shadow-breathe-a-strong),
-                0 20px 38px var(--terminal-shadow-breathe-accent),
-                15px 15px 0 var(--terminal-shadow-breathe-offset-strong);
-            }
-            50% {
-              transform: translateY(-18px) scale(1.016) rotate(0.75deg);
-              box-shadow:
-                0 44px 78px var(--terminal-shadow-breathe-max),
-                0 28px 48px var(--terminal-shadow-breathe-highlight),
-                20px 20px 0 var(--terminal-shadow-breathe-offset-max);
-            }
-            78% {
-              transform: translateY(-9px) scale(1.01) rotate(-0.05deg);
-              box-shadow:
-                0 34px 62px var(--terminal-shadow-breathe-a-hover),
-                0 18px 32px var(--terminal-shadow-breathe-deep),
-                15px 15px 0 var(--terminal-shadow-breathe-offset-soft);
-            }
-            100% {
-              transform: translateY(0) scale(1) rotate(-0.45deg);
-              box-shadow:
-                0 22px 40px var(--terminal-shadow-breathe-a),
-                0 12px 26px var(--terminal-shadow-breathe-b),
-                12px 12px 0 var(--terminal-shadow-breathe-offset);
-            }
-          }
-
-          @keyframes vhs-wobble {
-            0%, 100% {
-              transform: rotate(-0.4deg) translate3d(0, 0, 0) scale(1);
-              filter: hue-rotate(0deg) brightness(1);
-            }
-            22% {
-              transform: rotate(0.4deg) translate3d(1.2px, 0, 0) scale(1.001);
-              filter: hue-rotate(-3deg) brightness(0.998);
-            }
-            46% {
-              transform: rotate(-0.25deg) translate3d(-0.8px, 0.5px, 0) scale(0.9995);
-              filter: hue-rotate(4deg) brightness(1.002);
-            }
-            68% {
-              transform: rotate(0.2deg) translate3d(0.5px, -0.3px, 0) scale(1.0005);
-              filter: hue-rotate(-2deg) brightness(0.999);
-            }
-            84% {
-              transform: rotate(-0.15deg) translate3d(-0.4px, 0, 0) scale(1);
-              filter: hue-rotate(1deg) brightness(1.001);
-            }
-          }
-
-          @keyframes scanline-flicker {
-            0%, 100% { opacity: 0.18; }
-            40% { opacity: 0.22; }
-            50% { opacity: 0.28; }
-            60% { opacity: 0.18; }
-          }
-
-          @keyframes chroma-shift {
-            0%, 100% {
-              transform: translate3d(0, 0, 0);
-            }
-            30% {
-              transform: translate3d(-1px, 0, 0);
-            }
-            55% {
-              transform: translate3d(1px, 0, 0);
-            }
-            70% {
-              transform: translate3d(-0.5px, 0, 0);
-            }
-          }
-
-          @keyframes aura-pulse {
-            0%, 100% {
-              opacity: 0.42;
-              transform: scale(1) translate3d(0, 0, 0) rotate(0deg);
-              filter: blur(32px) saturate(140%) hue-rotate(0deg);
-            }
-            28% {
-              opacity: 0.48;
-              transform: scale(1.04) translate3d(0, -4px, 0) rotate(0.5deg);
-              filter: blur(36px) saturate(155%) hue-rotate(3deg);
-            }
-            52% {
-              opacity: 0.56;
-              transform: scale(1.08) translate3d(0, -8px, 0) rotate(-0.3deg);
-              filter: blur(38px) saturate(165%) hue-rotate(-2deg);
-            }
-            74% {
-              opacity: 0.44;
-              transform: scale(0.98) translate3d(0, 2px, 0) rotate(0.2deg);
-              filter: blur(30px) saturate(135%) hue-rotate(1deg);
-            }
-          }
-
-          @keyframes grain-shift {
-            0% {
-              background-position: 0 0, 0 0, 0 0;
-            }
-            50% {
-              background-position: 11px 7px, -7px -12px, 4px -3px;
-            }
-            100% {
-              background-position: -5px 10px, 9px -8px, -6px 5px;
-            }
-          }
-
-          @keyframes scanline-scroll {
-            0% {
-              background-position: 0 0;
-            }
-            100% {
-              background-position: 0 4px;
-            }
-          }
 
           @media (prefers-reduced-motion: reduce) {
             .terminal-window,
@@ -551,15 +436,18 @@ export function TerminalDisplay({
                   .horoscope-nav button:hover {
                     opacity: 1;
                     transform: translateY(-1px);
+                    text-shadow: 0 0 12px rgba(60, 255, 143, 0.8);
                   }
 
                   .horoscope-nav button:hover::after,
                   .horoscope-nav button.is-active::after {
                     transform: scaleX(1);
+                    box-shadow: 0 0 10px rgba(60, 255, 143, 0.6);
                   }
 
                   .horoscope-nav button.is-active {
                     opacity: 1;
+                    text-shadow: 0 0 8px rgba(60, 255, 143, 0.5);
                   }
                 `}
               </style>
@@ -598,81 +486,45 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="padding: 20px; background-color: #000000 !important; background: #000000 !important; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); overflow-x: hidden; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.58); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); min-height: 55vh;"
+        style="background: transparent; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         <style>
           {`
             .terminal-content {
-              background-color: #000000 !important;
-              background: #000000 !important;
+              background-color: transparent !important;
+              background: transparent !important;
               overflow-x: hidden;
               overflow-y: auto;
               padding: 20px !important;
-              border: 1px solid rgba(255, 255, 255, 0.08);
-              box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55);
-              backdrop-filter: blur(18px) saturate(140%);
-              -webkit-backdrop-filter: blur(18px) saturate(140%);
+              border: none;
+              box-shadow: none;
               position: relative;
-              min-height: 55vh;
+              min-height: auto;
               isolation: isolate;
               border-radius: 0 !important;
             }
 
             .terminal-content::before {
-              content: "";
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              pointer-events: none;
-              background:
-                radial-gradient(circle at 28% 18%, rgba(247, 118, 43, 0.22), transparent 58%),
-                radial-gradient(circle at 72% 78%, rgba(120, 74, 255, 0.18), transparent 62%);
-              opacity: 0.5;
-              mix-blend-mode: screen;
-              transition: opacity 0.45s ease;
-              z-index: 10;
+              display: none;
             }
 
             .terminal-content::after {
-              content: "";
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              pointer-events: none;
-              background:
-                linear-gradient(90deg, rgba(0, 255, 242, 0.12), rgba(255, 71, 178, 0.12)),
-                repeating-linear-gradient(
-                  0deg,
-                  rgba(255, 255, 255, 0.09),
-                  rgba(255, 255, 255, 0.09) 1px,
-                  transparent 1px,
-                  transparent 3px
-                );
-              mix-blend-mode: screen;
-              opacity: 0.2;
-              animation: scanline-flicker 4s linear infinite, chroma-shift 7.2s ease-in-out infinite;
-              z-index: 10;
+              display: none;
             }
 
             @media (max-width: 639px) {
               .terminal-content {
-                min-height: 68vh !important;
+                padding: 1.5rem 1rem !important;
               }
             }
             @media (min-width: 640px) {
               .terminal-content {
-                padding: 32px !important;
-                min-height: 62vh !important;
+                padding: 2.5rem 2rem !important;
               }
             }
             @media (min-width: 1024px) {
               .terminal-content {
-                padding: 44px !important;
-                min-height: 55vh !important;
+                padding: 3rem 2.5rem !important;
               }
             }
           `}
