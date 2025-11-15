@@ -225,25 +225,7 @@ export default function App({ Component }: PageProps) {
           Skip to content
         </a>
 
-        {/* Real grain texture using noise image */}
-        <div
-          id="grain-layer"
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-            zIndex: 9999,
-            opacity: 0.08,
-            // Using a base64 noise pattern for true random grain
-            backgroundImage:
-              `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='9' numOctaves='4' seed='5'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E")`,
-            backgroundRepeat: "repeat",
-            mixBlendMode: "overlay",
-          }}
-        />
+        {/* Grain layer removed for brighter appearance */}
 
         {/* Optional: Subtle scanlines on top (much lighter) */}
         <div
@@ -256,11 +238,11 @@ export default function App({ Component }: PageProps) {
             height: "100%",
             pointerEvents: "none",
             zIndex: 10000,
-            opacity: 0.03,
+            opacity: 0.015,
             background: `repeating-linear-gradient(
               0deg,
-              rgba(0, 0, 0, 0.2),
-              rgba(0, 0, 0, 0.2) 3px,
+              rgba(0, 0, 0, 0.1),
+              rgba(0, 0, 0, 0.1) 3px,
               transparent 3px,
               transparent 6px
             )`,
