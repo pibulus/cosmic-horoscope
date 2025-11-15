@@ -156,9 +156,9 @@ export function TerminalDisplay({
   const baseTextStyle = [
     "font-family: var(--mono)",
     "color: var(--accent-soft, #ffdfb5)",
-    "font-size: 20px",
-    "line-height: 1.5",
-    "letter-spacing: 0.02em",
+    "font-size: 19px",
+    "line-height: 1.6",
+    "letter-spacing: 0.04em",
     "white-space: pre-wrap",
     "word-break: break-word",
     "overflow-wrap: anywhere",
@@ -166,13 +166,13 @@ export function TerminalDisplay({
     "padding: 0",
     "display: block",
     "position: relative",
-    "max-width: 85%",
+    "max-width: 52ch",
     "box-sizing: border-box",
-    "text-align: center",
+    "text-align: left",
     "text-indent: 0",
     "font-weight: 400",
-    "filter: var(--terminal-text-filter, saturate(1.2) brightness(1.1))",
-    "text-shadow: 0 0 8px rgba(255, 223, 181, 0.4)",
+    "filter: var(--terminal-text-filter, saturate(1.25) brightness(1.12))",
+    "text-shadow: 0 0 10px rgba(255, 223, 181, 0.35)",
   ].join("; ");
 
   return (
@@ -189,24 +189,28 @@ export function TerminalDisplay({
             --terminal-color-neon-rgb: 28 255 107;
 
             /* Derived tokens */
-            --terminal-bg-base: radial-gradient(circle at top, #0a0312 0, #030005 60%, #000000 100%);
+            --terminal-bg-base: #050007;
             --terminal-text-color: var(--accent-soft, #ffdfb5);
             --terminal-text-filter: saturate(1.2) brightness(1.1);
 
+            /* Fixed CRT shell */
             position: relative;
+            display: flex;
+            flex-direction: column;
             opacity: 1 !important;
-            width: 88vw !important;
-            max-width: 1400px !important;
-            min-height: auto !important;
+            width: min(1100px, calc(100vw - 80px)) !important;
+            min-height: 500px !important;
             margin: 0 auto !important;
-            overflow: visible;
+            overflow: hidden;
             background: var(--terminal-bg-base);
-            border-radius: 20px;
-            border: none;
-            box-shadow: none;
-            padding: 2.5rem 3rem;
-            backdrop-filter: blur(16px) saturate(130%);
-            -webkit-backdrop-filter: blur(16px) saturate(130%);
+            border-radius: 24px;
+            border: 2px solid #ff4fd4;
+            box-shadow:
+              0 0 40px rgba(255, 0, 200, 0.7),
+              0 18px 60px rgba(0, 0, 0, 0.9);
+            padding: 0;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
             transform-origin: center;
             transition: transform 300ms ease-out, box-shadow 300ms ease-out, filter 300ms ease-out;
             will-change: transform, box-shadow;
@@ -231,40 +235,42 @@ export function TerminalDisplay({
 
           @media (hover:hover) {
             .terminal-window:hover {
-              transform: translateY(-8px) scale(1.01);
-              filter: brightness(1.05);
+              transform: translateY(-6px);
+              box-shadow:
+                0 0 50px rgba(255, 0, 200, 0.9),
+                0 24px 70px rgba(0, 0, 0, 0.95);
             }
             .terminal-window:hover::before {
-              opacity: 0.9;
-              filter: blur(60px) saturate(150%);
+              opacity: 0.95;
+              filter: blur(70px) saturate(160%);
             }
           }
 
-          /* Underglow - orange to purple to pink */
+          /* Underglow - orange to purple to pink emanating from beneath */
           .terminal-window::before {
             content: "";
             position: absolute;
-            inset: -80px;
+            inset: -100px;
             border-radius: 50%;
             background:
-              radial-gradient(ellipse at 30% 20%, rgba(255, 106, 0, 0.4), transparent 50%),
-              radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.5), transparent 50%),
-              radial-gradient(ellipse at 50% 50%, rgba(255, 79, 212, 0.3), transparent 60%);
+              radial-gradient(ellipse at 25% 15%, rgba(255, 106, 0, 0.5), transparent 45%),
+              radial-gradient(ellipse at 75% 85%, rgba(168, 85, 247, 0.6), transparent 45%),
+              radial-gradient(ellipse at 50% 50%, rgba(255, 79, 212, 0.4), transparent 55%);
             pointer-events: none;
             z-index: -1;
-            opacity: 0.7;
-            filter: blur(50px) saturate(140%);
-            animation: glow-pulse 6s ease-in-out infinite;
+            opacity: 0.8;
+            filter: blur(60px) saturate(150%);
+            animation: glow-pulse 7s ease-in-out infinite;
           }
 
           @keyframes glow-pulse {
             0%, 100% {
-              opacity: 0.65;
-              transform: scale(1);
+              opacity: 0.75;
+              transform: scale(1) rotate(0deg);
             }
             50% {
-              opacity: 0.85;
-              transform: scale(1.05);
+              opacity: 0.95;
+              transform: scale(1.08) rotate(2deg);
             }
           }
 
@@ -298,34 +304,34 @@ export function TerminalDisplay({
 
           @media (max-width: 639px) {
             .terminal-window {
-              width: 94vw !important;
-              max-width: 94vw !important;
-              padding: 1.5rem 1.25rem;
+              width: calc(100vw - 40px) !important;
+              min-height: 440px !important;
+              border-radius: 18px;
             }
             .terminal-header {
               border-bottom-width: 2px !important;
             }
           }
 
-          @media (min-width: 640px) {
+          @media (min-width: 640px) and (max-width: 1023px) {
             .terminal-window {
-              width: 90vw !important;
-              max-width: 1300px !important;
-              padding: 2rem 2.5rem;
+              width: min(960px, calc(100vw - 60px)) !important;
+              min-height: 480px !important;
+              border-radius: 20px;
             }
             .terminal-header {
-              border-bottom-width: 3px !important;
+              border-bottom-width: 2px !important;
             }
           }
 
           @media (min-width: 1024px) {
             .terminal-window {
-              width: 88vw !important;
-              max-width: 1400px !important;
-              padding: 2.5rem 3rem;
+              width: min(1100px, calc(100vw - 80px)) !important;
+              min-height: 500px !important;
+              border-radius: 24px;
             }
             .terminal-header {
-              border-bottom-width: 3px !important;
+              border-bottom-width: 2px !important;
             }
           }
 
@@ -486,20 +492,25 @@ export function TerminalDisplay({
       {/* Terminal Content Area */}
       <div
         class="transition-all duration-700 terminal-content relative z-10"
-        style="background: transparent; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
+        style="transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);"
       >
         <style>
           {`
             .terminal-content {
-              background-color: transparent !important;
-              background: transparent !important;
+              flex: 1;
+              position: relative;
               overflow-x: hidden;
               overflow-y: auto;
-              padding: 20px !important;
+              padding: 3.5rem 4.5rem !important;
+              background: radial-gradient(
+                ellipse at top,
+                rgba(255, 106, 0, 0.15) 0%,
+                rgba(168, 85, 247, 0.12) 45%,
+                rgba(5, 0, 7, 0.95) 100%
+              );
               border: none;
               box-shadow: none;
-              position: relative;
-              min-height: auto;
+              min-height: 300px;
               isolation: isolate;
               border-radius: 0 !important;
             }
@@ -514,17 +525,20 @@ export function TerminalDisplay({
 
             @media (max-width: 639px) {
               .terminal-content {
-                padding: 1.5rem 1rem !important;
+                padding: 2rem 1.5rem !important;
+                min-height: 280px;
               }
             }
-            @media (min-width: 640px) {
+            @media (min-width: 640px) and (max-width: 1023px) {
               .terminal-content {
-                padding: 2.5rem 2rem !important;
+                padding: 2.5rem 3rem !important;
+                min-height: 320px;
               }
             }
             @media (min-width: 1024px) {
               .terminal-content {
-                padding: 3rem 2.5rem !important;
+                padding: 3.5rem 4.5rem !important;
+                min-height: 340px;
               }
             }
           `}
