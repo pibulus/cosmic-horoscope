@@ -126,16 +126,22 @@ export default function HoroscopeDisplay(
       if (inHeader) {
         headerLineIndex++;
         const isTitleLine = headerLineIndex === 1;
-        const fontSize = isTitleLine
-          ? "clamp(20px, 5vw, 34px)"
-          : "clamp(16px, 4vw, 26px)";
-        const letterSpacing = isTitleLine ? "0.18em" : "0.12em";
-        // Header in gold/yellow
-        colorizedLines.push(
-          `<span style="color: #FFD700; font-weight: 900; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; text-transform: uppercase;">${
-            escapeHtml(line)
-          }</span>`,
-        );
+        const baseStyle =
+          "color: #FFD700; display: block; font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace;";
+
+        if (isTitleLine) {
+          colorizedLines.push(
+            `<span style="${baseStyle} font-weight: 900; letter-spacing: 0.18em; font-size: clamp(18px, 4vw, 32px); text-transform: uppercase;">${
+              escapeHtml(line)
+            }</span>`,
+          );
+        } else {
+          colorizedLines.push(
+            `<span style="${baseStyle} font-weight: 700; letter-spacing: 0.04em; font-size: clamp(14px, 3vw, 24px); text-transform: none; white-space: pre; line-height: 1.15;">${
+              escapeHtml(line)
+            }</span>`,
+          );
+        }
       } else if (line.trim()) {
         // Body in terminal green
         colorizedLines.push(
