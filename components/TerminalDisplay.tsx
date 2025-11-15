@@ -154,23 +154,26 @@ export function TerminalDisplay({
 
   const hasContent = Boolean(content);
   const baseTextStyle = [
-    "color: var(--terminal-text-color, #1cff6b)",
-    "font-size: clamp(16px, 4.5vw, 26px)",
-    "line-height: 1.6",
-    "white-space: pre-wrap",
-    "word-break: break-word",
-    "overflow-wrap: anywhere",
+    "font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace",
+    "color: var(--terminal-text-color, #00ff41)",
+    "font-size: 16px",
+    "line-height: 1.4",
+    "letter-spacing: 0.02em",
+    "white-space: pre",
+    "word-break: normal",
+    "overflow-wrap: normal",
     "margin: 0",
     "padding: 0",
     "display: block",
     "position: relative",
     "max-width: 100%",
+    "width: 100%",
     "box-sizing: border-box",
     "text-align: left",
     "text-indent: 0",
-    "font-weight: 900",
-    "filter: var(--terminal-text-filter, saturate(1.65) brightness(1.08))",
-    "text-shadow: none",
+    "font-weight: 400",
+    "filter: none",
+    "text-shadow: 0 0 2px rgba(0, 255, 65, 0.3)",
   ].join("; ");
 
   return (
@@ -247,24 +250,8 @@ export function TerminalDisplay({
               var(--terminal-bg-layer-north),
               var(--terminal-bg-layer-south),
               var(--terminal-bg-base);
-            border: 3px solid transparent;
-            background-image:
-              var(--terminal-bg-layer-sunset),
-              var(--terminal-bg-layer-north),
-              var(--terminal-bg-layer-south),
-              var(--terminal-bg-base),
-              linear-gradient(var(--terminal-bg-base), var(--terminal-bg-base)),
-              linear-gradient(
-                135deg,
-                rgb(var(--terminal-color-rose-rgb)) 0%,
-                rgb(var(--terminal-color-veronica-rgb)) 25%,
-                rgb(var(--terminal-color-pumpkin-rgb)) 50%,
-                rgb(var(--terminal-color-veronica-rgb)) 75%,
-                rgb(var(--terminal-color-rose-rgb)) 100%
-              );
-            background-origin: padding-box, padding-box, padding-box, padding-box, padding-box, border-box;
-            background-clip: padding-box, padding-box, padding-box, padding-box, padding-box, border-box;
-            animation: gradient-shift 8s linear infinite, float-breathe 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+            border: none;
+            animation: float-breathe 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
             box-shadow:
               0 30px 60px var(--terminal-shadow-midnight),
               0 15px 30px var(--terminal-shadow-soft),
@@ -272,19 +259,19 @@ export function TerminalDisplay({
             backdrop-filter: blur(6px) saturate(110%);
             -webkit-backdrop-filter: blur(6px) saturate(110%);
             transform-origin: center;
-            transition: transform 0.45s ease, box-shadow 0.45s ease, border-width 0.45s ease;
-            will-change: transform, box-shadow, background-position;
+            transition: transform 0.45s ease, box-shadow 0.45s ease, filter 0.3s ease;
+            will-change: transform, box-shadow;
           }
 
 
           .terminal-window:hover {
-            transform: translateY(-6px) scale(1.004);
+            transform: translateY(-8px) scale(1.008);
             box-shadow:
-              0 42px 72px var(--terminal-shadow-hover-midnight),
-              0 20px 32px var(--terminal-shadow-hover-soft),
+              0 44px 76px var(--terminal-shadow-hover-midnight),
+              0 22px 36px var(--terminal-shadow-hover-soft),
               18px 18px 0 var(--terminal-shadow-hover-offset);
-            border-color: var(--terminal-border-hover);
-            animation-play-state: paused, paused;
+            filter: brightness(1.05);
+            animation-play-state: paused;
           }
 
           /* Aura is rendered via ::before; keep gradients edge-weighted so the frosted interior stays clear */
@@ -552,22 +539,42 @@ export function TerminalDisplay({
         class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
         style="background-color: rgba(0, 0, 0, 1); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20;"
       >
-        <div class="flex space-x-1.5 sm:space-x-2">
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Close (jk)"
-          >
-          </div>
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-yellow-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Minimize (nope)"
-          >
-          </div>
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Full screen (maybe)"
-          >
-          </div>
+        <div class="traffic-lights">
+          <style>
+            {`
+              .traffic-lights {
+                display: flex;
+                gap: 6px;
+              }
+
+              .traffic-light {
+                width: 8px;
+                height: 8px;
+                border-radius: 999px;
+                background: #ff5f57;
+                box-shadow: 0 0 6px rgba(255,95,87,0.7);
+              }
+
+              .traffic-light:nth-child(2) {
+                background: #ffbd2e;
+                box-shadow: 0 0 6px rgba(255,189,46,0.7);
+              }
+
+              .traffic-light:nth-child(3) {
+                background: #28c840;
+                box-shadow: 0 0 6px rgba(40,200,64,0.7);
+                animation: breathe 2.6s ease-in-out infinite;
+              }
+
+              @keyframes breathe {
+                0%, 100% { box-shadow: 0 0 4px rgba(40,200,64,0.3); }
+                50% { box-shadow: 0 0 14px rgba(40,200,64,0.9); }
+              }
+            `}
+          </style>
+          <div class="traffic-light" title="Close"></div>
+          <div class="traffic-light" title="Minimize"></div>
+          <div class="traffic-light" title="Maximize"></div>
         </div>
         <div class="flex items-center gap-2 sm:gap-4">
           {/* Only show terminal path when NOT in horoscope mode */}
@@ -582,38 +589,74 @@ export function TerminalDisplay({
 
           {/* Period toggle (horoscope mode) */}
           {onPeriodChange && currentPeriod && (
-            <div
-              class="flex items-center gap-2 sm:gap-3 font-mono text-[11px] sm:text-sm uppercase tracking-[0.28em]"
-              style="color: rgba(0, 255, 65, 0.7); font-weight: 800;"
-            >
-              {periodOptions.map(({ value, label }, index) => (
-                <span class="flex items-center gap-2" key={value}>
-                  <button
-                    type="button"
-                    class="hover:opacity-100 transition-all focus:outline-none active:scale-95"
-                    style={`background: transparent; border: none; padding: 0; margin: 0; color: ${
-                      value === currentPeriod ? "#1cff6b" : "rgba(0, 255, 65, 0.55)"
-                    }; font-weight: 900; letter-spacing: 0.3em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35em;`}
-                    onClick={() => {
-                      if (value !== currentPeriod) {
-                        sounds.click();
-                        onPeriodChange(value);
-                      }
-                    }}
-                  >
-                    <span style="letter-spacing: inherit;">
-                      {label.toUpperCase()}
-                    </span>
-                  </button>
-                  {index < periodOptions.length - 1 && (
-                    <span
-                      class="opacity-40 text-[10px] sm:text-xs"
-                      style="color: rgba(0,255,65,0.4); letter-spacing: 0;"
-                    >
-                      •
-                    </span>
-                  )}
-                </span>
+            <div class="horoscope-nav">
+              <style>
+                {`
+                  .horoscope-nav {
+                    display: flex;
+                    gap: 1.5rem;
+                    font-family: var(--sans);
+                    font-size: 11px;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                  }
+
+                  .horoscope-nav button {
+                    position: relative;
+                    background: none;
+                    border: none;
+                    color: #3cff8f;
+                    padding: 0;
+                    cursor: pointer;
+                    opacity: 0.6;
+                    transition: opacity 160ms ease-out, transform 120ms ease-out;
+                  }
+
+                  .horoscope-nav button::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: -4px;
+                    height: 2px;
+                    background: linear-gradient(90deg, #3cff8f, #a3ffcf);
+                    transform-origin: center;
+                    transform: scaleX(0);
+                    transition: transform 160ms ease-out;
+                  }
+
+                  .horoscope-nav button:hover {
+                    opacity: 1;
+                    transform: translateY(-1px);
+                    text-shadow: 0 0 12px rgba(60, 255, 143, 0.8);
+                  }
+
+                  .horoscope-nav button:hover::after,
+                  .horoscope-nav button.is-active::after {
+                    transform: scaleX(1);
+                    box-shadow: 0 0 10px rgba(60, 255, 143, 0.6);
+                  }
+
+                  .horoscope-nav button.is-active {
+                    opacity: 1;
+                    text-shadow: 0 0 8px rgba(60, 255, 143, 0.5);
+                  }
+                `}
+              </style>
+              {periodOptions.map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  class={value === currentPeriod ? "is-active" : ""}
+                  onClick={() => {
+                    if (value !== currentPeriod) {
+                      sounds.click();
+                      onPeriodChange(value);
+                    }
+                  }}
+                >
+                  {label.toUpperCase()}
+                </button>
               ))}
             </div>
           )}
