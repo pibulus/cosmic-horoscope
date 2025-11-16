@@ -10,30 +10,34 @@ export default function Home() {
   return (
     <div
       id="main-content"
-      class="min-h-[100dvh] w-full flex flex-col relative global-flicker"
-      style="background: linear-gradient(135deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%);"
+      class="min-h-[100dvh] w-full flex flex-col relative overflow-hidden global-flicker"
+      style="background: linear-gradient(135deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); position: fixed; inset: 0;"
     >
       {/* Animated canvas background */}
       <BackgroundCanvas />
 
-      {/* Global atmospheric effects removed for crisper terminal */}
+      <div class="relative z-10 flex flex-col flex-1 w-full">
+        {/* Global atmospheric effects removed for crisper terminal */}
 
-      {/* Check if first visit and show welcome */}
-      <WelcomeChecker />
+        {/* Check if first visit and show welcome */}
+        <WelcomeChecker />
 
-      {/* First-visit welcome modal */}
-      <WelcomeModal />
+        {/* First-visit welcome modal */}
+        <WelcomeModal />
 
-      {/* About modal (opened by footer link) */}
-      <AboutModal />
+        {/* About modal (opened by footer link) */}
+        <AboutModal />
 
-      {/* Floating Theme Button */}
-      {/* <div class="fixed top-4 right-4 z-50">
-        <ThemeIsland />
-      </div> */}
+        {/* Floating Theme Button */}
+        {
+          /* <div class="fixed top-4 right-4 z-50">
+          <ThemeIsland />
+        </div> */
+        }
 
-      {/* Main interactive content */}
-      <HomeIsland />
+        {/* Main interactive content */}
+        <HomeIsland />
+      </div>
     </div>
   );
 }
