@@ -1,20 +1,19 @@
 // ===================================================================
-// ZODIAC PICKER ISLAND - Terminal-flavored sign selector
+// ZODIAC PICKER ISLAND - Terminal-flavored sign selector + horoscope
 // ===================================================================
 
 import { signal } from "@preact/signals";
-import { useEffect, useMemo } from "preact/hooks";
+import { useEffect, useMemo, useRef } from "preact/hooks";
 import {
   saveZodiacSign,
   ZODIAC_SIGNS,
   type ZodiacSign,
+  getZodiacEmoji,
 } from "../utils/zodiac.ts";
 import { sounds } from "../utils/sounds.ts";
 import { renderFigletText } from "../utils/asciiArtGenerator.ts";
-
-interface ZodiacPickerProps {
-  onSignSelected: (sign: string) => void;
-}
+import { applyColorToArt } from "../utils/colorEffects.ts";
+import { TypedWriter } from "../components/TypedWriter.tsx";
 
 const PRIMARY_TERMINAL_COLOR = "#00FF41";
 const ACCENT_COLORS = [
@@ -32,6 +31,17 @@ const hoveredSign = signal<string | null>(null);
 const flickerTrigger = signal<number>(0);
 const mouseX = signal<number>(0);
 const mouseY = signal<number>(0);
+
+// Horoscope mode states
+type Mode = "picker" | "horoscope";
+type Period = "daily" | "weekly" | "monthly";
+const currentMode = signal<Mode>("picker");
+const currentPeriod = signal<Period>("daily");
+const horoscopeData = signal<any>(null);
+const isLoadingHoroscope = signal(false);
+const horoscopeHtml = signal("");
+const horoscopePlainText = signal("");
+const bootMessages = signal<string[]>([]);
 
 const PICKER_TITLE_ASCII = renderFigletText("STARGRAM", {
   font: "ANSI Shadow",
@@ -77,6 +87,10 @@ const COSMIC_ANIMATION_STYLES = `
 .crt-flicker {
   animation: crtFlicker 0.1s ease-out;
 }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 `;
 
 const SIGN_ASCII_CACHE = new Map<string, string>();
@@ -103,7 +117,36 @@ function getSignData(name: string): ZodiacSign | undefined {
   return ZODIAC_SIGNS.find((sign) => sign.name === name);
 }
 
-export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
+function generateHoroscopeAscii(
+  signName: string,
+  horoscopeText: string,
+  period: string,
+  date: string,
+): string {
+  const signUpper = signName.toUpperCase();
+  const periodUpper = period.toUpperCase();
+  const metaLine = date ? `${periodUpper} • ${date}` : periodUpper;
+
+  const figletTitle = renderFigletText(signUpper, {
+    font: "ANSI Shadow",
+    width: 84,
+  });
+
+  const sentinel = "═══════════════════════════════════════";
+
+  const header = `[HEADER_START]
+${figletTitle}
+${metaLine}
+[HEADER_END]`;
+
+  return `${header}
+
+${sentinel}
+
+${horoscopeText}`;
+}
+
+export default function ZodiacPicker() {
   useEffect(() => {
     const styleEl = document.createElement("style");
     styleEl.textContent = COSMIC_ANIMATION_STYLES;
@@ -139,12 +182,78 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
     };
   }, []);
 
+  const fetchHoroscope = async (sign: string, period: Period) => {
+    isLoadingHoroscope.value = true;
+    bootMessages.value = [
+      "> Initializing cosmic link...",
+      `> Loading ${sign.toUpperCase()} ${period} horoscope...`,
+    ];
+
+    // Boot sequence with delays
+    for (let i = 0; i < bootMessages.value.length; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      sounds.click();
+    }
+
+    try {
+      const response = await fetch(
+        `/api/horoscope?sign=${sign}&period=${period}`,
+      );
+      if (!response.ok) {
+        throw new Error(`API returned ${response.status}`);
+      }
+      const data = await response.json();
+
+      if (data.success) {
+        const horoscopeText = data.data.horoscope_data;
+        const date = data.data.date || "";
+
+        // Generate ASCII art
+        const ascii = generateHoroscopeAscii(sign, horoscopeText, period, date);
+        horoscopePlainText.value = ascii;
+
+        // Apply color effects
+        const colorized = applyColorToArt(ascii, "trinity");
+        horoscopeHtml.value = colorized.fullHtml;
+
+        horoscopeData.value = data.data;
+        sounds.success();
+      } else {
+        sounds.error();
+        console.error("Horoscope fetch failed:", data.error);
+      }
+    } catch (error) {
+      sounds.error();
+      console.error("Failed to fetch horoscope:", error);
+    } finally {
+      isLoadingHoroscope.value = false;
+    }
+  };
+
   const handleSignClick = (sign: string) => {
     selectedSign.value = sign;
     saveZodiacSign(sign);
     sounds.success();
     flickerTrigger.value = Date.now(); // Trigger flicker animation
-    onSignSelected(sign);
+
+    // Switch to horoscope mode and fetch data
+    currentMode.value = "horoscope";
+    fetchHoroscope(sign, currentPeriod.value);
+  };
+
+  const handleBackToPicker = () => {
+    sounds.click();
+    currentMode.value = "picker";
+    horoscopeData.value = null;
+    horoscopeHtml.value = "";
+  };
+
+  const handlePeriodChange = (period: Period) => {
+    if (!selectedSign.value) return;
+    sounds.click();
+    currentPeriod.value = period;
+    flickerTrigger.value = Date.now();
+    fetchHoroscope(selectedSign.value, period);
   };
 
   const previewTarget = hoveredSign.value || selectedSign.value;
@@ -256,16 +365,20 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
               class="text-xs sm:text-sm font-mono tracking-[0.18em] uppercase"
               style={`color: ${accentColor};`}
             >
-              ~/cosmic/bin/zodiac.sh
+              {currentMode.value === "picker"
+                ? "~/cosmic/bin/zodiac.sh"
+                : `~/cosmic/${selectedSign.value}/${currentPeriod.value}.txt`}
             </div>
           </div>
 
           <div class="p-5 sm:p-8 lg:p-12 terminal-content-wrapper">
-            <div class="flex flex-col lg:flex-row gap-10 lg:gap-12">
-              <div
-                class="flex-1"
-                style={`animation: cosmicFloat 16s ease-in-out infinite; animation-delay: 0.7s; transform: translate3d(${selectorParallaxX}px, ${selectorParallaxY}px, 0); transition: transform 0.3s ease-out;`}
-              >
+            {currentMode.value === "picker" ? (
+              // PICKER MODE - Zodiac grid + dossier
+              <div class="flex flex-col lg:flex-row gap-10 lg:gap-12">
+                <div
+                  class="flex-1"
+                  style={`animation: cosmicFloat 16s ease-in-out infinite; animation-delay: 0.7s; transform: translate3d(${selectorParallaxX}px, ${selectorParallaxY}px, 0); transition: transform 0.3s ease-out;`}
+                >
                 <div class="mb-5">
                   <pre
                     class="font-mono text-[9px] sm:text-[10px] md:text-xs leading-[1.1] whitespace-pre mb-2"
@@ -514,8 +627,84 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       />
                     </div>
                   )}
+                </div>
               </div>
-            </div>
+            ) : (
+              // HOROSCOPE MODE - Full-width horoscope display
+              <div class="w-full max-w-4xl mx-auto">
+                {isLoadingHoroscope.value ? (
+                  // Boot sequence
+                  <div class="space-y-4">
+                    {bootMessages.value.map((msg, i) => (
+                      <p
+                        key={i}
+                        class="font-mono text-sm"
+                        style={`color: ${accentColor}; animation: fadeIn 0.3s ease-in;`}
+                      >
+                        {msg}
+                      </p>
+                    ))}
+                    <span
+                      class="inline-block h-4 w-2 cursor-blink"
+                      style={`background: ${accentColor};`}
+                    />
+                  </div>
+                ) : horoscopeHtml.value ? (
+                  // Horoscope content with typewriter
+                  <div class="space-y-6">
+                    <div
+                      class="font-mono leading-relaxed"
+                      style="color: #FFD700;"
+                      dangerouslySetInnerHTML={{ __html: horoscopeHtml.value }}
+                    />
+
+                    {/* Navigation */}
+                    <div class="flex flex-wrap gap-3 pt-6 border-t" style={`border-color: ${accentGlowColor}30;`}>
+                      <button
+                        type="button"
+                        onClick={handleBackToPicker}
+                        class="px-4 py-2 border-2 rounded-xl font-mono text-sm uppercase tracking-wider transition-all hover:scale-105"
+                        style={`background: rgba(0,0,0,0.6); border-color: ${accentGlowColor}; color: ${accentGlowColor}; box-shadow: 0 0 12px ${accentGlowColor}40;`}
+                      >
+                        ← BACK
+                      </button>
+                      {(["daily", "weekly", "monthly"] as Period[]).map((period) => (
+                        <button
+                          key={period}
+                          type="button"
+                          onClick={() => handlePeriodChange(period)}
+                          class={`px-4 py-2 border-2 rounded-xl font-mono text-sm uppercase tracking-wider transition-all hover:scale-105 ${
+                            currentPeriod.value === period ? "font-bold" : ""
+                          }`}
+                          style={
+                            currentPeriod.value === period
+                              ? `background: ${accentColor}30; border-color: ${accentColor}; color: ${accentColor}; box-shadow: 0 0 16px ${accentColor}60;`
+                              : `background: rgba(0,0,0,0.4); border-color: ${accentGlowColor}60; color: ${accentGlowColor}; box-shadow: 0 0 8px ${accentGlowColor}20;`
+                          }
+                        >
+                          {period}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  // Error state
+                  <div class="text-center py-12">
+                    <p class="font-mono text-lg" style={`color: ${accentColor};`}>
+                      Failed to load horoscope
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleBackToPicker}
+                      class="mt-4 px-6 py-3 border-2 rounded-xl font-mono uppercase"
+                      style={`border-color: ${accentGlowColor}; color: ${accentGlowColor};`}
+                    >
+                      ← Back
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,100 +1,19 @@
 // ===================================================================
-// HOME ISLAND - Main interactive container for sign selection
+// HOME ISLAND - Main interactive container with unified terminal
 // ===================================================================
 
-import { useSignal } from "@preact/signals";
 import ZodiacPicker from "./ZodiacPicker.tsx";
-import HoroscopeDisplay from "./HoroscopeDisplay.tsx";
 
 export default function HomeIsland() {
-  const selectedSign = useSignal<string | null>(null);
-
-  // Disabled: Load saved sign on mount - we want users to choose their sign each time
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const saved = getSavedZodiacSign();
-  //     if (saved) {
-  //       selectedSign.value = saved;
-  //     }
-  //   }
-  // }, []);
-
-  const handleSignSelected = (sign: string) => {
-    selectedSign.value = sign;
-  };
-
-  const handleChangeSign = () => {
-    selectedSign.value = null;
-  };
-
   return (
     <>
-      {/* Header - Solid dark background */}
-      {
-        /* <header
-        class="border-b-4 relative flex-shrink-0"
-        style="border-color: var(--color-border, #a855f7); background-color: #0a0a0a;"
-      >
-        <div class="max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 sm:gap-4">
-              <h1
-                onClick={selectedSign.value ? handleChangeSign : undefined}
-                class={`text-base sm:text-2xl md:text-3xl font-black font-mono tracking-tight transition-all ${
-                  selectedSign.value
-                    ? "cursor-pointer hover:scale-105 active:scale-95 hover:opacity-80"
-                    : ""
-                }`}
-                style="color: var(--color-text, #faf9f6)"
-                role={selectedSign.value ? "button" : undefined}
-                tabIndex={selectedSign.value ? 0 : undefined}
-                aria-label={selectedSign.value
-                  ? "Return to sign selection"
-                  : undefined}
-              >
-                STARGRAM
-              </h1>
-              {selectedSign.value && (
-                <>
-                  <div
-                    style="font-size: 32px; line-height: 1;"
-                    class="sm:text-5xl"
-                  >
-                    {getZodiacEmoji(selectedSign.value)}
-                  </div>
-                  <div
-                    class="font-black font-mono uppercase sm:text-3xl"
-                    style="
-                      font-size: 20px;
-                      color: var(--color-text, #faf9f6);
-                      letter-spacing: 0.08em;
-                      text-shadow: var(--shadow-glow, none);
-                    "
-                  >
-                    {selectedSign.value}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </header> */
-      }
-
       {/* Main Content - Centered both vertically and horizontally */}
       <main
         id="main-content"
         class="w-full min-h-[100dvh] flex items-start justify-center overflow-y-auto py-10"
       >
         <div class="w-full flex justify-center">
-          {selectedSign.value
-            ? (
-              <HoroscopeDisplay
-                sign={selectedSign.value}
-                onChangeSign={handleChangeSign}
-              />
-            )
-            : <ZodiacPicker onSignSelected={handleSignSelected} />}
+          <ZodiacPicker />
         </div>
       </main>
 
