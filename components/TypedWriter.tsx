@@ -115,7 +115,7 @@ export function TypedWriter({
           if (trailTimeoutRef.current) {
             clearTimeout(trailTimeoutRef.current);
           }
-          trailTimeoutRef.current = window.setTimeout(() => {
+          trailTimeoutRef.current = globalThis.setTimeout(() => {
             if (elementRef.current) {
               elementRef.current.classList.remove("typing-trail");
             }
@@ -124,7 +124,7 @@ export function TypedWriter({
         }
 
         // Add natural pause after punctuation
-        if (lastChar === '.' || lastChar === '!' || lastChar === '?') {
+        if (lastChar === "." || lastChar === "!" || lastChar === "?") {
           typedRef.current.stop();
           setTimeout(() => {
             if (typedRef.current) {
@@ -169,10 +169,11 @@ export function TypedWriter({
 
         // Add persistent blinking cursor after typing completes
         if (showCompletionCursor && elementRef.current) {
-          const cursor = document.createElement('span');
-          cursor.className = 'blinking-cursor';
-          cursor.textContent = '█';
-          cursor.style.cssText = 'color: #00FF41; font-size: inherit; font-weight: 900; margin-left: 0;';
+          const cursor = document.createElement("span");
+          cursor.className = "blinking-cursor";
+          cursor.textContent = "█";
+          cursor.style.cssText =
+            "color: #00FF41; font-size: inherit; font-weight: 900; margin-left: 0;";
           elementRef.current.appendChild(cursor);
         }
 

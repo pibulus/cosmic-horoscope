@@ -63,7 +63,7 @@ export default function BackgroundCanvas() {
     const simplex = createNoise3D();
     let tick = 0;
     let animationId: number;
-    let center: number[] = [];
+    const center: number[] = [];
 
     const resize = () => {
       const { innerWidth, innerHeight } = window;
@@ -207,12 +207,12 @@ export default function BackgroundCanvas() {
     }
 
     resize();
-    window.addEventListener("resize", resize);
+    globalThis.addEventListener("resize", resize);
     draw();
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", resize);
+      globalThis.removeEventListener("resize", resize);
       container.removeChild(canvasB);
     };
   }, []);

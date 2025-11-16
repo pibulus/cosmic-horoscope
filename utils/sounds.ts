@@ -31,7 +31,7 @@ export class SoundEngine {
   }
 
   // Play a simple beep/boop sound
-  async playTone(
+  playTone(
     frequency: number,
     duration: number,
     type: OscillatorType = "sine",

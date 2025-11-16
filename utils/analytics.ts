@@ -12,6 +12,7 @@
  * Uses dynamic import to prevent connection attempts without API keys
  */
 
+// deno-lint-ignore-file no-explicit-any
 class AnalyticsService {
   private isInitialized = false;
   private posthog: any = null;
@@ -52,7 +53,7 @@ class AnalyticsService {
           this.isInitialized = true;
           this.processQueue();
         },
-        loaded_error: (error: any) => {
+        loaded_error: (_error: any) => {
           // Silently fail - no console spam
           this.isInitialized = true;
         },

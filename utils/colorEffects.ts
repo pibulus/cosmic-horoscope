@@ -185,8 +185,7 @@ export function applyColorToArt(
         line.length,
         lines.length,
       );
-      const span =
-        `<span style="color: ${color};">${escapeHtml(line)}</span>`;
+      const span = `<span style="color: ${color};">${escapeHtml(line)}</span>`;
       colorizedLines.push(span);
       bodyLines.push(span);
     } else {

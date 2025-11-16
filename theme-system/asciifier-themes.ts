@@ -46,7 +46,7 @@ export function generateAsciifierRandomTheme(
   const isLight = preferLight;
 
   // Use the base themes as reference for constraints
-  const baseTheme = isLight ? vintageCream : terminalDusk;
+  const _baseTheme = isLight ? vintageCream : terminalDusk;
 
   // Generate a harmonically balanced random theme
   const randomTheme = RandomThemeGenerator.generateHarmonicTheme(

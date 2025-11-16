@@ -64,11 +64,8 @@ export function StructuredData({ horoscope }: StructuredDataProps) {
     : organizationSchema;
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(structuredData, null, 2),
-      }}
-    />
+    <script type="application/ld+json">
+      {JSON.stringify(structuredData, null, 2)}
+    </script>
   );
 }

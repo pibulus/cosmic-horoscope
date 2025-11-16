@@ -571,12 +571,12 @@ export class RandomThemeGenerator {
     const baseHsl = this.hexToHsl(baseTheme.accent);
 
     // Create variations within variance range
-    const newHue = (baseHsl.h + (Math.random() - 0.5) * variance * 2) % 360;
-    const newSat = Math.max(
+    const _newHue = (baseHsl.h + (Math.random() - 0.5) * variance * 2) % 360;
+    const _newSat = Math.max(
       0,
       Math.min(100, baseHsl.s + (Math.random() - 0.5) * variance),
     );
-    const newLight = Math.max(
+    const _newLight = Math.max(
       0,
       Math.min(100, baseHsl.l + (Math.random() - 0.5) * variance / 2),
     );

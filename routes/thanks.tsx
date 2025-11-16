@@ -1,3 +1,4 @@
+// deno-lint-ignore-file react-no-danger fresh-server-event-handlers
 import { useEffect, useState } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 
@@ -80,6 +81,7 @@ export default function Thanks() {
           class="mb-12 p-8 border-8 rounded-3xl shadow-brutal-xl animate-pop-in"
           style="border-color: var(--color-border, #0A0A0A); background-color: var(--color-secondary, #FFE5B4)"
         >
+          {/* deno-lint-ignore react-no-danger */}
           <pre
             class="font-mono text-center overflow-x-auto"
             style="color: var(--color-text, #0A0A0A); line-height: 1.1;"
@@ -145,6 +147,7 @@ export default function Thanks() {
               <span>Random ASCII Art</span>
             </a>
             <button
+              type="button"
               onClick={() => {
                 navigator.clipboard.writeText(
                   "☕ Thanks for the coffee! - Made with ASCIIFIER https://asciifier.com",

@@ -2,6 +2,8 @@
 // HOROSCOPE DISPLAY ISLAND - Cosmic horoscope with dark magic vibes
 // ===================================================================
 
+// deno-lint-ignore-file no-explicit-any no-unsafe-finally
+
 import { useSignal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
@@ -48,7 +50,7 @@ function getDisplayMeta(data: any, period: Period): string {
 }
 
 export default function HoroscopeDisplay(
-  { sign, onChangeSign }: HoroscopeDisplayProps,
+  { sign, onChangeSign: _onChangeSign }: HoroscopeDisplayProps,
 ) {
   const currentPeriod = useSignal<Period>("daily");
   const horoscopeData = useSignal<any>(null);
@@ -84,7 +86,10 @@ export default function HoroscopeDisplay(
   useEffect(() => {
     if (horoscopeData.value?.horoscope_data) {
       const text = horoscopeData.value.horoscope_data;
-      const metaLabel = getDisplayMeta(horoscopeData.value, currentPeriod.value);
+      const metaLabel = getDisplayMeta(
+        horoscopeData.value,
+        currentPeriod.value,
+      );
       // Generate ASCII art with sign name, period, and date
       const emoji = getZodiacEmoji(sign);
       const ascii = generateHoroscopeAscii(
@@ -254,7 +259,8 @@ export default function HoroscopeDisplay(
     ];
 
     // Randomly pick a boot sequence
-    const selectedBootMessages = bootSequences[Math.floor(Math.random() * bootSequences.length)];
+    const selectedBootMessages =
+      bootSequences[Math.floor(Math.random() * bootSequences.length)];
     bootMessages.value = selectedBootMessages;
 
     // Type out boot messages with delays
@@ -310,7 +316,8 @@ export default function HoroscopeDisplay(
           "⚡ SIGNAL LOST — Mothership went dark. Reconnect?",
           "🔮 DIVINATION FAILED — The universe hung up on us. One more time?",
         ];
-        errorMessage.value = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+        errorMessage.value =
+          errorMessages[Math.floor(Math.random() * errorMessages.length)];
       }
     } catch (error) {
       if (controller.signal.aborted || requestToken !== requestIdRef.current) {
@@ -328,7 +335,8 @@ export default function HoroscopeDisplay(
         "❌ DECRYPT FAILED — Star data scrambled beyond recognition. Try again?",
         "🌌 VOID DETECTED — Nothing but cosmic silence out there. Reconnect?",
       ];
-      errorMessage.value = networkErrors[Math.floor(Math.random() * networkErrors.length)];
+      errorMessage.value =
+        networkErrors[Math.floor(Math.random() * networkErrors.length)];
     } finally {
       if (controller.signal.aborted || requestToken !== requestIdRef.current) {
         return;
@@ -349,74 +357,78 @@ export default function HoroscopeDisplay(
     fetchHoroscope(sign, currentPeriod.value);
   };
 
-
   return (
     <div class="w-full min-h-[90dvh] flex items-center justify-center px-4 py-10 md:px-8 md:py-12">
       {/* Always show terminal */}
       {errorMessage.value
-          ? (
-            <div class="w-full flex justify-center" style="padding: 64px 0;">
-              <div
-                class="border-4 rounded-2xl px-6 py-8 max-w-md text-center shadow-brutal-lg"
-                style="background-color: rgba(10, 10, 10, 0.85); border-color: var(--color-border, #a855f7);"
+        ? (
+          <div class="w-full flex justify-center" style="padding: 64px 0;">
+            <div
+              class="border-4 rounded-2xl px-6 py-8 max-w-md text-center shadow-brutal-lg"
+              style="background-color: rgba(10, 10, 10, 0.85); border-color: var(--color-border, #a855f7);"
+            >
+              <p
+                class="font-mono text-sm sm:text-base mb-6"
+                style="color: var(--color-text, #faf9f6); line-height: 1.7;"
               >
-                <p
-                  class="font-mono text-sm sm:text-base mb-6"
-                  style="color: var(--color-text, #faf9f6); line-height: 1.7;"
-                >
-                  {errorMessage.value}
-                </p>
-                <button
-                  onClick={handleRetry}
-                  class="inline-flex items-center gap-2 font-mono font-black uppercase tracking-wide px-6 py-3 border-3 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-brutal"
-                  style="background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
-                >
-                  🔁 Retry
-                </button>
-              </div>
+                {errorMessage.value}
+              </p>
+              <button
+                type="button"
+                onClick={handleRetry}
+                class="inline-flex items-center gap-2 font-mono font-black uppercase tracking-wide px-6 py-3 border-3 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-brutal"
+                style="background-color: var(--color-accent, #a855f7); color: var(--color-text, #faf9f6); border-color: var(--color-border, #a855f7);"
+              >
+                🔁 Retry
+              </button>
             </div>
-          )
-          : (
-            <TerminalDisplay
-              content={(isLoading.value || isBootingUp.value)
-                ? bootMessages.value.join('\n')
-                : (horoscopeData.value ? asciiOutput.value : 'No horoscope data available')
-              }
-              htmlContent={(isLoading.value || isBootingUp.value)
-                ? bootMessages.value.map(msg => `<span style="color: #00FF41;">${msg}</span>`).join('\n')
-                : (horoscopeData.value ? colorizedHtml.value : '')
-              }
-              headerHtmlContent={(isLoading.value || isBootingUp.value)
-                ? undefined
-                : (headerHtml.value || undefined)}
-              bodyHtmlContent={(isLoading.value || isBootingUp.value)
-                ? undefined
-                : (bodyHtml.value || undefined)}
-              headerPlainText={(isLoading.value || isBootingUp.value)
-                ? undefined
-                : (headerText.value || undefined)}
-              bodyPlainText={(isLoading.value || isBootingUp.value)
-                ? undefined
-                : (bodyText.value || undefined)}
-              headerTypeSpeed={12}
-              isLoading={isLoading.value || isBootingUp.value}
-              filename={horoscopeData.value ? `${sign}-${currentPeriod.value}-${
+          </div>
+        )
+        : (
+          <TerminalDisplay
+            content={(isLoading.value || isBootingUp.value)
+              ? bootMessages.value.join("\n")
+              : (horoscopeData.value
+                ? asciiOutput.value
+                : "No horoscope data available")}
+            htmlContent={(isLoading.value || isBootingUp.value)
+              ? bootMessages.value.map((msg) =>
+                `<span style="color: #00FF41;">${msg}</span>`
+              ).join("\n")
+              : (horoscopeData.value ? colorizedHtml.value : "")}
+            headerHtmlContent={(isLoading.value || isBootingUp.value)
+              ? undefined
+              : (headerHtml.value || undefined)}
+            bodyHtmlContent={(isLoading.value || isBootingUp.value)
+              ? undefined
+              : (bodyHtml.value || undefined)}
+            headerPlainText={(isLoading.value || isBootingUp.value)
+              ? undefined
+              : (headerText.value || undefined)}
+            bodyPlainText={(isLoading.value || isBootingUp.value)
+              ? undefined
+              : (bodyText.value || undefined)}
+            headerTypeSpeed={12}
+            isLoading={isLoading.value || isBootingUp.value}
+            filename={horoscopeData.value
+              ? `${sign}-${currentPeriod.value}-${
                 horoscopeData.value.date
                   ? horoscopeData.value.date.toLowerCase().replace(
                     /[\s,]+/g,
                     "-",
                   )
                   : "horoscope"
-              }` : `${sign}-horoscope`}
-              terminalPath={`~/cosmic/${sign}.txt`}
-              visualEffect={visualEffect.value}
-              hideExportButtons={!horoscopeData.value}
-              enableTypewriter={bootComplete.value && horoscopeData.value}
-              typewriterSpeed={24}
-              currentPeriod={currentPeriod.value}
-              onPeriodChange={handlePeriodChange}
-            />
-          )}
+              }`
+              : `${sign}-horoscope`}
+            terminalPath={`~/cosmic/${sign}.txt`}
+            visualEffect={visualEffect.value}
+            hideExportButtons={!horoscopeData.value}
+            enableTypewriter={bootComplete.value && horoscopeData.value}
+            typewriterSpeed={24}
+            currentPeriod={currentPeriod.value}
+            onPeriodChange={handlePeriodChange}
+          />
+        )}
     </div>
   );
 }

@@ -70,6 +70,7 @@ export default function ThemeIsland() {
     <div class="relative" ref={dropdownRef}>
       {/* Theme Toggle Button */}
       <button
+        type="button"
         onClick={() => setShowPicker(!showPicker)}
         onMouseEnter={() => sounds.hover()}
         class="group relative px-4 py-2 rounded-lg font-mono text-xs font-bold shadow-brutal hover:shadow-brutal-lg hover:animate-pop transition-all active:scale-95"
@@ -92,6 +93,7 @@ export default function ThemeIsland() {
             <div class="space-y-2">
               {cosmicThemes.map((theme) => (
                 <button
+                  type="button"
                   key={theme.name}
                   onClick={() => handleThemeChange(theme)}
                   onMouseEnter={() => sounds.hover()}
@@ -130,6 +132,7 @@ export default function ThemeIsland() {
 
             {/* Cycle button */}
             <button
+              type="button"
               onClick={cycleTheme}
               class="w-full px-3 py-2 rounded-xl text-sm font-mono hover:scale-[1.02] transition-all font-bold"
               style="background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%); color: #ffffff; border: 3px solid var(--color-border, #a78bfa);"

@@ -18,8 +18,13 @@ export function generateShareableHoroscope(
   // Simple base64 encoding
   const encoded = btoa(JSON.stringify(data));
 
-  // Create shareable URL
-  const url = `${window.location.origin}/#share=${encoded}`;
+  // Create shareable URL (support SSR/globalThis environments)
+  const locationObj = typeof globalThis !== "undefined" &&
+      typeof (globalThis as { location?: Location }).location !== "undefined"
+    ? (globalThis as { location?: Location }).location
+    : undefined;
+  const origin = locationObj?.origin ?? "";
+  const url = origin ? `${origin}/#share=${encoded}` : `/#share=${encoded}`;
 
   return url;
 }

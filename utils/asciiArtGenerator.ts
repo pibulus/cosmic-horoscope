@@ -21,8 +21,8 @@ const FIGLET_FONT_DATA = {
 
 type FigletFontName = keyof typeof FIGLET_FONT_DATA;
 
-interface RenderFigletOptions
-  extends Pick<
+interface RenderFigletOptions extends
+  Pick<
     FigletOptions,
     "horizontalLayout" | "verticalLayout" | "width"
   > {
@@ -76,7 +76,7 @@ export function generateHoroscopeAscii(
   horoscopeText: string,
   period: string = "daily",
   date: string = "",
-  emoji?: string,
+  _emoji?: string,
 ): string {
   const signUpper = signName.toUpperCase();
   const periodUpper = period.toUpperCase();
@@ -87,7 +87,9 @@ export function generateHoroscopeAscii(
     width: 84,
   });
   const sentinelLine = "····················";
-  const figletTitle = figletTitleBase ? `${sentinelLine}\n${figletTitleBase}` : "";
+  const figletTitle = figletTitleBase
+    ? `${sentinelLine}\n${figletTitleBase}`
+    : "";
   const figletMeta = metaLine ? metaLine : "";
 
   // Wrap header in special markers for colorization

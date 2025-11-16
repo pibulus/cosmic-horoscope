@@ -1,3 +1,4 @@
+// deno-lint-ignore-file react-no-danger
 import { type PageProps } from "$fresh/server.ts";
 import { KofiModal } from "../islands/KofiModal.tsx";
 import { AboutModal } from "../islands/AboutModal.tsx";
@@ -195,6 +196,7 @@ export default function App({ Component }: PageProps) {
         </style>
 
         {/* Analytics env vars */}
+        {/* deno-lint-ignore react-no-danger */}
         <script
           dangerouslySetInnerHTML={{
             __html: `window.ENV = ${JSON.stringify(analyticsEnv)};`,
@@ -264,6 +266,7 @@ export default function App({ Component }: PageProps) {
         <InstallPrompt />
 
         {/* Service Worker Registration */}
+        {/* deno-lint-ignore react-no-danger */}
         <script
           dangerouslySetInnerHTML={{
             __html: `

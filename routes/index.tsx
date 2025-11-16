@@ -1,6 +1,4 @@
 import HomeIsland from "../islands/HomeIsland.tsx";
-import ThemeIsland from "../islands/ThemeIsland.tsx";
-import BackgroundEffects from "../islands/BackgroundEffects.tsx";
 import BackgroundCanvas from "../islands/BackgroundCanvas.tsx";
 import { AboutModal } from "../islands/AboutModal.tsx";
 import { WelcomeModal } from "../islands/WelcomeModal.tsx";

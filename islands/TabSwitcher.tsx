@@ -18,6 +18,7 @@ export default function TabSwitcher({ activeTab }: TabSwitcherProps) {
         style="border-color: var(--color-border, #0A0A0A)"
       >
         <button
+          type="button"
           onClick={() => handleTabChange("image")}
           class={`px-4 py-3 sm:px-4 sm:py-3 md:px-6 md:py-3 font-mono font-bold text-sm sm:text-sm md:text-base transition-all duration-200 ${
             activeTab.value === "image"
@@ -38,6 +39,7 @@ export default function TabSwitcher({ activeTab }: TabSwitcherProps) {
         >
         </div>
         <button
+          type="button"
           onClick={() => handleTabChange("text")}
           class={`px-4 py-3 sm:px-4 sm:py-3 md:px-6 md:py-3 font-mono font-bold text-sm sm:text-sm md:text-base transition-all duration-200 ${
             activeTab.value === "text"
@@ -58,6 +60,7 @@ export default function TabSwitcher({ activeTab }: TabSwitcherProps) {
         >
         </div>
         <button
+          type="button"
           onClick={() => handleTabChange("gallery")}
           class={`px-4 py-3 sm:px-4 sm:py-3 md:px-6 md:py-3 font-mono font-bold text-sm sm:text-sm md:text-base transition-all duration-200 ${
             activeTab.value === "gallery"

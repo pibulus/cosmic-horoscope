@@ -19,7 +19,7 @@ export async function copyToClipboard(
   analytics.trackExport(format === "email" ? "html" : "plain");
 
   try {
-    // Strip ANSI codes for plain text
+    // deno-lint-ignore no-control-regex
     const cleanText = plainText.replace(/\u001b\[[0-9;]*m/g, "");
 
     let textToCopy = cleanText;
@@ -54,7 +54,7 @@ export async function copyToClipboard(
 
     sounds.copy();
     return true;
-  } catch (err) {
+  } catch (_err) {
     sounds.error();
     alert("Copy failed. Try again.");
     return false;
@@ -81,7 +81,7 @@ export function downloadText(
     plainText = tempDiv.textContent || tempDiv.innerText || "";
   }
 
-  // Also strip any remaining ANSI codes
+  // deno-lint-ignore no-control-regex
   plainText = plainText.replace(/\u001b\[[0-9;]*m/g, "");
 
   const blob = new Blob([plainText], { type: "text/plain" });
@@ -124,7 +124,7 @@ export async function downloadPNG(
     const maxLineLength = Math.max(...lines.map((line) => line.length));
 
     // Get font size from computed styles or use defaults
-    const computedStyles = window.getComputedStyle(asciiElement);
+    const computedStyles = globalThis.getComputedStyle(asciiElement);
     const fontSize = parseInt(computedStyles.fontSize) || 16;
 
     // Monospace character dimensions (more generous for effects)
@@ -206,7 +206,7 @@ export async function downloadPNG(
           sounds.success();
           return; // Success - exit early
         }
-      } catch (shareError) {
+      } catch (_shareError) {
         // User cancelled or share failed - fall through to download
         console.log("Share cancelled or failed, falling back to download");
       }

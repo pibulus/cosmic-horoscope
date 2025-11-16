@@ -27,7 +27,6 @@ interface MagicDropdownProps {
   value: string;
   onChange: (value: string) => void;
   changed?: boolean;
-  width?: string;
 }
 
 export function MagicDropdown({
@@ -36,7 +35,6 @@ export function MagicDropdown({
   value,
   onChange,
   changed = false,
-  width = "w-full",
 }: MagicDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);

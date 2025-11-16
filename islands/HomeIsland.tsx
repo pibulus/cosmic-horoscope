@@ -3,12 +3,8 @@
 // ===================================================================
 
 import { useSignal } from "@preact/signals";
-import { useEffect } from "preact/hooks";
 import ZodiacPicker from "./ZodiacPicker.tsx";
 import HoroscopeDisplay from "./HoroscopeDisplay.tsx";
-import { KofiButton } from "./KofiModal.tsx";
-import { AboutLink } from "./AboutModal.tsx";
-import { getSavedZodiacSign, getZodiacEmoji } from "../utils/zodiac.ts";
 
 export default function HomeIsland() {
   const selectedSign = useSignal<string | null>(null);

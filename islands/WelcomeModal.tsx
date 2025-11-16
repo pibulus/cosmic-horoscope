@@ -170,6 +170,7 @@ export function WelcomeModal() {
 
             {/* Action */}
             <button
+              type="button"
               onClick={markWelcomeSeen}
               class="w-full px-6 py-4 border-3 rounded-xl font-mono font-bold text-base sm:text-lg transition-all hover:scale-105 shadow-brutal-sm active:scale-[0.98]"
               style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 100%); color: white; border-color: var(--color-border, #a78bfa)"

@@ -3,6 +3,8 @@
 // ===================================================================
 // Smart install prompt that handles both iOS and Android
 
+// deno-lint-ignore-file no-explicit-any
+
 import { useEffect, useRef, useState } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 
@@ -22,7 +24,7 @@ export default function InstallPrompt() {
     }
 
     // Check if already installed
-    if (window.matchMedia("(display-mode: standalone)").matches) {
+    if (globalThis.matchMedia("(display-mode: standalone)").matches) {
       return;
     }
 
@@ -56,10 +58,13 @@ export default function InstallPrompt() {
       }, PROMPT_DELAY_MS);
     };
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    globalThis.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt,
+    );
 
     return () => {
-      window.removeEventListener(
+      globalThis.removeEventListener(
         "beforeinstallprompt",
         handleBeforeInstallPrompt,
       );
@@ -134,7 +139,8 @@ export default function InstallPrompt() {
               >
                 <p class="font-bold">How to install:</p>
                 <ol class="space-y-1 pl-4 list-decimal">
-                  <li>Tap the Share button
+                  <li>
+                    Tap the Share button
                     <span class="inline-block mx-1 px-2 py-0.5 rounded bg-white/20">
                       <svg
                         width="14"

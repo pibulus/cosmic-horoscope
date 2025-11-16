@@ -3,6 +3,8 @@
 // ===================================================================
 // Creates the magical "receiving transmission" effect with organic typos
 
+// deno-lint-ignore-file react-no-danger
+
 import { useEffect, useRef, useState } from "preact/hooks";
 import SimpleTypeWriter from "../utils/simple-typewriter.js";
 
@@ -63,7 +65,9 @@ function getTypoChar(char: string): string {
 
   if (!typos || typos.length === 0) {
     // No typo mapping, just return a random nearby key
-    return String.fromCharCode(char.charCodeAt(0) + Math.floor(Math.random() * 3) - 1);
+    return String.fromCharCode(
+      char.charCodeAt(0) + Math.floor(Math.random() * 3) - 1,
+    );
   }
 
   const typo = typos[Math.floor(Math.random() * typos.length)];
@@ -165,7 +169,9 @@ export function TypewriterText({
 
       // Random thinking pause before typing this character
       if (Math.random() < pauseProbability) {
-        await new Promise((resolve) => setTimeout(resolve, 200 + Math.random() * 200));
+        await new Promise((resolve) =>
+          setTimeout(resolve, 200 + Math.random() * 200)
+        );
       }
 
       // Should we make a typo?
@@ -177,7 +183,10 @@ export function TypewriterText({
         currentText += typoChar;
         setDisplayedText(currentText);
         if (htmlText) {
-          currentHtml = htmlText.slice(0, findHtmlPosition(htmlText, currentText.length));
+          currentHtml = htmlText.slice(
+            0,
+            findHtmlPosition(htmlText, currentText.length),
+          );
           setDisplayedHtml(currentHtml);
         }
         playKeySound(typoChar);
@@ -191,7 +200,10 @@ export function TypewriterText({
         currentText = currentText.slice(0, -1);
         setDisplayedText(currentText);
         if (htmlText) {
-          currentHtml = htmlText.slice(0, findHtmlPosition(htmlText, currentText.length));
+          currentHtml = htmlText.slice(
+            0,
+            findHtmlPosition(htmlText, currentText.length),
+          );
           setDisplayedHtml(currentHtml);
         }
         playKeySound("\b"); // Backspace sound
@@ -206,7 +218,10 @@ export function TypewriterText({
       currentText += char;
       setDisplayedText(currentText);
       if (htmlText) {
-        currentHtml = htmlText.slice(0, findHtmlPosition(htmlText, currentText.length));
+        currentHtml = htmlText.slice(
+          0,
+          findHtmlPosition(htmlText, currentText.length),
+        );
         setDisplayedHtml(currentHtml);
       }
       playKeySound(char);
@@ -289,11 +304,9 @@ export function TypewriterText({
       onClick={handleClick}
       title={isTyping ? "Click to skip typing" : ""}
     >
-      {displayedHtml ? (
-        <span dangerouslySetInnerHTML={{ __html: displayedHtml }} />
-      ) : (
-        displayedText
-      )}
+      {displayedHtml
+        ? <span dangerouslySetInnerHTML={{ __html: displayedHtml }} />
+        : displayedText}
       {isTyping && <span class="typing-cursor">█</span>}
       <style>
         {`

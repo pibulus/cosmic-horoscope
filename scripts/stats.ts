@@ -25,8 +25,19 @@ function renderBar(value: number, max: number, width = 20): string {
   return "█".repeat(filled) + "░".repeat(empty);
 }
 
+interface PostHogEvent {
+  event: string;
+  timestamp: string;
+  properties?: {
+    format?: string;
+    to_theme?: string;
+    font?: string;
+    effect?: string;
+  };
+}
+
 // Fetch events from PostHog
-async function getEvents() {
+async function getEvents(): Promise<PostHogEvent[]> {
   const url = `${POSTHOG_HOST}/api/projects/@current/events?limit=1000`;
 
   const response = await fetch(url, {
@@ -40,7 +51,7 @@ async function getEvents() {
   }
 
   const data = await response.json();
-  return data.results || [];
+  return (data.results as PostHogEvent[]) || [];
 }
 
 // Analyze events
@@ -52,7 +63,7 @@ async function getStats() {
 
     // Filter to last N days
     const cutoff = Date.now() - (DAYS * 24 * 60 * 60 * 1000);
-    const recentEvents = events.filter((e: any) =>
+    const recentEvents = events.filter((e: PostHogEvent) =>
       new Date(e.timestamp).getTime() > cutoff
     );
 

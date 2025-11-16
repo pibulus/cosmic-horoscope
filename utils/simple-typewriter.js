@@ -39,7 +39,7 @@ export class SimpleTypeWriter {
       // Create audio context (required for Web Audio API)
       if (!this.audioContext) {
         this.audioContext =
-          new (window.AudioContext || window.webkitAudioContext)();
+          new (globalThis.AudioContext || globalThis.webkitAudioContext)();
       }
 
       // Load the config and audio in parallel
@@ -72,7 +72,7 @@ export class SimpleTypeWriter {
   /**
    * Play a key sound
    */
-  async play(event) {
+  play(event) {
     if (!this.enabled || !this.loaded) return;
 
     // Map the key to a sound ID
@@ -120,7 +120,7 @@ export class SimpleTypeWriter {
    */
   getKeyId(event) {
     const key = event.key;
-    const code = event.keyCode || event.which;
+    const _code = event.keyCode || event.which;
 
     // Special keys first
     const specialMap = {

@@ -3,6 +3,8 @@
 // ===================================================================
 // Used by both TextToAscii and AsciiGallery for consistent UI
 
+// deno-lint-ignore-file react-no-danger no-unused-vars
+
 import { useEffect, useRef, useState } from "preact/hooks";
 import { sounds } from "../utils/sounds.ts";
 import {
@@ -213,9 +215,7 @@ export function TerminalDisplay({
   ].join("; ");
 
   return (
-    <div
-      class="rounded-xl sm:rounded-2xl lg:rounded-3xl relative flex flex-col mx-auto terminal-window"
-    >
+    <div class="rounded-xl sm:rounded-2xl lg:rounded-3xl relative flex flex-col mx-auto terminal-window">
       <style>
         {`
           .terminal-window {
@@ -700,6 +700,7 @@ export function TerminalDisplay({
           {/* Shuffle button in menu bar (gallery mode) */}
           {showShuffleButton && onShuffle && hasContent && (
             <button
+              type="button"
               onClick={onShuffle}
               class="px-3 py-2 text-sm font-mono font-bold transition-all hover:scale-110 active:scale-95 opacity-80 hover:opacity-100 tracking-[0.1em]"
               style="color: #00FF41"
@@ -807,86 +808,97 @@ export function TerminalDisplay({
         </style>
         <div class="terminal-text relative z-20" style="min-height: 100%;">
           {isLoading && !content
-          ? (
-            <div class="flex items-start justify-start w-full pt-2 pl-2">
-              <pre
-                class="font-mono text-lg animate-loading-cursor"
-                style="color: #00FF41;"
-              >
+            ? (
+              <div class="flex items-start justify-start w-full pt-2 pl-2">
+                <pre
+                  class="font-mono text-lg animate-loading-cursor"
+                  style="color: #00FF41;"
+                >
                 <span class="blinking-cursor">█</span>
-              </pre>
-            </div>
-          )
-          : splitTypewriter
-          ? (
-            <div class="flex flex-col gap-6">
-              <div class="border-b border-[rgba(0,255,65,0.25)] pb-4">
-                <TypedWriter
-                  key={`header-${filename}`}
-                  text={headerPlainText!}
-                  htmlText={headerHtmlContent!}
-                  speed={fastHeaderSpeed}
-                  enabled={true}
-                  onComplete={() => setHeaderTypingComplete(true)}
-                  showCompletionCursor={false}
-                  className="ascii-display font-mono opacity-90"
-                  style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-                />
+                </pre>
               </div>
-              {headerTypingComplete && (
-                <div class="pt-2">
+            )
+            : splitTypewriter
+            ? (
+              <div class="flex flex-col gap-6">
+                <div class="border-b border-[rgba(0,255,65,0.25)] pb-4">
                   <TypedWriter
-                    key={`body-${filename}`}
-                    text={bodyPlainText!}
-                    htmlText={bodyHtmlContent!}
-                    speed={typewriterSpeed}
-                    enabled={true}
-                    onComplete={() => setTypingComplete(true)}
-                    showCompletionCursor={true}
+                    key={`header-${filename}`}
+                    text={headerPlainText!}
+                    htmlText={headerHtmlContent!}
+                    speed={fastHeaderSpeed}
+                    enabled
+                    onComplete={() => setHeaderTypingComplete(true)}
+                    showCompletionCursor={false}
                     className="ascii-display font-mono opacity-90"
-                    style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+                    style={`${baseTextStyle}; ${
+                      getVisualEffectStyle(visualEffect)
+                    }`}
                   />
                 </div>
-              )}
-            </div>
-          )
-          : (htmlContent || content) && enableTypewriter
-          ? (
-            // Typewriter mode
-            <TypedWriter
-              text={content}
-              htmlText={htmlContent}
-              speed={typewriterSpeed}
-              enabled={true}
-              onComplete={() => setTypingComplete(true)}
-              className="ascii-display font-mono opacity-90"
-              style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-            />
-          )
-          : htmlContent
-          ? (
-            // Static HTML mode
-            <pre
-              class="ascii-display font-mono opacity-90"
-              style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
-          )
-          : content
-          ? (
-            // Static text mode
-            <pre
-              class="ascii-display font-mono opacity-90"
-              style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-            >
+                {headerTypingComplete && (
+                  <div class="pt-2">
+                    <TypedWriter
+                      key={`body-${filename}`}
+                      text={bodyPlainText!}
+                      htmlText={bodyHtmlContent!}
+                      speed={typewriterSpeed}
+                      enabled
+                      onComplete={() => setTypingComplete(true)}
+                      showCompletionCursor
+                      className="ascii-display font-mono opacity-90"
+                      style={`${baseTextStyle}; ${
+                        getVisualEffectStyle(visualEffect)
+                      }`}
+                    />
+                  </div>
+                )}
+              </div>
+            )
+            : (htmlContent || content) && enableTypewriter
+            ? (
+              // Typewriter mode
+              <TypedWriter
+                text={content}
+                htmlText={htmlContent}
+                speed={typewriterSpeed}
+                enabled
+                onComplete={() => setTypingComplete(true)}
+                className="ascii-display font-mono opacity-90"
+                style={`${baseTextStyle}; ${
+                  getVisualEffectStyle(visualEffect)
+                }`}
+              />
+            )
+            : htmlContent
+            ? (
+              // Static HTML mode
+              <pre
+                class="ascii-display font-mono opacity-90"
+                style={`${baseTextStyle}; ${
+                  getVisualEffectStyle(visualEffect)
+                }`}
+                dangerouslySetInnerHTML={{ __html: htmlContent }}
+              />
+            )
+            : content
+            ? (
+              // Static text mode
+              <pre
+                class="ascii-display font-mono opacity-90"
+                style={`${baseTextStyle}; ${
+                  getVisualEffectStyle(visualEffect)
+                }`}
+              >
               {content}
-            </pre>
-          )
-          : null}
+              </pre>
+            )
+            : null}
         </div>
       </div>
 
-      {/* Share Button - Commented out for now
+      {
+        /* Share Button - Commented out for now
       {!hideExportButtons && hasContent && (
         <div class="absolute bottom-6 right-6 z-10 animate-pop-in">
           <button
@@ -920,7 +932,8 @@ export function TerminalDisplay({
           </button>
         </div>
       )}
-      */}
+      */
+      }
 
       <style>
         {`
