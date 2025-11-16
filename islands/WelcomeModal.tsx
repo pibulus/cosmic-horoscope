@@ -2,18 +2,14 @@ import { useEffect } from "preact/hooks";
 import { signal } from "@preact/signals";
 
 /**
- * ✨ Welcome Modal Component
- *
- * First-open modal with cosmic gradient intro.
- * Shows once, then never again (unless localStorage cleared).
- *
- * Built by Pablo for that legendary first impression 🎸
+ * ✨ Terminal-styled Welcome Modal
+ * First-open modal with cosmic CRT terminal aesthetic
  */
 
 // Global signal for modal state
 export const welcomeModalOpen = signal(false);
 
-// Track the animation timeout globally so we can clean it up
+// Track the animation timeout globally
 let closeAnimationTimeout: number | null = null;
 
 // Check if user has seen welcome before
@@ -29,37 +25,30 @@ export function checkWelcomeStatus() {
 }
 
 export function markWelcomeSeen() {
-  // Start fade out animation
-  const modal = document.querySelector(".animate-welcome-in");
+  const modal = document.querySelector(".animate-terminal-in");
   if (modal) {
-    modal.classList.add("animate-welcome-out");
+    modal.classList.add("animate-terminal-out");
   }
-
-  // Trigger brightness splash
-  document.body.classList.add("brightness-splash");
 
   // Clear any existing timeout
   if (closeAnimationTimeout !== null) {
     clearTimeout(closeAnimationTimeout);
   }
 
-  // Wait for animations to complete before closing modal
   closeAnimationTimeout = setTimeout(() => {
-    document.body.classList.remove("brightness-splash");
     welcomeModalOpen.value = false;
 
     if (typeof localStorage !== "undefined") {
       localStorage.setItem(WELCOME_SEEN_KEY, "true");
     }
     closeAnimationTimeout = null;
-  }, 600) as unknown as number;
+  }, 400) as unknown as number;
 }
 
 export function WelcomeModal() {
   const isOpen = welcomeModalOpen.value;
 
   useEffect(() => {
-    // Close on Escape key
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
         markWelcomeSeen();
@@ -74,7 +63,6 @@ export function WelcomeModal() {
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "";
-      // Clean up animation timeout if component unmounts while animating
       if (closeAnimationTimeout !== null) {
         clearTimeout(closeAnimationTimeout);
         closeAnimationTimeout = null;
@@ -89,161 +77,161 @@ export function WelcomeModal() {
       {/* Backdrop */}
       <div
         class="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style="background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px);"
+        style="background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(18px);"
         role="dialog"
         aria-modal="true"
         aria-labelledby="welcome-modal-title"
       >
-        {/* Modal */}
+        {/* Terminal Modal */}
         <div
-          class="relative w-full max-w-2xl animate-welcome-in"
+          class="relative w-full max-w-2xl animate-terminal-in terminal-modal"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Cosmic Header */}
+          {/* Terminal shell */}
           <div
-            class="p-6 sm:p-8 border-4 rounded-3xl text-center shadow-brutal-xl mb-4"
-            style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 50%, #fbbf24 100%); border-color: var(--color-border, #a78bfa)"
+            class="border-4 rounded-3xl overflow-hidden"
+            style="background: rgba(2, 4, 12, 0.98); border-color: #8B5CF6; box-shadow: 0 0 45px rgba(139, 92, 246, 0.3), 0 25px 90px rgba(0,0,0,0.7), inset 0 0 80px rgba(0,0,0,0.6);"
           >
-            <div class="text-6xl sm:text-7xl mb-4">✨</div>
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
-              STARGRAM
-            </h1>
-          </div>
-
-          {/* Content */}
-          <div
-            class="p-5 sm:p-8 border-4 rounded-3xl shadow-brutal-xl space-y-4 sm:space-y-6"
-            style="background-color: var(--color-base, #0a0e27); border-color: var(--color-border, #a78bfa)"
-          >
-            {/* Headline */}
-            <h2
-              id="welcome-modal-title"
-              class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-center leading-tight tracking-tight"
-              style="color: var(--color-text, #e0e7ff)"
-            >
-              Horoscopes that look<br />
-              as good as they read
-            </h2>
-
-            {/* AI-Free Badge - PROMINENT */}
+            {/* Terminal title bar */}
             <div
-              class="p-4 sm:p-5 border-3 rounded-2xl text-center"
-              style="background: rgba(167, 139, 250, 0.15); border-color: rgba(167, 139, 250, 0.4);"
+              class="flex items-center gap-3 px-6 py-3 border-b-3"
+              style="border-color: rgba(139, 92, 246, 0.3); background: rgba(0, 0, 0, 0.9);"
             >
-              <p
-                class="text-base sm:text-lg md:text-xl font-black leading-tight"
-                style="color: var(--color-accent, #f0abfc)"
+              <div class="flex gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#ff5f56]" />
+                <span class="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+                <span class="w-3 h-3 rounded-full bg-[#27c93f]" />
+              </div>
+              <div
+                class="text-sm font-mono tracking-wider uppercase"
+                style="color: #8B5CF6;"
               >
-                🚫🤖 100% AI-FREE ZONE
-              </p>
-              <p
-                class="text-xs sm:text-sm font-medium mt-2 opacity-90"
-                style="color: var(--color-text, #e0e7ff)"
-              >
-                Real horoscopes from actual astrologers.<br />
-                Downloaded from the stars. No robots.
-              </p>
+                ~/cosmic/welcome.sh
+              </div>
             </div>
 
-            {/* Features */}
-            <div class="space-y-3 sm:space-y-4">
-              <p
-                class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
-                style="color: var(--color-text, #e0e7ff)"
-              >
-                Pick your sign. Daily, weekly, monthly—your call.
-              </p>
-              <p
-                class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
-                style="color: var(--color-text, #e0e7ff)"
-              >
-                Apply gradients. Unicorn, fire, vaporwave, neon—six cosmic
-                vibes.
-              </p>
-              <p
-                class="text-sm sm:text-base md:text-lg font-medium leading-relaxed"
-                style="color: var(--color-text, #e0e7ff)"
-              >
-                Export as images. Share your reading, flex the aesthetic.
-              </p>
+            {/* Terminal content */}
+            <div class="p-8 space-y-6">
+              {/* ASCII Title */}
+              <pre
+                class="font-mono text-center text-xs sm:text-sm leading-tight mb-4"
+                style="color: #8B5CF6; text-shadow: 0 0 12px rgba(139, 92, 246, 0.6);"
+              >{`
+███████╗████████╗ █████╗ ██████╗  ██████╗ ██████╗  █████╗ ███╗   ███╗
+██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔════╝ ██╔══██╗██╔══██╗████╗ ████║
+███████╗   ██║   ███████║██████╔╝██║  ███╗██████╔╝███████║██╔████╔██║
+╚════██║   ██║   ██╔══██║██╔══██╗██║   ██║██╔══██╗██╔══██║██║╚██╔╝██║
+███████║   ██║   ██║  ██║██║  ██║╚██████╔╝██║  ██║██║  ██║██║ ╚═╝ ██║
+╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝
+              `}</pre>
+
+              <div class="space-y-4 font-mono">
+                <p class="text-sm" style="color: rgba(139, 92, 246, 0.9);">
+                  <span style="color: #00FF41;">$</span> Horoscopes that look as good as they read
+                </p>
+
+                {/* AI-Free Badge */}
+                <div
+                  class="p-4 border-2 rounded-xl"
+                  style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3);"
+                >
+                  <p class="text-sm font-bold text-center" style="color: #EC4899;">
+                    🚫🤖 100% AI-FREE ZONE
+                  </p>
+                  <p class="text-xs text-center mt-2" style="color: rgba(139, 92, 246, 0.8);">
+                    Real horoscopes from actual astrologers.<br />
+                    Downloaded from the stars. No robots.
+                  </p>
+                </div>
+
+                {/* Features as terminal commands */}
+                <div class="space-y-2 text-xs sm:text-sm">
+                  <p style="color: rgba(139, 92, 246, 0.7);">
+                    <span style="color: #00FF41;">></span> Pick your sign (daily/weekly/monthly)
+                  </p>
+                  <p style="color: rgba(139, 92, 246, 0.7);">
+                    <span style="color: #00FF41;">></span> Watch cosmic typewriter effect
+                  </p>
+                  <p style="color: rgba(139, 92, 246, 0.7);">
+                    <span style="color: #00FF41;">></span> Get random lucky numbers + vibes
+                  </p>
+                </div>
+
+                {/* Action button */}
+                <button
+                  type="button"
+                  onClick={markWelcomeSeen}
+                  class="w-full px-6 py-4 border-3 rounded-xl font-mono font-bold text-base transition-all hover:scale-105 active:scale-95"
+                  style="background: rgba(139, 92, 246, 0.2); color: #8B5CF6; border-color: #8B5CF6; box-shadow: 0 0 16px rgba(139, 92, 246, 0.4);"
+                  aria-label="Start exploring horoscopes"
+                >
+                  <span style="color: #00FF41;">> </span>CHECK THE STARS
+                </button>
+
+                {/* Footer */}
+                <p class="text-center text-xs" style="color: rgba(139, 92, 246, 0.6);">
+                  Quick. Free. Yours.
+                </p>
+              </div>
             </div>
-
-            {/* Action */}
-            <button
-              type="button"
-              onClick={markWelcomeSeen}
-              class="w-full px-6 py-4 border-3 rounded-xl font-mono font-bold text-base sm:text-lg transition-all hover:scale-105 shadow-brutal-sm active:scale-[0.98]"
-              style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 100%); color: white; border-color: var(--color-border, #a78bfa)"
-              aria-label="Close welcome message and start reading your horoscope"
-            >
-              Check the stars
-            </button>
-
-            {/* Tagline */}
-            <p
-              class="text-base sm:text-lg md:text-xl font-bold text-center pt-2"
-              style="color: var(--color-accent, #f0abfc)"
-            >
-              Quick. Free. Yours.
-            </p>
           </div>
+
+          {/* CRT scanlines overlay */}
+          <div class="terminal-scanlines" />
         </div>
       </div>
 
       <style>
         {`
-          @keyframes welcome-in {
+          @keyframes terminal-in {
             0% {
               opacity: 0;
-              transform: scale(0.9) translateY(30px);
+              transform: scale(0.95) translateY(20px);
+              filter: brightness(1.5);
             }
             100% {
               opacity: 1;
               transform: scale(1) translateY(0);
+              filter: brightness(1);
             }
           }
 
-          @keyframes welcome-out {
+          @keyframes terminal-out {
             0% {
               opacity: 1;
-              transform: scale(1) translateY(0);
+              transform: scale(1);
             }
             100% {
               opacity: 0;
-              transform: scale(0.95) translateY(-20px);
+              transform: scale(0.98);
             }
           }
 
-          @keyframes brightness-flash {
-            0% {
-              filter: brightness(1);
-            }
-            30% {
-              filter: brightness(1.6);
-            }
-            100% {
-              filter: brightness(1);
-            }
+          .animate-terminal-in {
+            animation: terminal-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
           }
 
-          .animate-welcome-in {
-            animation: welcome-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          .animate-terminal-out {
+            animation: terminal-out 0.3s ease-out forwards;
           }
 
-          .animate-welcome-out {
-            animation: welcome-out 0.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+          .terminal-modal {
+            position: relative;
           }
 
-          .brightness-splash {
-            animation: brightness-flash 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
-          }
-
-          .shadow-brutal-xl {
-            box-shadow: 12px 12px 0px var(--color-border, #0A0A0A);
-          }
-
-          .shadow-brutal-sm {
-            box-shadow: 4px 4px 0px var(--color-border, #0A0A0A);
+          .terminal-scanlines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+              0deg,
+              rgba(255, 255, 255, 0.03),
+              rgba(255, 255, 255, 0.03) 1px,
+              transparent 1px,
+              transparent 2px
+            );
+            opacity: 0.3;
+            border-radius: 1.5rem;
           }
         `}
       </style>

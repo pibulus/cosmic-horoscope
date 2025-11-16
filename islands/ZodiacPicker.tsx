@@ -286,12 +286,49 @@ export default function ZodiacPicker() {
   const previewAscii = previewSign
     ? getSignAsciiArt(previewSign.name, 32)
     : IDLE_PREVIEW_ASCII;
-  const dossierMeta = previewSign
+
+  // Random serendipitous content for dossier
+  const cosmicExtras = useMemo(() => {
+    if (!previewSign) return null;
+
+    const luckyNumber = Math.floor(Math.random() * 999) + 1;
+    const cosmicEnergy = Math.floor(Math.random() * 30) + 70; // 70-100%
+
+    const luckyColors = [
+      { name: "Cosmic Purple", hex: "#8B5CF6" },
+      { name: "Stellar Blue", hex: "#3B82F6" },
+      { name: "Nova Pink", hex: "#EC4899" },
+      { name: "Nebula Teal", hex: "#14B8A6" },
+      { name: "Solar Gold", hex: "#F59E0B" },
+      { name: "Void Indigo", hex: "#6366F1" },
+    ];
+    const luckyColor = luckyColors[Math.floor(Math.random() * luckyColors.length)];
+
+    const vibes = [
+      "Main character energy",
+      "Plot twist incoming",
+      "Side quest unlocked",
+      "Power-up detected",
+      "Boss mode activated",
+      "Hidden achievement found",
+      "Multiplayer advantage",
+      "Critical hit ready",
+    ];
+    const cosmicVibe = vibes[Math.floor(Math.random() * vibes.length)];
+
+    return { luckyNumber, cosmicEnergy, luckyColor, cosmicVibe };
+  }, [previewSign?.name]);
+
+  const dossierMeta = previewSign && cosmicExtras
     ? [
       { label: "Element", value: previewSign.element.toUpperCase() },
       { label: "Modality", value: previewSign.modality.toUpperCase() },
       { label: "Ruling Planet", value: previewSign.rulingPlanet.toUpperCase() },
       { label: "Solar Dates", value: previewSign.dates.toUpperCase() },
+      { label: "Lucky №", value: String(cosmicExtras.luckyNumber), special: "number" },
+      { label: "Cosmic Energy", value: `${cosmicExtras.cosmicEnergy}%`, special: "energy" },
+      { label: "Lucky Color", value: cosmicExtras.luckyColor.name, special: "color", hex: cosmicExtras.luckyColor.hex },
+      { label: "Today's Vibe", value: cosmicExtras.cosmicVibe, special: "vibe" },
     ]
     : [];
   const dossierCursorColor = previewSign ? accentColor : accentGlowColor;
@@ -529,16 +566,22 @@ export default function ZodiacPicker() {
                       </p>
 
                       <div class="grid grid-cols-1 gap-3 text-[10px] uppercase tracking-[0.35em]">
-                        {dossierMeta.map((item) => (
+                        {dossierMeta.map((item: any) => (
                           <div
                             key={item.label}
-                            class="flex justify-between pb-1"
+                            class="flex justify-between items-center pb-1"
                             style={`border-bottom: 1px solid ${accentGlowColor}44;`}
                           >
                             <span style={`color: ${accentGlowColor}B0;`}>
                               {item.label}
                             </span>
-                            <span style={`color: ${accentColor};`}>
+                            <span class="flex items-center gap-2" style={`color: ${accentColor};`}>
+                              {item.special === "color" && item.hex && (
+                                <span
+                                  class="inline-block w-3 h-3 rounded-full border border-white/30"
+                                  style={`background: ${item.hex}; box-shadow: 0 0 6px ${item.hex}80;`}
+                                />
+                              )}
                               {item.value}
                             </span>
                           </div>
@@ -701,32 +744,47 @@ export default function ZodiacPicker() {
                     />
 
                     {/* Navigation */}
-                    <div class="flex flex-wrap gap-3 pt-6 border-t" style={`border-color: ${accentGlowColor}30;`}>
-                      <button
-                        type="button"
-                        onClick={handleBackToPicker}
-                        class="px-4 py-2 border-2 rounded-xl font-mono text-sm uppercase tracking-wider transition-all hover:scale-105"
-                        style={`background: rgba(0,0,0,0.6); border-color: ${accentGlowColor}; color: ${accentGlowColor}; box-shadow: 0 0 12px ${accentGlowColor}40;`}
-                      >
-                        ← BACK
-                      </button>
-                      {(["daily", "weekly", "monthly"] as Period[]).map((period) => (
+                    <div class="space-y-4">
+                      <div class="flex flex-wrap gap-3 pt-6 border-t" style={`border-color: ${accentGlowColor}30;`}>
                         <button
-                          key={period}
                           type="button"
-                          onClick={() => handlePeriodChange(period)}
-                          class={`px-4 py-2 border-2 rounded-xl font-mono text-sm uppercase tracking-wider transition-all hover:scale-105 ${
-                            currentPeriod.value === period ? "font-bold" : ""
-                          }`}
-                          style={
-                            currentPeriod.value === period
-                              ? `background: ${accentColor}30; border-color: ${accentColor}; color: ${accentColor}; box-shadow: 0 0 16px ${accentColor}60;`
-                              : `background: rgba(0,0,0,0.4); border-color: ${accentGlowColor}60; color: ${accentGlowColor}; box-shadow: 0 0 8px ${accentGlowColor}20;`
-                          }
+                          onClick={handleBackToPicker}
+                          class="px-4 py-2 border-2 rounded-xl font-mono text-sm uppercase tracking-wider transition-all hover:scale-105"
+                          style={`background: rgba(0,0,0,0.6); border-color: ${accentGlowColor}; color: ${accentGlowColor}; box-shadow: 0 0 12px ${accentGlowColor}40;`}
                         >
-                          {period}
+                          ← BACK
                         </button>
-                      ))}
+                        {(["daily", "weekly", "monthly"] as Period[]).map((period) => (
+                          <button
+                            key={period}
+                            type="button"
+                            onClick={() => handlePeriodChange(period)}
+                            class={`px-4 py-2 border-2 rounded-xl font-mono text-sm uppercase tracking-wider transition-all hover:scale-105 ${
+                              currentPeriod.value === period ? "font-bold" : ""
+                            }`}
+                            style={
+                              currentPeriod.value === period
+                                ? `background: ${accentColor}30; border-color: ${accentColor}; color: ${accentColor}; box-shadow: 0 0 16px ${accentColor}60;`
+                                : `background: rgba(0,0,0,0.4); border-color: ${accentGlowColor}60; color: ${accentGlowColor}; box-shadow: 0 0 8px ${accentGlowColor}20;`
+                            }
+                          >
+                            {period}
+                          </button>
+                        ))}
+                      </div>
+                      {/* Ko-fi terminal button */}
+                      <div class="flex justify-center pt-2 border-t" style={`border-color: ${accentGlowColor}15;`}>
+                        <a
+                          href="https://ko-fi.com/madebypablo"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="px-4 py-2 border-2 rounded-xl font-mono text-xs uppercase tracking-wider transition-all hover:scale-105"
+                          style={`background: rgba(255, 192, 203, 0.05); border-color: rgba(255, 192, 203, 0.3); color: rgba(255, 192, 203, 0.9); box-shadow: 0 0 8px rgba(255, 192, 203, 0.2);`}
+                          onClick={() => sounds.click()}
+                        >
+                          <span style="opacity: 0.7;">> </span>☕ SUPPORT CREATOR
+                        </a>
+                      </div>
                     </div>
                   </div>
                 ) : (

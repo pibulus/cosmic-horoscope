@@ -1,7 +1,6 @@
 // ===================================================================
-// INSTALL PROMPT - PWA Add to Home Screen prompt
+// INSTALL PROMPT - Terminal-styled PWA prompt
 // ===================================================================
-// Smart install prompt that handles both iOS and Android
 
 // deno-lint-ignore-file no-explicit-any
 
@@ -36,7 +35,7 @@ export default function InstallPrompt() {
     setIsIOS(isiOS);
     setIsAndroid(isAndroidDevice);
 
-    // iOS: Show after delay (no beforeinstallprompt event)
+    // iOS: Show after delay
     if (isiOS) {
       const timer = setTimeout(() => {
         setShowPrompt(true);
@@ -46,12 +45,11 @@ export default function InstallPrompt() {
       return () => clearTimeout(timer);
     }
 
-    // Android/Chrome: Listen for beforeinstallprompt event
+    // Android/Chrome: Listen for beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       deferredPromptRef.current = e;
 
-      // Show prompt after delay
       setTimeout(() => {
         setShowPrompt(true);
         sounds.success();
@@ -73,7 +71,6 @@ export default function InstallPrompt() {
 
   const handleInstall = async () => {
     if (isAndroid && deferredPromptRef.current) {
-      // Android: Show native install prompt
       deferredPromptRef.current.prompt();
       const { outcome } = await deferredPromptRef.current.userChoice;
 
@@ -85,7 +82,6 @@ export default function InstallPrompt() {
       setShowPrompt(false);
       localStorage.setItem(PROMPT_DISMISSED_KEY, "true");
     }
-    // iOS: Instructions are shown in the prompt itself
   };
 
   const handleDismiss = () => {
@@ -98,33 +94,51 @@ export default function InstallPrompt() {
 
   return (
     <div
-      class="fixed bottom-20 sm:bottom-24 left-4 right-4 sm:left-auto sm:right-6 z-40 animate-slide-up"
-      style="max-width: 400px; margin-left: auto; margin-right: auto;"
+      class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 z-40 animate-terminal-slide"
+      style="max-width: 380px; margin-left: auto; margin-right: auto;"
     >
       <div
-        class="p-4 sm:p-5 border-4 rounded-2xl shadow-brutal-xl relative"
-        style="background: linear-gradient(135deg, #a78bfa 0%, #f0abfc 100%); border-color: var(--color-border, #a78bfa);"
+        class="border-3 rounded-2xl overflow-hidden terminal-prompt"
+        style="background: rgba(2, 4, 12, 0.98); border-color: #00FF41; box-shadow: 0 0 25px rgba(0, 255, 65, 0.3), 0 12px 40px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.6);"
       >
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={handleDismiss}
-          class="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full font-bold transition-all hover:scale-110"
-          style="background-color: rgba(0, 0, 0, 0.3); color: white;"
-          aria-label="Dismiss install prompt"
+        {/* Terminal title bar */}
+        <div
+          class="flex items-center justify-between px-4 py-2 border-b-2"
+          style="border-color: rgba(0, 255, 65, 0.2); background: rgba(0, 0, 0, 0.9);"
         >
-          ×
-        </button>
+          <div class="flex items-center gap-2">
+            <div class="flex gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ff5f56]" />
+              <span class="w-2.5 h-2.5 rounded-full bg-[#ffbd2e]" />
+              <span class="w-2.5 h-2.5 rounded-full bg-[#27c93f]" />
+            </div>
+            <span
+              class="text-xs font-mono uppercase tracking-wider"
+              style="color: #00FF41;"
+            >
+              ~/install.sh
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleDismiss}
+            class="w-6 h-6 flex items-center justify-center rounded font-bold transition-all hover:scale-110"
+            style="color: rgba(0, 255, 65, 0.6);"
+            aria-label="Dismiss"
+          >
+            ×
+          </button>
+        </div>
 
         {/* Content */}
-        <div class="space-y-3">
-          <div class="flex items-center gap-3">
-            <div class="text-3xl">✨</div>
+        <div class="p-4 space-y-3 font-mono">
+          <div class="flex items-start gap-2">
+            <span class="text-lg">✨</span>
             <div>
-              <h3 class="text-lg sm:text-xl font-black font-mono text-white">
-                Add to Home Screen
-              </h3>
-              <p class="text-sm font-mono text-white opacity-90">
+              <p class="text-sm font-bold" style="color: #00FF41;">
+                <span style="color: rgba(0, 255, 65, 0.6);">$</span> Install to Home Screen
+              </p>
+              <p class="text-xs mt-1" style="color: rgba(0, 255, 65, 0.7);">
                 Get horoscopes with one tap!
               </p>
             </div>
@@ -134,27 +148,28 @@ export default function InstallPrompt() {
             ? (
               // iOS Instructions
               <div
-                class="p-3 rounded-xl text-sm font-mono space-y-2"
-                style="background-color: rgba(0, 0, 0, 0.2); color: white;"
+                class="p-3 rounded-xl text-xs space-y-2"
+                style="background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.2);"
               >
-                <p class="font-bold">How to install:</p>
-                <ol class="space-y-1 pl-4 list-decimal">
+                <p class="font-bold" style="color: rgba(0, 255, 65, 0.9);">
+                  > HOW TO INSTALL:
+                </p>
+                <ol class="space-y-1 pl-4 list-decimal" style="color: rgba(0, 255, 65, 0.7);">
                   <li>
-                    Tap the Share button
-                    <span class="inline-block mx-1 px-2 py-0.5 rounded bg-white/20">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        class="inline"
-                      >
-                        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />
-                      </svg>
-                    </span>
+                    Tap Share button
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="inline mx-1"
+                      style="opacity: 0.8;"
+                    >
+                      <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" />
+                    </svg>
                   </li>
-                  <li>Scroll and tap "Add to Home Screen"</li>
-                  <li>Tap "Add" to confirm</li>
+                  <li>Tap "Add to Home Screen"</li>
+                  <li>Tap "Add"</li>
                 </ol>
               </div>
             )
@@ -163,22 +178,25 @@ export default function InstallPrompt() {
               <button
                 type="button"
                 onClick={handleInstall}
-                class="w-full px-5 py-3 border-3 rounded-xl font-mono font-black text-base transition-all hover:scale-105 active:scale-95 shadow-brutal-sm"
-                style="background-color: white; color: #a78bfa; border-color: rgba(0, 0, 0, 0.3);"
+                class="w-full px-4 py-3 border-2 rounded-xl font-bold text-sm transition-all hover:scale-105 active:scale-95"
+                style="background: rgba(0, 255, 65, 0.1); color: #00FF41; border-color: #00FF41; box-shadow: 0 0 12px rgba(0, 255, 65, 0.3);"
               >
-                📱 Install App
+                <span style="color: rgba(0, 255, 65, 0.7);">></span> INSTALL APP
               </button>
             )}
 
-          <p class="text-xs text-center font-mono text-white opacity-80">
-            Free. No ads. Works offline.
+          <p class="text-xs text-center" style="color: rgba(0, 255, 65, 0.5);">
+            Free • No ads • Works offline
           </p>
         </div>
+
+        {/* Scanlines */}
+        <div class="terminal-scanlines" />
       </div>
 
       <style>
         {`
-        @keyframes slide-up {
+        @keyframes terminal-slide {
           0% {
             opacity: 0;
             transform: translateY(20px);
@@ -189,16 +207,27 @@ export default function InstallPrompt() {
           }
         }
 
-        .animate-slide-up {
-          animation: slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        .animate-terminal-slide {
+          animation: terminal-slide 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        .shadow-brutal-xl {
-          box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
+        .terminal-prompt {
+          position: relative;
         }
 
-        .shadow-brutal-sm {
-          box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+        .terminal-scanlines {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.02),
+            rgba(255, 255, 255, 0.02) 1px,
+            transparent 1px,
+            transparent 2px
+          );
+          opacity: 0.4;
+          border-radius: 1rem;
         }
         `}
       </style>
