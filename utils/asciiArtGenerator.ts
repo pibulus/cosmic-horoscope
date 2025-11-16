@@ -88,12 +88,7 @@ export function generateHoroscopeAscii(
   });
   const sentinelLine = "····················";
   const figletTitle = figletTitleBase ? `${sentinelLine}\n${figletTitleBase}` : "";
-  const figletMeta = metaLine
-    ? renderFigletText(metaLine, {
-      font: "Small",
-      width: 64,
-    })
-    : "";
+  const figletMeta = metaLine ? metaLine : "";
 
   // Wrap header in special markers for colorization
   const headerParts = ["[HEADER_START]"];

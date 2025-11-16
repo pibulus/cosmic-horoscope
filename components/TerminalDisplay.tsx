@@ -191,10 +191,10 @@ export function TerminalDisplay({
     Math.max(4, Math.floor(typewriterSpeed / 2));
   const baseTextStyle = [
     "font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace",
-    "color: var(--terminal-text-color, #00ff41)",
-    "font-size: 16px",
-    "line-height: 1.25",
-    "letter-spacing: 0.01em",
+    "color: rgba(0, 255, 65, 0.9)",
+    "font-size: 17px",
+    "line-height: 1.45",
+    "letter-spacing: 0.012em",
     "white-space: pre",
     "word-break: normal",
     "overflow-wrap: normal",
@@ -209,7 +209,7 @@ export function TerminalDisplay({
     "text-indent: 0",
     "font-weight: 400",
     "filter: none",
-    "text-shadow: 0 0 2px rgba(0, 255, 65, 0.3)",
+    "text-shadow: 0 0 6px rgba(0, 255, 65, 0.25)",
   ].join("; ");
 
   return (
@@ -819,30 +819,36 @@ export function TerminalDisplay({
           )
           : splitTypewriter && !typingComplete
           ? (
-            <div class="flex flex-col gap-4">
-              <TypedWriter
-                key={`header-${filename}`}
-                text={headerPlainText!}
-                htmlText={headerHtmlContent!}
-                speed={fastHeaderSpeed}
-                enabled={!typingComplete}
-                onComplete={() => setHeaderTypingComplete(true)}
-                showCompletionCursor={false}
-                className="ascii-display font-mono opacity-90"
-                style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
-              />
-              {headerTypingComplete && (
+            <div class="flex flex-col gap-6">
+              <div
+                class="border-b border-[rgba(0,255,65,0.25)] pb-4"
+              >
                 <TypedWriter
-                  key={`body-${filename}`}
-                  text={bodyPlainText!}
-                  htmlText={bodyHtmlContent!}
-                  speed={typewriterSpeed}
+                  key={`header-${filename}`}
+                  text={headerPlainText!}
+                  htmlText={headerHtmlContent!}
+                  speed={fastHeaderSpeed}
                   enabled={!typingComplete}
-                  onComplete={() => setTypingComplete(true)}
-                  showCompletionCursor={true}
+                  onComplete={() => setHeaderTypingComplete(true)}
+                  showCompletionCursor={false}
                   className="ascii-display font-mono opacity-90"
                   style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
                 />
+              </div>
+              {headerTypingComplete && (
+                <div class="pt-2">
+                  <TypedWriter
+                    key={`body-${filename}`}
+                    text={bodyPlainText!}
+                    htmlText={bodyHtmlContent!}
+                    speed={typewriterSpeed}
+                    enabled={!typingComplete}
+                    onComplete={() => setTypingComplete(true)}
+                    showCompletionCursor={true}
+                    className="ascii-display font-mono opacity-90"
+                    style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+                  />
+                </div>
               )}
             </div>
           )
