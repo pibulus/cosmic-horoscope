@@ -41,7 +41,10 @@ const horoscopeData = signal<any>(null);
 const isLoadingHoroscope = signal(false);
 const horoscopeHtml = signal("");
 const horoscopePlainText = signal("");
+const horoscopeHeaderHtml = signal("");
+const horoscopeBodyHtml = signal("");
 const bootMessages = signal<string[]>([]);
+const showHoroscope = signal(false);
 
 const PICKER_TITLE_ASCII = renderFigletText("STARGRAM", {
   font: "ANSI Shadow",
@@ -146,6 +149,21 @@ ${sentinel}
 ${horoscopeText}`;
 }
 
+function splitHoroscopeAscii(ascii: string) {
+  const startMarker = "[HEADER_START]";
+  const endMarker = "[HEADER_END]";
+  const startIndex = ascii.indexOf(startMarker);
+  const endIndex = ascii.indexOf(endMarker);
+
+  if (startIndex === -1 || endIndex === -1) {
+    return { header: "", body: ascii.trim() };
+  }
+
+  const header = ascii.slice(startIndex + startMarker.length, endIndex).trim();
+  const body = ascii.slice(endIndex + endMarker.length).trim();
+  return { header, body };
+}
+
 export default function ZodiacPicker() {
   useEffect(() => {
     const styleEl = document.createElement("style");
@@ -212,11 +230,16 @@ export default function ZodiacPicker() {
         const ascii = generateHoroscopeAscii(sign, horoscopeText, period, date);
         horoscopePlainText.value = ascii;
 
-        // Apply color effects
+        // Split and colorize
+        const { header, body } = splitHoroscopeAscii(ascii);
         const colorized = applyColorToArt(ascii, "trinity");
+
         horoscopeHtml.value = colorized.fullHtml;
+        horoscopeHeaderHtml.value = colorized.headerHtml;
+        horoscopeBodyHtml.value = colorized.bodyHtml;
 
         horoscopeData.value = data.data;
+        showHoroscope.value = true;
         sounds.success();
       } else {
         sounds.error();
@@ -246,6 +269,7 @@ export default function ZodiacPicker() {
     currentMode.value = "picker";
     horoscopeData.value = null;
     horoscopeHtml.value = "";
+    showHoroscope.value = false;
   };
 
   const handlePeriodChange = (period: Period) => {
@@ -253,6 +277,7 @@ export default function ZodiacPicker() {
     sounds.click();
     currentPeriod.value = period;
     flickerTrigger.value = Date.now();
+    showHoroscope.value = false;
     fetchHoroscope(selectedSign.value, period);
   };
 
@@ -649,13 +674,30 @@ export default function ZodiacPicker() {
                       style={`background: ${accentColor};`}
                     />
                   </div>
-                ) : horoscopeHtml.value ? (
+                ) : horoscopeHtml.value && showHoroscope.value ? (
                   // Horoscope content with typewriter
                   <div class="space-y-6">
-                    <div
-                      class="font-mono leading-relaxed"
-                      style="color: #FFD700;"
-                      dangerouslySetInnerHTML={{ __html: horoscopeHtml.value }}
+                    {/* Fast-typing header */}
+                    <div class="border-b pb-4" style={`border-color: ${accentGlowColor}30;`}>
+                      <TypedWriter
+                        text={splitHoroscopeAscii(horoscopePlainText.value).header}
+                        htmlText={horoscopeHeaderHtml.value}
+                        speed={8}
+                        enabled
+                        showCompletionCursor={false}
+                        className="font-mono leading-tight"
+                        style="color: #FFD700; font-size: 14px; letter-spacing: 0.02em;"
+                      />
+                    </div>
+                    {/* Slower-typing body */}
+                    <TypedWriter
+                      text={splitHoroscopeAscii(horoscopePlainText.value).body}
+                      htmlText={horoscopeBodyHtml.value}
+                      speed={20}
+                      enabled
+                      showCompletionCursor
+                      className="font-mono leading-relaxed"
+                      style={`color: ${accentColor}; font-size: 15px;`}
                     />
 
                     {/* Navigation */}
