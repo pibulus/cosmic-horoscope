@@ -413,7 +413,7 @@ export default function ZodiacPicker() {
         <div
           key={flickerTrigger.value}
           class={`w-full max-w-6xl border-[3px] sm:border-4 rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden terminal-shell ${flickerTrigger.value > 0 ? 'crt-flicker' : ''}`}
-          style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentGlowColor}80; box-shadow: 0 0 45px ${accentGlowColor}2e, 0 25px 90px rgba(0,0,0,0.7), inset 0 0 80px rgba(0,0,0,0.6); animation: cosmicFloat 12s ease-in-out infinite; transform: perspective(1000px) rotateX(${parallaxRotateX}deg) rotateY(${parallaxRotateY}deg) translate3d(${parallaxX}px, ${parallaxY}px, 0); transition: transform 0.3s ease-out;`}
+          style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentGlowColor}80; box-shadow: 0 0 45px ${accentGlowColor}2e, 0 25px 90px rgba(0,0,0,0.7), inset 0 0 80px rgba(0,0,0,0.6); animation: cosmicFloat 12s ease-in-out infinite; transform: perspective(1000px) rotateX(${parallaxRotateX}deg) rotateY(${parallaxRotateY}deg) translate3d(${parallaxX}px, ${parallaxY}px, 0); transition: transform 0.3s ease-out; min-height: 700px; max-height: 85vh;`}
         >
           {/* Terminal title bar */}
           <div
@@ -435,7 +435,7 @@ export default function ZodiacPicker() {
             </div>
           </div>
 
-          <div class="p-5 sm:p-8 lg:p-12 terminal-content-wrapper" style="min-height: 600px;">
+          <div class="p-5 sm:p-8 lg:p-12 terminal-content-wrapper" style="min-height: 600px; max-height: calc(85vh - 100px); overflow-y: auto;">
             {currentMode.value === "picker" ? (
               // PICKER MODE - Zodiac grid + dossier
               <div class="flex flex-col lg:flex-row gap-10 lg:gap-12">
