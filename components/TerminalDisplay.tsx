@@ -827,6 +827,7 @@ export function TerminalDisplay({
                 speed={fastHeaderSpeed}
                 enabled={!typingComplete}
                 onComplete={() => setHeaderTypingComplete(true)}
+                showCompletionCursor={false}
                 className="ascii-display font-mono opacity-90"
                 style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
               />
@@ -838,6 +839,7 @@ export function TerminalDisplay({
                   speed={typewriterSpeed}
                   enabled={!typingComplete}
                   onComplete={() => setTypingComplete(true)}
+                  showCompletionCursor={true}
                   className="ascii-display font-mono opacity-90"
                   style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
                 />

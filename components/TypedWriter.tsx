@@ -17,6 +17,8 @@ interface TypedWriterProps {
   enabled?: boolean;
   /** Callback when complete */
   onComplete?: () => void;
+  /** Whether to append blinking cursor on completion */
+  showCompletionCursor?: boolean;
   /** CSS class */
   className?: string;
   /** Inline styles */
@@ -29,6 +31,7 @@ export function TypedWriter({
   speed = 60,
   enabled = true,
   onComplete,
+  showCompletionCursor = true,
   className = "",
   style = "",
 }: TypedWriterProps) {
@@ -165,7 +168,7 @@ export function TypedWriter({
         observer.disconnect();
 
         // Add persistent blinking cursor after typing completes
-        if (elementRef.current) {
+        if (showCompletionCursor && elementRef.current) {
           const cursor = document.createElement('span');
           cursor.className = 'blinking-cursor';
           cursor.textContent = '█';

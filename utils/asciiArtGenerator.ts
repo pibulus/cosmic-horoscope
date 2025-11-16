@@ -9,12 +9,14 @@ import AnsiShadowFont from "npm:figlet/importable-fonts/ANSI Shadow.js";
 import SmallSlantFont from "npm:figlet/importable-fonts/Small Slant.js";
 import MiniFont from "npm:figlet/importable-fonts/Mini.js";
 import StandardFont from "npm:figlet/importable-fonts/Standard.js";
+import SmallFont from "npm:figlet/importable-fonts/Small.js";
 
 const FIGLET_FONT_DATA = {
   "ANSI Shadow": AnsiShadowFont,
   "Small Slant": SmallSlantFont,
   Mini: MiniFont,
   Standard: StandardFont,
+  Small: SmallFont,
 } as const;
 
 type FigletFontName = keyof typeof FIGLET_FONT_DATA;
@@ -80,13 +82,15 @@ export function generateHoroscopeAscii(
   const periodUpper = period.toUpperCase();
   const metaLine = date ? `${periodUpper} • ${date}` : periodUpper;
 
-  const figletTitle = renderFigletText(signUpper, {
-    font: "Standard",
+  const figletTitleBase = renderFigletText(signUpper, {
+    font: "ANSI Shadow",
     width: 84,
   });
+  const sentinelLine = "····················";
+  const figletTitle = figletTitleBase ? `${sentinelLine}\n${figletTitleBase}` : "";
   const figletMeta = metaLine
     ? renderFigletText(metaLine, {
-      font: "Mini",
+      font: "Small",
       width: 64,
     })
     : "";

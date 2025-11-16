@@ -37,19 +37,37 @@ const IDLE_PREVIEW_ASCII = [
 ].join("\n");
 
 const SIGN_ASCII_CACHE = new Map<string, string>();
+const DATE_ASCII_CACHE = new Map<string, string>();
 
-function getSignAscii(sign: string, width = 30): string {
+function getSignAscii(sign: string, width = 52): string {
   const key = `${sign.toUpperCase()}-${width}`;
   if (!SIGN_ASCII_CACHE.has(key)) {
     SIGN_ASCII_CACHE.set(
       key,
-      renderFigletText(sign.toUpperCase(), {
-        font: "Mini",
+      (() => {
+        const base = renderFigletText(sign.toUpperCase(), {
+          font: "ANSI Shadow",
+          width,
+        });
+        return base ? `....\n${base}` : "";
+      })(),
+    );
+  }
+  return SIGN_ASCII_CACHE.get(key)!;
+}
+
+function getDateAscii(dates: string, width = 34): string {
+  const key = `${dates}-${width}`;
+  if (!DATE_ASCII_CACHE.has(key)) {
+    DATE_ASCII_CACHE.set(
+      key,
+      renderFigletText(dates.toUpperCase(), {
+        font: "Small",
         width,
       }),
     );
   }
-  return SIGN_ASCII_CACHE.get(key)!;
+  return DATE_ASCII_CACHE.get(key)!;
 }
 
 function getSignData(name: string): ZodiacSign | undefined {
@@ -72,7 +90,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
   const previewTarget = hoveredSign.value || selectedSign.value;
   const previewSign = previewTarget ? getSignData(previewTarget) : undefined;
   const previewAscii = previewSign
-    ? getSignAscii(previewSign.name, 32)
+    ? getSignAscii(previewSign.name, 60)
     : IDLE_PREVIEW_ASCII;
 
   return (
@@ -167,11 +185,11 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                           [{indexLabel}]
                         </span>
                         <pre
-                        class="flex-1 font-mono text-[8px] sm:text-[9px] leading-[1.05] whitespace-pre uppercase"
-                        style={`color: ${accentColor}; text-shadow: 0 0 6px ${accentColor}66;`}
-                      >
-                        {getSignAscii(zodiac.name)}
-                      </pre>
+                          class="flex-1 font-mono text-[8px] sm:text-[9px] leading-[1.05] whitespace-pre uppercase"
+                          style={`color: ${PRIMARY_TERMINAL_COLOR}; text-shadow: 0 0 6px ${PRIMARY_TERMINAL_COLOR}55;`}
+                        >
+                          {getSignAscii(zodiac.name)}
+                        </pre>
                         <span
                           class="text-[11px] tracking-[0.2em]"
                           style={`color: ${PRIMARY_TERMINAL_COLOR}CC;`}
@@ -179,11 +197,17 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                           {isSelected ? "LOCKED" : "READY"}
                         </span>
                       </div>
-                      <div
-                        class="mt-2 text-[11px] sm:text-xs uppercase tracking-[0.32em]"
-                        style={`color: ${PRIMARY_TERMINAL_COLOR}B3;`}
+                      <pre
+                        class="mt-2 font-mono text-[8px] sm:text-[9px] leading-[1.05] whitespace-pre"
+                        style={`color: ${PRIMARY_TERMINAL_COLOR}D9;`}
                       >
-                        {zodiac.dates} • {zodiac.element.toUpperCase()}
+                        {getDateAscii(zodiac.dates)}
+                      </pre>
+                      <div
+                        class="text-[10px] sm:text-xs uppercase tracking-[0.32em]"
+                        style={`color: ${PRIMARY_TERMINAL_COLOR}99; border-top: 1px solid ${PRIMARY_TERMINAL_COLOR}33; padding-top: 6px;`}
+                      >
+                        {zodiac.element.toUpperCase()}
                       </div>
                     </button>
                   );
@@ -202,7 +226,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
 
               <pre
                 class="font-mono text-[9px] leading-[1.05] whitespace-pre mb-3"
-                style={`color: ${accentColor};`}
+                style={`color: ${PRIMARY_TERMINAL_COLOR};`}
               >
                 {previewAscii}
               </pre>
