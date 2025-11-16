@@ -55,6 +55,16 @@ const COSMIC_ANIMATION_STYLES = `
   0%, 49% { opacity: 1; }
   50%, 100% { opacity: 0; }
 }
+.cosmic-scrollless {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cosmic-scrollless::-webkit-scrollbar {
+  display: none;
+}
+.cursor-blink {
+  animation: cursorBlink 1s steps(2, start) infinite;
+}
 `;
 
 const SIGN_ASCII_CACHE = new Map<string, string>();
@@ -91,9 +101,15 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
     };
   }, []);
 
-  const accentColor = useMemo(() => {
-    const index = Math.floor(Math.random() * ACCENT_COLORS.length);
-    return ACCENT_COLORS[index];
+  const { accentColor, accentGlowColor } = useMemo(() => {
+    const primaryIndex = Math.floor(Math.random() * ACCENT_COLORS.length);
+    const remaining = ACCENT_COLORS.filter((_, idx) => idx !== primaryIndex);
+    const secondaryIndex = Math.floor(Math.random() * remaining.length);
+    return {
+      accentColor: ACCENT_COLORS[primaryIndex],
+      accentGlowColor: remaining[secondaryIndex] ??
+        ACCENT_COLORS[(primaryIndex + 3) % ACCENT_COLORS.length],
+    };
   }, []);
 
   const handleSignClick = (sign: string) => {
@@ -123,7 +139,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
       <div class="w-full min-h-[90dvh] flex items-center justify-center px-3 sm:px-6 py-12 md:py-16">
         <div
           class="w-full max-w-6xl border-[3px] sm:border-4 rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden terminal-shell"
-          style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentColor}A6; box-shadow: 0 0 60px ${accentColor}2b; animation: cosmicFloat 12s ease-in-out infinite;`}
+          style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentGlowColor}80; box-shadow: 0 0 45px ${accentGlowColor}2e, 0 25px 90px rgba(0,0,0,0.7); animation: cosmicFloat 12s ease-in-out infinite;`}
         >
           {/* Terminal title bar */}
           <div
@@ -154,23 +170,26 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                     class="font-mono text-[9px] sm:text-[10px] md:text-xs leading-[1.1] whitespace-pre mb-2"
                     style={`color: ${accentColor}; text-shadow: 0 0 14px ${accentColor}88;`}
                   >
-                  {PICKER_TITLE_ASCII}
+                    {PICKER_TITLE_ASCII}
                   </pre>
-                  <div class="flex overflow-x-auto">
+                  <div
+                    class="w-full cosmic-scrollless overflow-x-auto sm:overflow-visible"
+                    style="scrollbar-width: none;"
+                  >
                     <pre
-                      class="font-mono text-[8px] sm:text-[9px] leading-[1.05] whitespace-pre min-w-full"
-                      style={`color: ${accentColor};`}
+                      class="font-mono text-center leading-[1.05] whitespace-pre w-full"
+                      style={`color: ${accentGlowColor}; font-size: clamp(7px, 2vw, 12px); letter-spacing: 0.22em;`}
                     >
-                    {PICKER_HINT_ASCII}
+                      {PICKER_HINT_ASCII}
                     </pre>
                   </div>
                 </div>
 
                 <pre
                   class="font-mono text-xs sm:text-sm tracking-[0.35em] uppercase"
-                  style={`color: ${PRIMARY_TERMINAL_COLOR}88;`}
+                  style={`color: ${accentGlowColor}88;`}
                 >
-                {ASCII_DIVIDER}
+                  {ASCII_DIVIDER}
                 </pre>
 
                 <div
@@ -188,7 +207,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       : `${accentColor}AA`;
                     const borderColor = isSelected || isHovered
                       ? accentColor
-                      : `${PRIMARY_TERMINAL_COLOR}44`;
+                      : `${accentGlowColor}44`;
                     const backgroundColor = isSelected
                       ? "rgba(0, 30, 8, 0.92)"
                       : isHovered
@@ -197,7 +216,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                     const glow = isSelected
                       ? `0 0 32px ${accentColor}80, 0 12px 35px rgba(0,0,0,0.55)`
                       : isHovered
-                      ? `0 0 16px ${accentColor}55, 0 8px 22px rgba(0,0,0,0.55)`
+                      ? `0 0 16px ${accentGlowColor}66, 0 8px 22px rgba(0,0,0,0.55)`
                       : "0 8px 20px rgba(0,0,0,0.55)";
 
                     return (
@@ -229,7 +248,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                         </div>
                         <div
                           class="mt-2 text-[10px] sm:text-xs uppercase tracking-[0.28em]"
-                          style={`color: ${accentColor}CC;`}
+                          style={`color: ${accentGlowColor}CC;`}
                         >
                           {zodiac.dates.toUpperCase()} • {elementLabel}
                         </div>
@@ -241,10 +260,13 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
 
               {/* Preview Pane */}
               <div
-                class="w-full lg:w-[320px] xl:w-[360px] border-[3px] rounded-3xl p-5 bg-black/35 text-[#00ff41]"
-                style={`border-color: ${PRIMARY_TERMINAL_COLOR}5c; box-shadow: inset 0 0 32px ${PRIMARY_TERMINAL_COLOR}12;`}
+                class="w-full lg:w-[320px] xl:w-[360px] border-[3px] rounded-3xl p-5 bg-black/35"
+                style={`border-color: ${accentGlowColor}40; box-shadow: inset 0 0 32px ${accentGlowColor}22;`}
               >
-                <div class="text-xs uppercase tracking-[0.4em] text-[#00ff41]/80 mb-4">
+                <div
+                  class="text-xs uppercase tracking-[0.4em] mb-4"
+                  style={`color: ${accentGlowColor}CC;`}
+                >
                   {previewSign ? "COSMIC DOSSIER" : "SIGNAL STANDBY"}
                 </div>
 
@@ -253,7 +275,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                     <div class="space-y-4">
                       <pre
                         class="font-mono text-[9px] leading-[1.05] whitespace-pre"
-                        style={`color: ${accentColor};`}
+                        style={`color: ${accentColor}; text-shadow: 0 0 10px ${accentColor}33;`}
                       >
                       {previewAscii}
                       </pre>
@@ -270,9 +292,9 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                           <div
                             key={item.label}
                             class="flex justify-between pb-1"
-                            style={`border-bottom: 1px solid ${accentColor}44;`}
+                            style={`border-bottom: 1px solid ${accentGlowColor}44;`}
                           >
-                            <span style={`color: ${accentColor}AA;`}>
+                            <span style={`color: ${accentGlowColor}B0;`}>
                               {item.label}
                             </span>
                             <span style={`color: ${accentColor};`}>
@@ -283,25 +305,40 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       </div>
 
                       <div>
-                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                        <p
+                          class="text-[10px] uppercase tracking-[0.4em] mb-1"
+                          style={`color: ${accentGlowColor}AA;`}
+                        >
                           Signature Move
                         </p>
-                        <p class="font-mono text-sm leading-relaxed text-[#00ff41]/90">
+                        <p
+                          class="font-mono text-sm leading-relaxed"
+                          style={`color: ${accentColor}D0;`}
+                        >
                           {previewSign.signatureMove}
                         </p>
                       </div>
 
                       <div>
-                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                        <p
+                          class="text-[10px] uppercase tracking-[0.4em] mb-1"
+                          style={`color: ${accentGlowColor}AA;`}
+                        >
                           Recharge Protocol
                         </p>
-                        <p class="font-mono text-sm leading-relaxed text-[#00ff41]/85">
+                        <p
+                          class="font-mono text-sm leading-relaxed"
+                          style={`color: ${accentGlowColor}D0;`}
+                        >
                           {previewSign.recharge}
                         </p>
                       </div>
 
                       <div>
-                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                        <p
+                          class="text-[10px] uppercase tracking-[0.4em] mb-1"
+                          style={`color: ${accentGlowColor}AA;`}
+                        >
                           Keywords
                         </p>
                         <ul class="space-y-1 text-[11px] uppercase tracking-[0.35em]">
@@ -309,7 +346,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                             <li
                               key={keyword}
                               class="font-mono"
-                              style={`color: ${accentColor};`}
+                              style={`color: ${accentGlowColor};`}
                             >
                               • {keyword.toUpperCase()}
                             </li>
@@ -318,23 +355,32 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       </div>
 
                       <div>
-                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                        <p
+                          class="text-[10px] uppercase tracking-[0.4em] mb-1"
+                          style={`color: ${accentGlowColor}AA;`}
+                        >
                           Motto
                         </p>
-                        <p class="font-mono text-sm italic text-[#00ff41]/85">
+                        <p
+                          class="font-mono text-sm italic"
+                          style={`color: ${accentColor}C2;`}
+                        >
                           “{previewSign.motto}”
                         </p>
                       </div>
 
                       {selectedSign.value && (
-                        <p class="pt-2 font-mono text-[11px] tracking-[0.25em] text-[#00ff41]/70 uppercase border-t border-[#00ff41]1f">
+                        <p
+                          class="pt-2 font-mono text-[11px] tracking-[0.25em] uppercase border-t"
+                          style={`color: ${accentGlowColor}AA; border-color: ${accentGlowColor}28;`}
+                        >
                           {`> LOCKED :: ${selectedSign.value.toUpperCase()}`}
                         </p>
                       )}
 
                       <span
-                        class="inline-block h-4 w-2"
-                        style={`background: ${dossierCursorColor}; animation: cursorBlink 1s steps(2, start) infinite;`}
+                        class="inline-block h-4 w-2 cursor-blink"
+                        style={`background: ${dossierCursorColor};`}
                       />
                     </div>
                   )
@@ -353,12 +399,15 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                         Hover a sign to load intel. Tap to lock your signal and
                         fetch the horoscope stream.
                       </p>
-                      <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#00ff41]/80">
+                      <p
+                        class="font-mono text-[11px] uppercase tracking-[0.35em]"
+                        style={`color: ${accentGlowColor}B0;`}
+                      >
                         No sign selected
                       </p>
                       <span
-                        class="inline-block h-4 w-2"
-                        style={`background: ${dossierCursorColor}; animation: cursorBlink 1s steps(2, start) infinite;`}
+                        class="inline-block h-4 w-2 cursor-blink"
+                        style={`background: ${dossierCursorColor};`}
                       />
                     </div>
                   )}
