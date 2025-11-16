@@ -34,7 +34,8 @@ export default function HomeIsland() {
   return (
     <>
       {/* Header - Solid dark background */}
-      {/* <header
+      {
+        /* <header
         class="border-b-4 relative flex-shrink-0"
         style="border-color: var(--color-border, #a855f7); background-color: #0a0a0a;"
       >
@@ -81,7 +82,8 @@ export default function HomeIsland() {
             </div>
           </div>
         </div>
-      </header> */}
+      </header> */
+      }
 
       {/* Main Content - Centered both vertically and horizontally */}
       <main
@@ -101,7 +103,8 @@ export default function HomeIsland() {
       </main>
 
       {/* Footer - Floating at bottom */}
-      {/* <footer
+      {
+        /* <footer
         class="fixed bottom-0 left-0 right-0 py-2 sm:py-3 z-40 border-t-4"
         style="
           background-color: #0a0a0a;
@@ -114,7 +117,8 @@ export default function HomeIsland() {
             <KofiButton size="sm" label="☕ Support" />
           </div>
         </div>
-      </footer> */}
+      </footer> */
+      }
     </>
   );
 }

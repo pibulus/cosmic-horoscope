@@ -3,7 +3,7 @@
 // ===================================================================
 
 import { signal } from "@preact/signals";
-import { useMemo } from "preact/hooks";
+import { useEffect, useMemo } from "preact/hooks";
 import {
   saveZodiacSign,
   ZODIAC_SIGNS,
@@ -17,7 +17,15 @@ interface ZodiacPickerProps {
 }
 
 const PRIMARY_TERMINAL_COLOR = "#00FF41";
-const ACCENT_COLORS = ["#FF61E6", "#A5F3FC", "#C084FC", "#FFB347"];
+const ACCENT_COLORS = [
+  "#74FBA4",
+  "#00F5FF",
+  "#FF71F6",
+  "#F5F349",
+  "#8CF1FF",
+  "#FF8DF1",
+  "#7DF4FF",
+];
 
 const selectedSign = signal<string | null>(null);
 const hoveredSign = signal<string | null>(null);
@@ -26,9 +34,10 @@ const PICKER_TITLE_ASCII = renderFigletText("STARGRAM", {
   font: "ANSI Shadow",
   width: 72,
 });
-const PICKER_HINT_WORDS = ["COSMIC", "ACCESS", "PANEL"].map((word) =>
-  renderFigletText(word, { font: "Mini", width: 52 })
-);
+const PICKER_HINT_ASCII = renderFigletText("COSMIC ACCESS PANEL", {
+  font: "Mini",
+  width: 68,
+});
 const IDLE_PREVIEW_ASCII = [
   " /\\  /\\ ",
   "/  \\/  \\",
@@ -36,6 +45,17 @@ const IDLE_PREVIEW_ASCII = [
   " \\_/\\_/ ",
 ].join("\n");
 const ASCII_DIVIDER = "::::::::::::::::::::::::::::::::::::::::";
+const COSMIC_ANIMATION_STYLES = `
+@keyframes cosmicFloat {
+  0% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -12px, 8px); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+`;
 
 const SIGN_ASCII_CACHE = new Map<string, string>();
 
@@ -62,6 +82,15 @@ function getSignData(name: string): ZodiacSign | undefined {
 }
 
 export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
+  useEffect(() => {
+    const styleEl = document.createElement("style");
+    styleEl.textContent = COSMIC_ANIMATION_STYLES;
+    document.head.appendChild(styleEl);
+    return () => {
+      document.head.removeChild(styleEl);
+    };
+  }, []);
+
   const accentColor = useMemo(() => {
     const index = Math.floor(Math.random() * ACCENT_COLORS.length);
     return ACCENT_COLORS[index];
@@ -87,232 +116,253 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
       { label: "Solar Dates", value: previewSign.dates.toUpperCase() },
     ]
     : [];
+  const dossierCursorColor = previewSign ? accentColor : PRIMARY_TERMINAL_COLOR;
 
   return (
-    <div class="w-full min-h-[90dvh] flex items-center justify-center px-3 sm:px-6 py-12 md:py-16">
-      <div
-        class="w-full max-w-6xl border-[3px] sm:border-4 rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden terminal-shell"
-        style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentColor}A6; box-shadow: 0 0 60px ${accentColor}2b;`}
-      >
-        {/* Terminal title bar */}
+    <div class="relative">
+      <div class="w-full min-h-[90dvh] flex items-center justify-center px-3 sm:px-6 py-12 md:py-16">
         <div
-          class="flex items-center gap-3 px-5 sm:px-8 py-3 border-b-[3px] sm:border-b-4"
-          style="border-color: rgba(0, 255, 65, 0.18); background: rgba(0, 0, 0, 0.8);"
+          class="w-full max-w-6xl border-[3px] sm:border-4 rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden terminal-shell"
+          style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentColor}A6; box-shadow: 0 0 60px ${accentColor}2b; animation: cosmicFloat 12s ease-in-out infinite;`}
         >
-          <div class="flex gap-2">
-            <span class="w-3 h-3 rounded-full bg-[#ff5f56]" />
-            <span class="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-            <span class="w-3 h-3 rounded-full bg-[#27c93f]" />
-          </div>
+          {/* Terminal title bar */}
           <div
-            class="text-xs sm:text-sm font-mono tracking-[0.18em] uppercase"
-            style={`color: ${accentColor};`}
+            class="flex items-center gap-3 px-5 sm:px-8 py-3 border-b-[3px] sm:border-b-4"
+            style="border-color: rgba(0, 255, 65, 0.18); background: rgba(0, 0, 0, 0.8);"
           >
-            ~/cosmic/bin/zodiac.sh
+            <div class="flex gap-2">
+              <span class="w-3 h-3 rounded-full bg-[#ff5f56]" />
+              <span class="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+              <span class="w-3 h-3 rounded-full bg-[#27c93f]" />
+            </div>
+            <div
+              class="text-xs sm:text-sm font-mono tracking-[0.18em] uppercase"
+              style={`color: ${accentColor};`}
+            >
+              ~/cosmic/bin/zodiac.sh
+            </div>
           </div>
-        </div>
 
-        <div class="p-5 sm:p-8 lg:p-12">
-          <div class="flex flex-col lg:flex-row gap-10 lg:gap-12">
-            <div class="flex-1">
-              <div class="mb-5">
-                <pre
-                  class="font-mono text-[9px] sm:text-[10px] md:text-xs leading-[1.1] whitespace-pre mb-2"
-                  style={`color: ${accentColor}; text-shadow: 0 0 14px ${accentColor}88;`}
-                >
+          <div class="p-5 sm:p-8 lg:p-12">
+            <div class="flex flex-col lg:flex-row gap-10 lg:gap-12">
+              <div
+                class="flex-1"
+                style="animation: cosmicFloat 16s ease-in-out infinite; animation-delay: 0.7s;"
+              >
+                <div class="mb-5">
+                  <pre
+                    class="font-mono text-[9px] sm:text-[10px] md:text-xs leading-[1.1] whitespace-pre mb-2"
+                    style={`color: ${accentColor}; text-shadow: 0 0 14px ${accentColor}88;`}
+                  >
                   {PICKER_TITLE_ASCII}
-                </pre>
-                <div class="flex flex-col sm:flex-row gap-1 sm:gap-3">
-                  {PICKER_HINT_WORDS.map((word, idx) => (
+                  </pre>
+                  <div class="flex overflow-x-auto">
                     <pre
-                      key={idx}
-                      class="font-mono text-[8px] sm:text-[9px] leading-[1.05] whitespace-pre flex-1"
+                      class="font-mono text-[8px] sm:text-[9px] leading-[1.05] whitespace-pre min-w-full"
                       style={`color: ${accentColor};`}
                     >
-                      {word}
+                    {PICKER_HINT_ASCII}
                     </pre>
-                  ))}
+                  </div>
                 </div>
-              </div>
 
-              <pre
-                class="font-mono text-xs sm:text-sm tracking-[0.35em] uppercase"
-                style={`color: ${PRIMARY_TERMINAL_COLOR}88;`}
-              >
+                <pre
+                  class="font-mono text-xs sm:text-sm tracking-[0.35em] uppercase"
+                  style={`color: ${PRIMARY_TERMINAL_COLOR}88;`}
+                >
                 {ASCII_DIVIDER}
-              </pre>
+                </pre>
 
-              <div
-                class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-3"
-                role="listbox"
-                aria-label="Select your zodiac sign"
-              >
-                {ZODIAC_SIGNS.map((zodiac) => {
-                  const isSelected = selectedSign.value === zodiac.name;
-                  const isHovered = hoveredSign.value === zodiac.name;
-                  const cardTitle = getSignTitle(zodiac.name);
-                  const elementLabel = zodiac.element.toUpperCase();
-                  const borderColor = isSelected || isHovered
-                    ? PRIMARY_TERMINAL_COLOR
-                    : `${PRIMARY_TERMINAL_COLOR}44`;
-                  const backgroundColor = isSelected
-                    ? "rgba(0, 30, 8, 0.92)"
-                    : isHovered
-                    ? "rgba(0, 0, 0, 0.6)"
-                    : "rgba(0, 0, 0, 0.45)";
-                  const glow = isSelected
-                    ? `0 0 32px ${PRIMARY_TERMINAL_COLOR}66`
-                    : isHovered
-                    ? `0 0 16px ${PRIMARY_TERMINAL_COLOR}33`
-                    : "0 8px 20px rgba(0,0,0,0.55)";
+                <div
+                  class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-3"
+                  role="listbox"
+                  aria-label="Select your zodiac sign"
+                >
+                  {ZODIAC_SIGNS.map((zodiac) => {
+                    const isSelected = selectedSign.value === zodiac.name;
+                    const isHovered = hoveredSign.value === zodiac.name;
+                    const cardTitle = getSignTitle(zodiac.name);
+                    const elementLabel = zodiac.element.toUpperCase();
+                    const titleColor = isSelected || isHovered
+                      ? accentColor
+                      : `${accentColor}AA`;
+                    const borderColor = isSelected || isHovered
+                      ? accentColor
+                      : `${PRIMARY_TERMINAL_COLOR}44`;
+                    const backgroundColor = isSelected
+                      ? "rgba(0, 30, 8, 0.92)"
+                      : isHovered
+                      ? "rgba(0, 0, 0, 0.6)"
+                      : "rgba(0, 0, 0, 0.45)";
+                    const glow = isSelected
+                      ? `0 0 32px ${accentColor}80, 0 12px 35px rgba(0,0,0,0.55)`
+                      : isHovered
+                      ? `0 0 16px ${accentColor}55, 0 8px 22px rgba(0,0,0,0.55)`
+                      : "0 8px 20px rgba(0,0,0,0.55)";
 
-                  return (
-                    <button
-                      key={zodiac.name}
-                      type="button"
-                      onClick={() => handleSignClick(zodiac.name)}
-                      onMouseEnter={() => hoveredSign.value = zodiac.name}
-                      onMouseLeave={() => hoveredSign.value = null}
-                      onFocus={() => hoveredSign.value = zodiac.name}
-                      onBlur={() => hoveredSign.value = null}
-                      role="option"
-                      aria-selected={isSelected}
-                      class="group w-full text-left font-mono border-[3px] rounded-2xl px-4 py-4 transition-all duration-150"
-                      style={`
+                    return (
+                      <button
+                        key={zodiac.name}
+                        type="button"
+                        onClick={() => handleSignClick(zodiac.name)}
+                        onMouseEnter={() => hoveredSign.value = zodiac.name}
+                        onMouseLeave={() => hoveredSign.value = null}
+                        onFocus={() => hoveredSign.value = zodiac.name}
+                        onBlur={() => hoveredSign.value = null}
+                        role="option"
+                        aria-selected={isSelected}
+                        class="group w-full text-left font-mono border-[3px] rounded-2xl px-4 py-4 transition-all duration-150"
+                        style={`
                         border-color: ${borderColor};
                         background: ${backgroundColor};
                         color: ${PRIMARY_TERMINAL_COLOR};
                         box-shadow: ${glow};
                       `}
-                    >
-                      <div class="flex items-center">
-                        <p
-                          class="text-[11px] sm:text-sm uppercase tracking-[0.4em] whitespace-nowrap overflow-hidden text-ellipsis"
-                          style="letter-spacing: 0.38em;"
+                      >
+                        <div class="flex items-center">
+                          <p
+                            class="text-[11px] sm:text-sm uppercase tracking-[0.4em] whitespace-nowrap overflow-hidden text-ellipsis"
+                            style={`letter-spacing: 0.38em; color: ${titleColor}; text-shadow: 0 0 12px ${titleColor}40;`}
+                          >
+                            {cardTitle}
+                          </p>
+                        </div>
+                        <div
+                          class="mt-2 text-[10px] sm:text-xs uppercase tracking-[0.28em]"
+                          style={`color: ${accentColor}CC;`}
                         >
-                          {cardTitle}
+                          {zodiac.dates.toUpperCase()} • {elementLabel}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Preview Pane */}
+              <div
+                class="w-full lg:w-[320px] xl:w-[360px] border-[3px] rounded-3xl p-5 bg-black/35 text-[#00ff41]"
+                style={`border-color: ${PRIMARY_TERMINAL_COLOR}5c; box-shadow: inset 0 0 32px ${PRIMARY_TERMINAL_COLOR}12;`}
+              >
+                <div class="text-xs uppercase tracking-[0.4em] text-[#00ff41]/80 mb-4">
+                  {previewSign ? "COSMIC DOSSIER" : "SIGNAL STANDBY"}
+                </div>
+
+                {previewSign
+                  ? (
+                    <div class="space-y-4">
+                      <pre
+                        class="font-mono text-[9px] leading-[1.05] whitespace-pre"
+                        style={`color: ${accentColor};`}
+                      >
+                      {previewAscii}
+                      </pre>
+
+                      <p
+                        class="font-mono text-sm leading-relaxed"
+                        style={`color: ${PRIMARY_TERMINAL_COLOR}BF;`}
+                      >
+                        {previewSign.bio}
+                      </p>
+
+                      <div class="grid grid-cols-1 gap-3 text-[10px] uppercase tracking-[0.35em]">
+                        {dossierMeta.map((item) => (
+                          <div
+                            key={item.label}
+                            class="flex justify-between pb-1"
+                            style={`border-bottom: 1px solid ${accentColor}44;`}
+                          >
+                            <span style={`color: ${accentColor}AA;`}>
+                              {item.label}
+                            </span>
+                            <span style={`color: ${accentColor};`}>
+                              {item.value}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                          Signature Move
+                        </p>
+                        <p class="font-mono text-sm leading-relaxed text-[#00ff41]/90">
+                          {previewSign.signatureMove}
                         </p>
                       </div>
-                      <div
-                        class="mt-2 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-[#00ff41]/75"
-                      >
-                        {zodiac.dates.toUpperCase()} • {elementLabel}
+
+                      <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                          Recharge Protocol
+                        </p>
+                        <p class="font-mono text-sm leading-relaxed text-[#00ff41]/85">
+                          {previewSign.recharge}
+                        </p>
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
-            {/* Preview Pane */}
-            <div
-              class="w-full lg:w-[320px] xl:w-[360px] border-[3px] rounded-3xl p-5 bg-black/35 text-[#00ff41]"
-              style={`border-color: ${PRIMARY_TERMINAL_COLOR}5c; box-shadow: inset 0 0 32px ${PRIMARY_TERMINAL_COLOR}12;`}
-            >
-              <div class="text-xs uppercase tracking-[0.4em] text-[#00ff41]/80 mb-4">
-                {previewSign ? "COSMIC DOSSIER" : "SIGNAL STANDBY"}
-              </div>
+                      <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                          Keywords
+                        </p>
+                        <ul class="space-y-1 text-[11px] uppercase tracking-[0.35em]">
+                          {previewSign.keywords.map((keyword) => (
+                            <li
+                              key={keyword}
+                              class="font-mono"
+                              style={`color: ${accentColor};`}
+                            >
+                              • {keyword.toUpperCase()}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
 
-              {previewSign
-                ? (
-                  <div class="space-y-4">
-                    <pre
-                      class="font-mono text-[9px] leading-[1.05] whitespace-pre"
-                      style={`color: ${accentColor};`}
-                    >
+                      <div>
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
+                          Motto
+                        </p>
+                        <p class="font-mono text-sm italic text-[#00ff41]/85">
+                          “{previewSign.motto}”
+                        </p>
+                      </div>
+
+                      {selectedSign.value && (
+                        <p class="pt-2 font-mono text-[11px] tracking-[0.25em] text-[#00ff41]/70 uppercase border-t border-[#00ff41]1f">
+                          {`> LOCKED :: ${selectedSign.value.toUpperCase()}`}
+                        </p>
+                      )}
+
+                      <span
+                        class="inline-block h-4 w-2"
+                        style={`background: ${dossierCursorColor}; animation: cursorBlink 1s steps(2, start) infinite;`}
+                      />
+                    </div>
+                  )
+                  : (
+                    <div class="space-y-3">
+                      <pre
+                        class="font-mono text-[9px] leading-[1.05] whitespace-pre"
+                        style={`color: ${accentColor};`}
+                      >
                       {previewAscii}
-                    </pre>
-
-                    <p
-                      class="font-mono text-sm leading-relaxed"
-                      style={`color: ${PRIMARY_TERMINAL_COLOR}BF;`}
-                    >
-                      {previewSign.bio}
-                    </p>
-
-                    <div class="grid grid-cols-1 gap-3 text-[10px] uppercase tracking-[0.35em]">
-                      {dossierMeta.map((item) => (
-                        <div
-                          key={item.label}
-                          class="flex justify-between pb-1"
-                          style={`border-bottom: 1px solid ${accentColor}44;`}
-                        >
-                          <span style={`color: ${accentColor}AA;`}>{item.label}</span>
-                          <span style={`color: ${accentColor};`}>{item.value}</span>
-                        </div>
-                      ))}
+                      </pre>
+                      <p
+                        class="font-mono text-sm leading-relaxed"
+                        style={`color: ${PRIMARY_TERMINAL_COLOR}BF;`}
+                      >
+                        Hover a sign to load intel. Tap to lock your signal and
+                        fetch the horoscope stream.
+                      </p>
+                      <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#00ff41]/80">
+                        No sign selected
+                      </p>
+                      <span
+                        class="inline-block h-4 w-2"
+                        style={`background: ${dossierCursorColor}; animation: cursorBlink 1s steps(2, start) infinite;`}
+                      />
                     </div>
-
-                    <div>
-                      <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
-                        Signature Move
-                      </p>
-                      <p class="font-mono text-sm leading-relaxed text-[#00ff41]/90">
-                        {previewSign.signatureMove}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
-                        Recharge Protocol
-                      </p>
-                      <p class="font-mono text-sm leading-relaxed text-[#00ff41]/85">
-                        {previewSign.recharge}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
-                        Keywords
-                      </p>
-                      <ul class="space-y-1 text-[11px] uppercase tracking-[0.35em]">
-                        {previewSign.keywords.map((keyword) => (
-                          <li
-                            key={keyword}
-                            class="font-mono"
-                            style={`color: ${accentColor};`}
-                          >
-                            • {keyword.toUpperCase()}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
-                        Motto
-                      </p>
-                      <p class="font-mono text-sm italic text-[#00ff41]/85">
-                        “{previewSign.motto}”
-                      </p>
-                    </div>
-
-                    {selectedSign.value && (
-                      <p class="pt-2 font-mono text-[11px] tracking-[0.25em] text-[#00ff41]/70 uppercase border-t border-[#00ff41]1f">
-                        {`> LOCKED :: ${selectedSign.value.toUpperCase()}`}
-                      </p>
-                    )}
-                  </div>
-                )
-                : (
-                  <div class="space-y-3">
-                    <pre
-                      class="font-mono text-[9px] leading-[1.05] whitespace-pre"
-                      style={`color: ${accentColor};`}
-                    >
-                      {previewAscii}
-                    </pre>
-                    <p
-                      class="font-mono text-sm leading-relaxed"
-                      style={`color: ${PRIMARY_TERMINAL_COLOR}BF;`}
-                    >
-                      Hover a sign to load intel. Tap to lock your signal and fetch the horoscope stream.
-                    </p>
-                    <p class="font-mono text-[11px] uppercase tracking-[0.35em] text-[#00ff41]/80">
-                      No sign selected
-                    </p>
-                  </div>
-                )}
+                  )}
+              </div>
             </div>
           </div>
         </div>
