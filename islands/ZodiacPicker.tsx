@@ -34,10 +34,7 @@ const PICKER_TITLE_ASCII = renderFigletText("STARGRAM", {
   font: "ANSI Shadow",
   width: 72,
 });
-const PICKER_HINT_ASCII = renderFigletText("COSMIC ACCESS PANEL", {
-  font: "Mini",
-  width: 68,
-});
+const PICKER_HINT_TEXT = "COSMIC ACCESS PANEL";
 const IDLE_PREVIEW_ASCII = [
   " /\\  /\\ ",
   "/  \\/  \\",
@@ -132,7 +129,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
       { label: "Solar Dates", value: previewSign.dates.toUpperCase() },
     ]
     : [];
-  const dossierCursorColor = previewSign ? accentColor : PRIMARY_TERMINAL_COLOR;
+  const dossierCursorColor = previewSign ? accentColor : accentGlowColor;
 
   return (
     <div class="relative">
@@ -172,16 +169,13 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                   >
                     {PICKER_TITLE_ASCII}
                   </pre>
-                  <div
-                    class="w-full cosmic-scrollless overflow-x-auto sm:overflow-visible"
-                    style="scrollbar-width: none;"
-                  >
-                    <pre
-                      class="font-mono text-center leading-[1.05] whitespace-pre w-full"
-                      style={`color: ${accentGlowColor}; font-size: clamp(7px, 2vw, 12px); letter-spacing: 0.22em;`}
+                  <div class="w-full text-center">
+                    <p
+                      class="font-mono uppercase tracking-[0.4em] text-[10px] sm:text-xs"
+                      style={`color: ${accentGlowColor}; letter-spacing: clamp(0.2em, 2vw, 0.5em);`}
                     >
-                      {PICKER_HINT_ASCII}
-                    </pre>
+                      {PICKER_HINT_TEXT}
+                    </p>
                   </div>
                 </div>
 
@@ -216,8 +210,8 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                     const glow = isSelected
                       ? `0 0 32px ${accentColor}80, 0 12px 35px rgba(0,0,0,0.55)`
                       : isHovered
-                      ? `0 0 16px ${accentGlowColor}66, 0 8px 22px rgba(0,0,0,0.55)`
-                      : "0 8px 20px rgba(0,0,0,0.55)";
+                      ? `0 0 16px ${accentColor}40, 0 8px 22px rgba(0,0,0,0.5)`
+                      : "0 6px 18px rgba(0,0,0,0.55)";
 
                     return (
                       <button
@@ -282,7 +276,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
 
                       <p
                         class="font-mono text-sm leading-relaxed"
-                        style={`color: ${PRIMARY_TERMINAL_COLOR}BF;`}
+                        style={`color: ${accentGlowColor}DD;`}
                       >
                         {previewSign.bio}
                       </p>
@@ -394,7 +388,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       </pre>
                       <p
                         class="font-mono text-sm leading-relaxed"
-                        style={`color: ${PRIMARY_TERMINAL_COLOR}BF;`}
+                        style={`color: ${accentGlowColor}DD;`}
                       >
                         Hover a sign to load intel. Tap to lock your signal and
                         fetch the horoscope stream.
