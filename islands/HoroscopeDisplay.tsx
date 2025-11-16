@@ -12,12 +12,21 @@ import { TerminalDisplay } from "../components/TerminalDisplay.tsx";
 import { applyColorToArt } from "../utils/colorEffects.ts";
 import { generateHoroscopeAscii } from "../utils/asciiArtGenerator.ts";
 
-const RANDOM_COLOR_EFFECTS = COLOR_EFFECTS.filter(effect => effect.value !== "none");
+const FEATURED_EFFECTS = ["trinity", "lolcat"];
+const RANDOM_COLOR_EFFECTS = COLOR_EFFECTS.filter((effect) =>
+  FEATURED_EFFECTS.includes(effect.value)
+);
+const FALLBACK_COLOR_EFFECTS = COLOR_EFFECTS.filter((effect) =>
+  effect.value !== "none"
+);
 
 function pickRandomColorEffect(): string {
-  if (!RANDOM_COLOR_EFFECTS.length) return "sunrise";
-  const randomIndex = Math.floor(Math.random() * RANDOM_COLOR_EFFECTS.length);
-  return RANDOM_COLOR_EFFECTS[randomIndex].value;
+  const pool = RANDOM_COLOR_EFFECTS.length
+    ? RANDOM_COLOR_EFFECTS
+    : FALLBACK_COLOR_EFFECTS;
+  if (!pool.length) return "sunrise";
+  const randomIndex = Math.floor(Math.random() * pool.length);
+  return pool[randomIndex].value;
 }
 
 interface HoroscopeDisplayProps {
@@ -51,6 +60,10 @@ export default function HoroscopeDisplay(
   const visualEffect = useSignal("neon"); // Hard-coded to neon
   const asciiOutput = useSignal("");
   const colorizedHtml = useSignal("");
+  const headerHtml = useSignal("");
+  const bodyHtml = useSignal("");
+  const headerText = useSignal("");
+  const bodyText = useSignal("");
   const requestIdRef = useRef(0);
   const activeController = useRef<AbortController | null>(null);
   const errorMessage = useSignal<string | null>(null);
@@ -82,16 +95,23 @@ export default function HoroscopeDisplay(
         emoji,
       );
       asciiOutput.value = ascii;
+      const sections = splitAsciiSections(ascii);
+      headerText.value = sections.header;
+      bodyText.value = sections.body;
 
       // Always apply special header formatting
       // Even with no color effect, header gets golden color
       if (colorEffect.value !== "none") {
         const colorized = applyColorToArt(ascii, colorEffect.value);
-        colorizedHtml.value = colorized;
+        colorizedHtml.value = colorized.fullHtml;
+        headerHtml.value = colorized.headerHtml;
+        bodyHtml.value = colorized.bodyHtml;
       } else {
         // No color effect: still highlight header in gold
         const colorized = applyHeaderHighlight(ascii);
-        colorizedHtml.value = colorized;
+        colorizedHtml.value = colorized.fullHtml;
+        headerHtml.value = colorized.headerHtml;
+        bodyHtml.value = colorized.bodyHtml;
       }
     }
   }, [horoscopeData.value, colorEffect.value]);
@@ -105,9 +125,11 @@ export default function HoroscopeDisplay(
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
 
-  const applyHeaderHighlight = (art: string): string => {
+  const applyHeaderHighlight = (art: string) => {
     const lines = art.split("\n");
     const colorizedLines: string[] = [];
+    const headerLines: string[] = [];
+    const bodyLines: string[] = [];
     let inHeader = false;
     let headerLineIndex = 0;
 
@@ -129,30 +151,44 @@ export default function HoroscopeDisplay(
         const baseStyle =
           "color: #FFD700; display: block; font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace;";
 
-        if (isTitleLine) {
-          colorizedLines.push(
-            `<span style="${baseStyle} font-weight: 900; letter-spacing: 0.18em; font-size: clamp(18px, 4vw, 32px); text-transform: uppercase;">${
-              escapeHtml(line)
-            }</span>`,
-          );
-        } else {
-          colorizedLines.push(
-            `<span style="${baseStyle} font-weight: 700; letter-spacing: 0.04em; font-size: clamp(14px, 3vw, 24px); text-transform: none; white-space: pre; line-height: 1.15;">${
-              escapeHtml(line)
-            }</span>`,
-          );
-        }
+        const span = isTitleLine
+          ? `<span style="${baseStyle} font-weight: 900; letter-spacing: 0.18em; font-size: clamp(18px, 4vw, 32px); text-transform: uppercase;">${
+            escapeHtml(line)
+          }</span>`
+          : `<span style="${baseStyle} font-weight: 700; letter-spacing: 0.04em; font-size: clamp(14px, 3vw, 24px); text-transform: none; white-space: pre; line-height: 1.15;">${
+            escapeHtml(line)
+          }</span>`;
+        colorizedLines.push(span);
+        headerLines.push(span);
       } else if (line.trim()) {
         // Body in terminal green
-        colorizedLines.push(
-          `<span style="color: #00FF41;">${escapeHtml(line)}</span>`,
-        );
+        const span = `<span style="color: #00FF41;">${escapeHtml(line)}</span>`;
+        colorizedLines.push(span);
+        bodyLines.push(span);
       } else {
         colorizedLines.push(line);
+        bodyLines.push(line);
       }
     }
 
-    return colorizedLines.join("\n");
+    return {
+      fullHtml: colorizedLines.join("\n"),
+      headerHtml: headerLines.join("\n"),
+      bodyHtml: bodyLines.join("\n"),
+    };
+  };
+
+  const splitAsciiSections = (art: string) => {
+    const startMarker = "[HEADER_START]";
+    const endMarker = "[HEADER_END]";
+    const startIndex = art.indexOf(startMarker);
+    const endIndex = art.indexOf(endMarker);
+    if (startIndex === -1 || endIndex === -1) {
+      return { header: "", body: art.trim() };
+    }
+    const header = art.slice(startIndex + startMarker.length, endIndex).trim();
+    const body = art.slice(endIndex + endMarker.length).trimStart();
+    return { header, body };
   };
 
   const fetchHoroscope = async (zodiacSign: string, period: Period) => {
@@ -315,7 +351,7 @@ export default function HoroscopeDisplay(
 
 
   return (
-    <div class="w-full h-screen flex items-center justify-center p-8 md:p-12">
+    <div class="w-full min-h-[90dvh] flex items-center justify-center px-4 py-10 md:px-8 md:py-12">
       {/* Always show terminal */}
       {errorMessage.value
           ? (
@@ -350,6 +386,19 @@ export default function HoroscopeDisplay(
                 ? bootMessages.value.map(msg => `<span style="color: #00FF41;">${msg}</span>`).join('\n')
                 : (horoscopeData.value ? colorizedHtml.value : '')
               }
+              headerHtmlContent={(isLoading.value || isBootingUp.value)
+                ? undefined
+                : (headerHtml.value || undefined)}
+              bodyHtmlContent={(isLoading.value || isBootingUp.value)
+                ? undefined
+                : (bodyHtml.value || undefined)}
+              headerPlainText={(isLoading.value || isBootingUp.value)
+                ? undefined
+                : (headerText.value || undefined)}
+              bodyPlainText={(isLoading.value || isBootingUp.value)
+                ? undefined
+                : (bodyText.value || undefined)}
+              headerTypeSpeed={12}
               isLoading={isLoading.value || isBootingUp.value}
               filename={horoscopeData.value ? `${sign}-${currentPeriod.value}-${
                 horoscopeData.value.date
@@ -363,7 +412,7 @@ export default function HoroscopeDisplay(
               visualEffect={visualEffect.value}
               hideExportButtons={!horoscopeData.value}
               enableTypewriter={bootComplete.value && horoscopeData.value}
-              typewriterSpeed={60}
+              typewriterSpeed={24}
               currentPeriod={currentPeriod.value}
               onPeriodChange={handlePeriodChange}
             />

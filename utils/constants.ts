@@ -9,6 +9,8 @@
 // Enhanced color effects - ordered warm → cool → special
 export const COLOR_EFFECTS = [
   { name: "Matrix", value: "none" },
+  { name: "Lolcat", value: "lolcat" },
+  { name: "Triad Beam", value: "trinity" },
   { name: "Fire", value: "fire" },
   { name: "Sunrise", value: "sunrise" },
   { name: "Unicorn", value: "unicorn" },

@@ -63,6 +63,14 @@ interface TerminalDisplayProps {
   content: string;
   /** HTML content with color spans (optional) */
   htmlContent?: string;
+  /** HTML content for header segment */
+  headerHtmlContent?: string;
+  /** HTML content for body segment */
+  bodyHtmlContent?: string;
+  /** Plain text for header segment */
+  headerPlainText?: string;
+  /** Plain text for body segment */
+  bodyPlainText?: string;
   /** Whether content is currently loading */
   isLoading?: boolean;
   /** Filename for downloads (without extension) */
@@ -81,6 +89,8 @@ interface TerminalDisplayProps {
   enableTypewriter?: boolean;
   /** Typewriter speed in ms per character (default: 60) */
   typewriterSpeed?: number;
+  /** Header typing speed override (ms per character) */
+  headerTypeSpeed?: number;
   /** Current period (for horoscope mode) */
   currentPeriod?: string;
   /** Period change handler (for horoscope mode) */
@@ -90,6 +100,10 @@ interface TerminalDisplayProps {
 export function TerminalDisplay({
   content,
   htmlContent,
+  headerHtmlContent,
+  bodyHtmlContent,
+  headerPlainText,
+  bodyPlainText,
   isLoading = false,
   filename = "ascii-art",
   onShuffle,
@@ -99,11 +113,15 @@ export function TerminalDisplay({
   hideExportButtons = false,
   enableTypewriter = false,
   typewriterSpeed = 60,
+  headerTypeSpeed,
   currentPeriod,
   onPeriodChange,
 }: TerminalDisplayProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [typingComplete, setTypingComplete] = useState(false);
+  const [headerTypingComplete, setHeaderTypingComplete] = useState(
+    !headerHtmlContent,
+  );
   const copyTimeoutRef = useRef<number | null>(null);
   const periodOptions = [
     { value: "daily", label: "Daily" },
@@ -122,7 +140,16 @@ export function TerminalDisplay({
 
   useEffect(() => {
     setTypingComplete(false);
-  }, [content, htmlContent, enableTypewriter]);
+    setHeaderTypingComplete(!headerHtmlContent);
+  }, [
+    content,
+    htmlContent,
+    headerHtmlContent,
+    bodyHtmlContent,
+    headerPlainText,
+    bodyPlainText,
+    enableTypewriter,
+  ]);
 
   const handleCopy = async () => {
     const success = await copyToClipboard(
@@ -153,12 +180,21 @@ export function TerminalDisplay({
   };
 
   const hasContent = Boolean(content);
+  const splitTypewriter = Boolean(
+    enableTypewriter &&
+      headerHtmlContent &&
+      bodyHtmlContent &&
+      headerPlainText &&
+      bodyPlainText,
+  );
+  const fastHeaderSpeed = headerTypeSpeed ??
+    Math.max(4, Math.floor(typewriterSpeed / 2));
   const baseTextStyle = [
     "font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace",
     "color: var(--terminal-text-color, #00ff41)",
     "font-size: 16px",
-    "line-height: 1.4",
-    "letter-spacing: 0.02em",
+    "line-height: 1.25",
+    "letter-spacing: 0.01em",
     "white-space: pre",
     "word-break: normal",
     "overflow-wrap: normal",
@@ -779,6 +815,33 @@ export function TerminalDisplay({
               >
                 <span class="blinking-cursor">█</span>
               </pre>
+            </div>
+          )
+          : splitTypewriter && !typingComplete
+          ? (
+            <div class="flex flex-col gap-4">
+              <TypedWriter
+                key={`header-${filename}`}
+                text={headerPlainText!}
+                htmlText={headerHtmlContent!}
+                speed={fastHeaderSpeed}
+                enabled={!typingComplete}
+                onComplete={() => setHeaderTypingComplete(true)}
+                className="ascii-display font-mono opacity-90"
+                style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+              />
+              {headerTypingComplete && (
+                <TypedWriter
+                  key={`body-${filename}`}
+                  text={bodyPlainText!}
+                  htmlText={bodyHtmlContent!}
+                  speed={typewriterSpeed}
+                  enabled={!typingComplete}
+                  onComplete={() => setTypingComplete(true)}
+                  className="ascii-display font-mono opacity-90"
+                  style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+                />
+              )}
             </div>
           )
           : (htmlContent || content) && enableTypewriter && !typingComplete

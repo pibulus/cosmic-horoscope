@@ -156,7 +156,8 @@ export function TypedWriter({
           if (self && !self.typingComplete) {
             // Vary speed between 70-130% of base speed
             const variation = 0.7 + Math.random() * 0.6;
-            self.typeSpeed = Math.floor(originalSpeed * variation);
+            const typedInstance = self as Typed & { typeSpeed: number };
+            typedInstance.typeSpeed = Math.floor(originalSpeed * variation);
           }
         }, 100);
       },

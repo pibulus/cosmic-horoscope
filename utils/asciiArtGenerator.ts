@@ -78,23 +78,21 @@ export function generateHoroscopeAscii(
 ): string {
   const signUpper = signName.toUpperCase();
   const periodUpper = period.toUpperCase();
-  const titleLine = emoji ? `${emoji}  ${signUpper}` : signUpper;
   const metaLine = date ? `${periodUpper} • ${date}` : periodUpper;
 
   const figletTitle = renderFigletText(signUpper, {
-    font: "ANSI Shadow",
-    width: 72,
+    font: "Standard",
+    width: 84,
   });
-  const figletMeta = renderFigletText(metaLine, {
-    font: "Small Slant",
-    width: 68,
-  });
+  const figletMeta = metaLine
+    ? renderFigletText(metaLine, {
+      font: "Mini",
+      width: 64,
+    })
+    : "";
 
   // Wrap header in special markers for colorization
   const headerParts = ["[HEADER_START]"];
-  if (titleLine) {
-    headerParts.push(titleLine);
-  }
   if (figletTitle) {
     headerParts.push(figletTitle);
   }

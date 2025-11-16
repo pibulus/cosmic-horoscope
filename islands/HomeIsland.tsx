@@ -86,9 +86,9 @@ export default function HomeIsland() {
       {/* Main Content - Centered both vertically and horizontally */}
       <main
         id="main-content"
-        class="w-full h-screen flex items-center justify-center overflow-hidden"
+        class="w-full min-h-[100dvh] flex items-start justify-center overflow-y-auto py-10"
       >
-        <div class="w-full h-full flex items-center justify-center">
+        <div class="w-full flex justify-center">
           {selectedSign.value
             ? (
               <HoroscopeDisplay

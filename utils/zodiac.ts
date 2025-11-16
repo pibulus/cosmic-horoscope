@@ -7,31 +7,94 @@ export interface ZodiacSign {
   emoji: string;
   dates: string;
   element: "fire" | "earth" | "air" | "water";
+  bio: string;
 }
 
 export const ZODIAC_SIGNS: ZodiacSign[] = [
-  { name: "aries", emoji: "♈", dates: "Mar 21 - Apr 19", element: "fire" },
-  { name: "taurus", emoji: "♉", dates: "Apr 20 - May 20", element: "earth" },
-  { name: "gemini", emoji: "♊", dates: "May 21 - Jun 20", element: "air" },
-  { name: "cancer", emoji: "♋", dates: "Jun 21 - Jul 22", element: "water" },
-  { name: "leo", emoji: "♌", dates: "Jul 23 - Aug 22", element: "fire" },
-  { name: "virgo", emoji: "♍", dates: "Aug 23 - Sep 22", element: "earth" },
-  { name: "libra", emoji: "♎", dates: "Sep 23 - Oct 22", element: "air" },
-  { name: "scorpio", emoji: "♏", dates: "Oct 23 - Nov 21", element: "water" },
+  {
+    name: "aries",
+    emoji: "♈",
+    dates: "Mar 21 - Apr 19",
+    element: "fire",
+    bio: "Impulsive firestarter who thrives on first moves, dares, and impossible bets.",
+  },
+  {
+    name: "taurus",
+    emoji: "♉",
+    dates: "Apr 20 - May 20",
+    element: "earth",
+    bio: "Earthy sensualist—loyal, grounded, and forever chasing tactile luxury.",
+  },
+  {
+    name: "gemini",
+    emoji: "♊",
+    dates: "May 21 - Jun 20",
+    element: "air",
+    bio: "Split-signal trickster who lives for gossip, beta builds, and hot takes.",
+  },
+  {
+    name: "cancer",
+    emoji: "♋",
+    dates: "Jun 21 - Jul 22",
+    element: "water",
+    bio: "Lunar caretaker with moods synced to the tides and playlists full of feelings.",
+  },
+  {
+    name: "leo",
+    emoji: "♌",
+    dates: "Jul 23 - Aug 22",
+    element: "fire",
+    bio: "Solar performer, gold-trim maximalist, and perpetual hype engine.",
+  },
+  {
+    name: "virgo",
+    emoji: "♍",
+    dates: "Aug 23 - Sep 22",
+    element: "earth",
+    bio: "Precision analyst turning chaos into clean checklists and clever systems.",
+  },
+  {
+    name: "libra",
+    emoji: "♎",
+    dates: "Sep 23 - Oct 22",
+    element: "air",
+    bio: "Charm dealer balancing beauty, diplomacy, and curated drama.",
+  },
+  {
+    name: "scorpio",
+    emoji: "♏",
+    dates: "Oct 23 - Nov 21",
+    element: "water",
+    bio: "Psychic hacker who reads motives, guards secrets, and loves transformation.",
+  },
   {
     name: "sagittarius",
     emoji: "♐",
     dates: "Nov 22 - Dec 21",
     element: "fire",
+    bio: "Galactic explorer chasing horizons, spicy takes, and unfiltered freedom.",
   },
   {
     name: "capricorn",
     emoji: "♑",
     dates: "Dec 22 - Jan 19",
     element: "earth",
+    bio: "Saturnian builder stacking legacy moves, status mountains, and spreadsheets.",
   },
-  { name: "aquarius", emoji: "♒", dates: "Jan 20 - Feb 18", element: "air" },
-  { name: "pisces", emoji: "♓", dates: "Feb 19 - Mar 20", element: "water" },
+  {
+    name: "aquarius",
+    emoji: "♒",
+    dates: "Jan 20 - Feb 18",
+    element: "air",
+    bio: "Future-wave inventor remixing systems with rebellious humanitarian code.",
+  },
+  {
+    name: "pisces",
+    emoji: "♓",
+    dates: "Feb 19 - Mar 20",
+    element: "water",
+    bio: "Dream-diver translating cosmic feelings into art, playlists, and poetry.",
+  },
 ];
 
 const STORAGE_KEY = "cosmic_zodiac_sign";

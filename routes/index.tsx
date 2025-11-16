@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <div
       id="main-content"
-      class="min-h-[100dvh] w-full flex flex-col relative overflow-hidden global-flicker"
-      style="background: linear-gradient(135deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%); position: fixed; top: 0; left: 0; right: 0; bottom: 0;"
+      class="min-h-[100dvh] w-full flex flex-col relative global-flicker"
+      style="background: linear-gradient(135deg, #0a0a0a 0%, #151515 50%, #0a0a0a 100%);"
     >
       {/* Animated canvas background */}
       <BackgroundCanvas />
