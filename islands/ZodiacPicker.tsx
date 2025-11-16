@@ -30,6 +30,8 @@ const ACCENT_COLORS = [
 const selectedSign = signal<string | null>(null);
 const hoveredSign = signal<string | null>(null);
 const flickerTrigger = signal<number>(0);
+const mouseX = signal<number>(0);
+const mouseY = signal<number>(0);
 
 const PICKER_TITLE_ASCII = renderFigletText("STARGRAM", {
   font: "ANSI Shadow",
@@ -111,6 +113,21 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
     };
   }, []);
 
+  // Parallax mouse tracking
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2; // Normalize to -1 to 1
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      mouseX.value = x;
+      mouseY.value = y;
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   const { accentColor, accentGlowColor } = useMemo(() => {
     const primaryIndex = Math.floor(Math.random() * ACCENT_COLORS.length);
     const remaining = ACCENT_COLORS.filter((_, idx) => idx !== primaryIndex);
@@ -144,6 +161,22 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
     ]
     : [];
   const dossierCursorColor = previewSign ? accentColor : accentGlowColor;
+
+  // Parallax transforms
+  const parallaxX = mouseX.value * 8; // Subtle movement
+  const parallaxY = mouseY.value * 8;
+  const parallaxRotateX = mouseY.value * 2;
+  const parallaxRotateY = mouseX.value * -2;
+
+  // Dossier panel parallax (different layer depth)
+  const dossierParallaxX = mouseX.value * 12;
+  const dossierParallaxY = mouseY.value * 12;
+  const dossierRotateX = mouseY.value * 3;
+  const dossierRotateY = mouseX.value * -3;
+
+  // Selector panel parallax (middle layer)
+  const selectorParallaxX = mouseX.value * 6;
+  const selectorParallaxY = mouseY.value * 6;
 
   return (
     <div class="relative">
@@ -207,7 +240,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
         <div
           key={flickerTrigger.value}
           class={`w-full max-w-6xl border-[3px] sm:border-4 rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden terminal-shell ${flickerTrigger.value > 0 ? 'crt-flicker' : ''}`}
-          style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentGlowColor}80; box-shadow: 0 0 45px ${accentGlowColor}2e, 0 25px 90px rgba(0,0,0,0.7), inset 0 0 80px rgba(0,0,0,0.6); animation: cosmicFloat 12s ease-in-out infinite;`}
+          style={`background: rgba(2, 4, 12, 0.95); border-color: ${accentGlowColor}80; box-shadow: 0 0 45px ${accentGlowColor}2e, 0 25px 90px rgba(0,0,0,0.7), inset 0 0 80px rgba(0,0,0,0.6); animation: cosmicFloat 12s ease-in-out infinite; transform: perspective(1000px) rotateX(${parallaxRotateX}deg) rotateY(${parallaxRotateY}deg) translate3d(${parallaxX}px, ${parallaxY}px, 0); transition: transform 0.3s ease-out;`}
         >
           {/* Terminal title bar */}
           <div
@@ -231,7 +264,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
             <div class="flex flex-col lg:flex-row gap-10 lg:gap-12">
               <div
                 class="flex-1"
-                style="animation: cosmicFloat 16s ease-in-out infinite; animation-delay: 0.7s;"
+                style={`animation: cosmicFloat 16s ease-in-out infinite; animation-delay: 0.7s; transform: translate3d(${selectorParallaxX}px, ${selectorParallaxY}px, 0); transition: transform 0.3s ease-out;`}
               >
                 <div class="mb-5">
                   <pre
@@ -295,18 +328,23 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                         onBlur={() => hoveredSign.value = null}
                         role="option"
                         aria-selected={isSelected}
-                        class="group w-full text-left font-mono border-[3px] rounded-2xl px-4 py-4 transition-all duration-150"
+                        class="group w-full text-left font-mono border-[3px] rounded-2xl px-4 py-4 transition-all duration-150 hover:scale-[1.02] hover:-translate-y-0.5"
                         style={`
                         border-color: ${borderColor};
                         background: ${backgroundColor};
                         color: ${PRIMARY_TERMINAL_COLOR};
                         box-shadow: ${glow};
+                        transform-style: preserve-3d;
                       `}
                       >
                         <div class="flex items-center">
                           <p
-                            class="text-[11px] sm:text-sm uppercase tracking-[0.4em] whitespace-nowrap overflow-hidden text-ellipsis"
-                            style={`letter-spacing: 0.38em; color: ${titleColor}; text-shadow: 0 0 12px ${titleColor}40;`}
+                            class="text-[11px] sm:text-sm uppercase tracking-[0.4em] whitespace-nowrap overflow-hidden text-ellipsis transition-all duration-150"
+                            style={`letter-spacing: 0.38em; color: ${titleColor}; text-shadow: ${
+                              isHovered
+                                ? `-2px 0 ${accentColor}, 2px 0 ${accentGlowColor}, 0 0 12px ${titleColor}40`
+                                : `0 0 12px ${titleColor}40`
+                            };`}
                           >
                             {cardTitle}
                           </p>
@@ -326,7 +364,7 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
               {/* Preview Pane */}
               <div
                 class="w-full lg:w-[320px] xl:w-[360px] border-[3px] rounded-3xl p-5 bg-black/35"
-                style={`border-color: ${accentGlowColor}40; box-shadow: inset 0 0 32px ${accentGlowColor}22;`}
+                style={`border-color: ${accentGlowColor}40; box-shadow: inset 0 0 32px ${accentGlowColor}22; transform: perspective(1000px) rotateX(${dossierRotateX}deg) rotateY(${dossierRotateY}deg) translate3d(${dossierParallaxX}px, ${dossierParallaxY}px, 0); transition: transform 0.3s ease-out; transform-style: preserve-3d;`}
               >
                 <div
                   class="text-xs uppercase tracking-[0.4em] mb-4 font-bold"
