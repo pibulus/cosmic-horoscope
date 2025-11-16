@@ -35,6 +35,7 @@ const IDLE_PREVIEW_ASCII = [
   "\\      /",
   " \\_/\\_/ ",
 ].join("\n");
+const ASCII_DIVIDER = "::::::::::::::::::::::::::::::::::::::::";
 
 const SIGN_ASCII_CACHE = new Map<string, string>();
 
@@ -134,22 +135,21 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                 </div>
               </div>
 
-              <p
-                class="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase"
-                style={`color: ${PRIMARY_TERMINAL_COLOR}CC;`}
+              <pre
+                class="font-mono text-xs sm:text-sm tracking-[0.35em] uppercase"
+                style={`color: ${PRIMARY_TERMINAL_COLOR}88;`}
               >
-                &gt; Tap a sign or use keyboard focus to preview :: press enter to lock selection
-              </p>
+                {ASCII_DIVIDER}
+              </pre>
 
               <div
                 class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-3"
                 role="listbox"
                 aria-label="Select your zodiac sign"
               >
-                {ZODIAC_SIGNS.map((zodiac, index) => {
+                {ZODIAC_SIGNS.map((zodiac) => {
                   const isSelected = selectedSign.value === zodiac.name;
                   const isHovered = hoveredSign.value === zodiac.name;
-                  const indexLabel = (index + 1).toString().padStart(2, "0");
                   const cardTitle = getSignTitle(zodiac.name);
                   const elementLabel = zodiac.element.toUpperCase();
                   const borderColor = isSelected || isHovered
@@ -185,27 +185,13 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                         box-shadow: ${glow};
                       `}
                     >
-                      <div class="flex items-start gap-3">
-                        <span
-                          class="text-[10px] uppercase tracking-[0.4em]"
-                          style={`color: ${PRIMARY_TERMINAL_COLOR}B3;`}
+                      <div class="flex items-center">
+                        <p
+                          class="text-[11px] sm:text-sm uppercase tracking-[0.4em] whitespace-nowrap overflow-hidden text-ellipsis"
+                          style="letter-spacing: 0.38em;"
                         >
-                          [{indexLabel}]
-                        </span>
-                        <div class="flex-1">
-                          <p
-                            class="text-[11px] sm:text-sm uppercase tracking-[0.4em] whitespace-nowrap overflow-hidden text-ellipsis"
-                            style="letter-spacing: 0.38em;"
-                          >
-                            {cardTitle}
-                          </p>
-                        </div>
-                        <span
-                          class="text-[11px] tracking-[0.2em]"
-                          style={`color: ${PRIMARY_TERMINAL_COLOR}CC;`}
-                        >
-                          {isSelected ? "LOCKED" : "READY"}
-                        </span>
+                          {cardTitle}
+                        </p>
                       </div>
                       <div
                         class="mt-2 text-[10px] sm:text-xs uppercase tracking-[0.28em] text-[#00ff41]/75"
@@ -230,11 +216,6 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
               {previewSign
                 ? (
                   <div class="space-y-4">
-                    <div class="flex items-center gap-3 text-sm uppercase tracking-[0.3em] text-[#00ff41]/80">
-                      <span class="text-lg" aria-hidden="true">{previewSign.emoji}</span>
-                      <span>{getSignTitle(previewSign.name)}</span>
-                    </div>
-
                     <pre
                       class="font-mono text-[9px] leading-[1.05] whitespace-pre"
                       style={`color: ${accentColor};`}
@@ -251,9 +232,13 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
 
                     <div class="grid grid-cols-1 gap-3 text-[10px] uppercase tracking-[0.35em]">
                       {dossierMeta.map((item) => (
-                        <div key={item.label} class="flex justify-between border-b border-[#00ff41]24 pb-1">
-                          <span class="text-[#00ff41]/60">{item.label}</span>
-                          <span class="text-[#00ff41]">{item.value}</span>
+                        <div
+                          key={item.label}
+                          class="flex justify-between pb-1"
+                          style={`border-bottom: 1px solid ${accentColor}44;`}
+                        >
+                          <span style={`color: ${accentColor}AA;`}>{item.label}</span>
+                          <span style={`color: ${accentColor};`}>{item.value}</span>
                         </div>
                       ))}
                     </div>
@@ -280,16 +265,17 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       <p class="text-[10px] uppercase tracking-[0.4em] text-[#00ff41]/70 mb-1">
                         Keywords
                       </p>
-                      <div class="flex flex-wrap gap-2">
+                      <ul class="space-y-1 text-[11px] uppercase tracking-[0.35em]">
                         {previewSign.keywords.map((keyword) => (
-                          <span
+                          <li
                             key={keyword}
-                            class="border border-[#00ff41]36 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.3em] text-[#00ff41]/85"
+                            class="font-mono"
+                            style={`color: ${accentColor};`}
                           >
-                            {keyword}
-                          </span>
+                            • {keyword.toUpperCase()}
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
 
                     <div>
