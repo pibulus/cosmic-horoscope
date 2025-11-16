@@ -69,15 +69,35 @@ export function getEffectColor(
       const bright = 45 + (progress * 20);
       return `hsl(${hue}, ${sat}%, ${bright}%)`;
     }
+    case "lolcat": {
+      const hue = ((x * 18) + (y * 8)) % 360;
+      const sat = 90;
+      const bright = 70 + Math.sin((x + y) * 0.35) * 12;
+      return `hsl(${hue}, ${sat}%, ${bright}%)`;
+    }
+    case "trinity": {
+      const palette = ["#b179ff", "#00ff9d", "#ff9a3c"];
+      const progress = x / Math.max(1, lineWidth);
+      const index = Math.min(
+        palette.length - 1,
+        Math.floor(progress * palette.length),
+      );
+      return palette[index];
+    }
     default:
       return "#00FF41";
   }
 }
 
+export interface ColorizedArtSegments {
+  fullHtml: string;
+  headerHtml: string;
+  bodyHtml: string;
+}
+
 /**
  * Apply a color effect to ASCII art text with special header treatment
- * Returns HTML with colored spans for each line
- * Header section gets a special bright color, body gets gradient
+ * Returns HTML segments with colored spans for header/body
  */
 const escapeHtml = (value: string): string =>
   value
@@ -87,13 +107,18 @@ const escapeHtml = (value: string): string =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 
-export function applyColorToArt(art: string, effect: string): string {
+export function applyColorToArt(
+  art: string,
+  effect: string,
+): ColorizedArtSegments {
   if (effect === "none" || !art) {
-    return "";
+    return { fullHtml: "", headerHtml: "", bodyHtml: "" };
   }
 
   const lines = art.split("\n");
   const colorizedLines: string[] = [];
+  const headerLines: string[] = [];
+  const bodyLines: string[] = [];
   let inHeader = false;
   let headerLineIndex = 0;
 
@@ -108,6 +133,8 @@ export function applyColorToArt(art: string, effect: string): string {
     ocean: "hsl(180, 85%, 65%)", // Bright cyan
     neon: "hsl(100, 100%, 70%)", // Lime green
     poison: "hsl(100, 100%, 55%)", // Toxic green
+    lolcat: "hsl(320, 95%, 75%)", // Vibrant magenta
+    trinity: "#ffdb8a", // Warm gold for triad mix
   };
 
   const headerColor = headerColors[effect] || "#FFD700"; // Gold fallback
@@ -131,16 +158,24 @@ export function applyColorToArt(art: string, effect: string): string {
     if (inHeader) {
       headerLineIndex++;
       const isTitleLine = headerLineIndex === 1;
-      const fontSize = isTitleLine
-        ? "clamp(20px, 5vw, 34px)"
-        : "clamp(16px, 4vw, 26px)";
-      const letterSpacing = isTitleLine ? "0.18em" : "0.12em";
-      // Header gets special bright color
-      colorizedLines.push(
-        `<span style="color: ${headerColor}; font-weight: 900; letter-spacing: ${letterSpacing}; font-size: ${fontSize}; text-transform: uppercase;">${
-          escapeHtml(line)
-        }</span>`,
-      );
+      const baseStyle =
+        `color: ${headerColor}; display: block; font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace;`;
+
+      if (isTitleLine) {
+        const span =
+          `<span style="${baseStyle} font-weight: 900; letter-spacing: 0.18em; font-size: clamp(18px, 4vw, 32px); text-transform: uppercase;">${
+            escapeHtml(line)
+          }</span>`;
+        headerLines.push(span);
+        colorizedLines.push(span);
+      } else {
+        const span =
+          `<span style="${baseStyle} font-weight: 700; letter-spacing: 0.04em; font-size: clamp(14px, 3vw, 24px); text-transform: none; white-space: pre; line-height: 1.15;">${
+            escapeHtml(line)
+          }</span>`;
+        headerLines.push(span);
+        colorizedLines.push(span);
+      }
     } else if (line.trim()) {
       // Body gets gradient effect
       const color = getEffectColor(
@@ -150,14 +185,20 @@ export function applyColorToArt(art: string, effect: string): string {
         line.length,
         lines.length,
       );
-      colorizedLines.push(
-        `<span style="color: ${color};">${escapeHtml(line)}</span>`,
-      );
+      const span =
+        `<span style="color: ${color};">${escapeHtml(line)}</span>`;
+      colorizedLines.push(span);
+      bodyLines.push(span);
     } else {
       // Empty lines stay empty
       colorizedLines.push(line);
+      bodyLines.push(line);
     }
   }
 
-  return colorizedLines.join("\n");
+  return {
+    fullHtml: colorizedLines.join("\n"),
+    headerHtml: headerLines.join("\n"),
+    bodyHtml: bodyLines.join("\n"),
+  };
 }

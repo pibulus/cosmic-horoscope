@@ -63,6 +63,14 @@ interface TerminalDisplayProps {
   content: string;
   /** HTML content with color spans (optional) */
   htmlContent?: string;
+  /** HTML content for header segment */
+  headerHtmlContent?: string;
+  /** HTML content for body segment */
+  bodyHtmlContent?: string;
+  /** Plain text for header segment */
+  headerPlainText?: string;
+  /** Plain text for body segment */
+  bodyPlainText?: string;
   /** Whether content is currently loading */
   isLoading?: boolean;
   /** Filename for downloads (without extension) */
@@ -81,6 +89,8 @@ interface TerminalDisplayProps {
   enableTypewriter?: boolean;
   /** Typewriter speed in ms per character (default: 60) */
   typewriterSpeed?: number;
+  /** Header typing speed override (ms per character) */
+  headerTypeSpeed?: number;
   /** Current period (for horoscope mode) */
   currentPeriod?: string;
   /** Period change handler (for horoscope mode) */
@@ -90,6 +100,10 @@ interface TerminalDisplayProps {
 export function TerminalDisplay({
   content,
   htmlContent,
+  headerHtmlContent,
+  bodyHtmlContent,
+  headerPlainText,
+  bodyPlainText,
   isLoading = false,
   filename = "ascii-art",
   onShuffle,
@@ -99,11 +113,15 @@ export function TerminalDisplay({
   hideExportButtons = false,
   enableTypewriter = false,
   typewriterSpeed = 60,
+  headerTypeSpeed,
   currentPeriod,
   onPeriodChange,
 }: TerminalDisplayProps) {
   const [copiedToClipboard, setCopiedToClipboard] = useState(false);
   const [typingComplete, setTypingComplete] = useState(false);
+  const [headerTypingComplete, setHeaderTypingComplete] = useState(
+    !headerHtmlContent,
+  );
   const copyTimeoutRef = useRef<number | null>(null);
   const periodOptions = [
     { value: "daily", label: "Daily" },
@@ -122,7 +140,16 @@ export function TerminalDisplay({
 
   useEffect(() => {
     setTypingComplete(false);
-  }, [content, htmlContent, enableTypewriter]);
+    setHeaderTypingComplete(!headerHtmlContent);
+  }, [
+    content,
+    htmlContent,
+    headerHtmlContent,
+    bodyHtmlContent,
+    headerPlainText,
+    bodyPlainText,
+    enableTypewriter,
+  ]);
 
   const handleCopy = async () => {
     const success = await copyToClipboard(
@@ -153,29 +180,41 @@ export function TerminalDisplay({
   };
 
   const hasContent = Boolean(content);
+  const splitTypewriter = Boolean(
+    enableTypewriter &&
+      headerHtmlContent &&
+      bodyHtmlContent &&
+      headerPlainText &&
+      bodyPlainText,
+  );
+  const fastHeaderSpeed = headerTypeSpeed ??
+    Math.max(4, Math.floor(typewriterSpeed / 2));
   const baseTextStyle = [
-    "color: var(--terminal-text-color, #1cff6b)",
-    "font-size: clamp(16px, 4.5vw, 26px)",
-    "line-height: 1.6",
-    "white-space: pre-wrap",
-    "word-break: break-word",
-    "overflow-wrap: anywhere",
+    "font-family: 'JetBrains Mono', 'SF Mono', 'Courier New', monospace",
+    "color: rgba(0, 255, 65, 0.9)",
+    "font-size: 17px",
+    "line-height: 1.45",
+    "letter-spacing: 0.012em",
+    "white-space: pre",
+    "word-break: normal",
+    "overflow-wrap: normal",
     "margin: 0",
     "padding: 0",
     "display: block",
     "position: relative",
     "max-width: 100%",
+    "width: 100%",
     "box-sizing: border-box",
     "text-align: left",
     "text-indent: 0",
-    "font-weight: 900",
-    "filter: var(--terminal-text-filter, saturate(1.65) brightness(1.08))",
-    "text-shadow: var(--terminal-text-shadow, 0 0 3px rgba(28, 255, 107, 0.55), 0 0 8px rgba(28, 255, 107, 0.18))",
+    "font-weight: 400",
+    "filter: none",
+    "text-shadow: 0 0 6px rgba(0, 255, 65, 0.25)",
   ].join("; ");
 
   return (
     <div
-      class="rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden relative flex flex-col mx-auto terminal-window"
+      class="rounded-xl sm:rounded-2xl lg:rounded-3xl relative flex flex-col mx-auto terminal-window"
     >
       <style>
         {`
@@ -247,30 +286,28 @@ export function TerminalDisplay({
               var(--terminal-bg-layer-north),
               var(--terminal-bg-layer-south),
               var(--terminal-bg-base);
-            border: 3px solid var(--terminal-border-color);
+            border: none;
+            animation: float-breathe 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
             box-shadow:
-              0 26px 48px var(--terminal-shadow-midnight),
-              0 10px 22px var(--terminal-shadow-soft),
-              12px 12px 0 var(--terminal-shadow-offset);
-            backdrop-filter: blur(14px) saturate(120%);
-            -webkit-backdrop-filter: blur(14px) saturate(120%);
+              0 30px 60px var(--terminal-shadow-midnight),
+              0 15px 30px var(--terminal-shadow-soft),
+              14px 14px 0 var(--terminal-shadow-offset);
+            backdrop-filter: blur(6px) saturate(110%);
+            -webkit-backdrop-filter: blur(6px) saturate(110%);
             transform-origin: center;
-            transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, background 0.45s ease;
-            animation:
-              float-breathe 11s cubic-bezier(0.6, 0.05, 0.28, 0.91) infinite,
-              vhs-wobble 6s ease-in-out infinite;
+            transition: transform 0.45s ease, box-shadow 0.45s ease, filter 0.3s ease;
             will-change: transform, box-shadow;
           }
 
 
           .terminal-window:hover {
-            transform: translateY(-6px) scale(1.004);
+            transform: translateY(-8px) scale(1.008);
             box-shadow:
-              0 42px 72px var(--terminal-shadow-hover-midnight),
-              0 20px 32px var(--terminal-shadow-hover-soft),
+              0 44px 76px var(--terminal-shadow-hover-midnight),
+              0 22px 36px var(--terminal-shadow-hover-soft),
               18px 18px 0 var(--terminal-shadow-hover-offset);
-            border-color: var(--terminal-border-hover);
-            animation-play-state: paused, paused;
+            filter: brightness(1.05);
+            animation-play-state: paused;
           }
 
           /* Aura is rendered via ::before; keep gradients edge-weighted so the frosted interior stays clear */
@@ -341,7 +378,7 @@ export function TerminalDisplay({
             position: relative;
             overflow: visible;
             border-bottom-width: 3px !important;
-            border-color: var(--color-border, #a855f7) !important;
+            border-color: var(--terminal-border-color) !important;
             background: rgba(0, 0, 0, 1) !important;
             border-radius: 0 !important;
           }
@@ -381,41 +418,53 @@ export function TerminalDisplay({
             }
           }
 
-          @keyframes float-breathe {
+          @keyframes gradient-shift {
             0% {
-              transform: translateY(0) scale(1) rotate(-0.45deg);
-              box-shadow:
-                0 22px 40px var(--terminal-shadow-breathe-a),
-                0 12px 26px var(--terminal-shadow-breathe-b),
-                12px 12px 0 var(--terminal-shadow-breathe-offset);
-            }
-            22% {
-              transform: translateY(-10px) scale(1.008) rotate(0.25deg);
-              box-shadow:
-                0 32px 58px var(--terminal-shadow-breathe-a-strong),
-                0 20px 38px var(--terminal-shadow-breathe-accent),
-                15px 15px 0 var(--terminal-shadow-breathe-offset-strong);
+              background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
             }
             50% {
-              transform: translateY(-18px) scale(1.016) rotate(0.75deg);
-              box-shadow:
-                0 44px 78px var(--terminal-shadow-breathe-max),
-                0 28px 48px var(--terminal-shadow-breathe-highlight),
-                20px 20px 0 var(--terminal-shadow-breathe-offset-max);
-            }
-            78% {
-              transform: translateY(-9px) scale(1.01) rotate(-0.05deg);
-              box-shadow:
-                0 34px 62px var(--terminal-shadow-breathe-a-hover),
-                0 18px 32px var(--terminal-shadow-breathe-deep),
-                15px 15px 0 var(--terminal-shadow-breathe-offset-soft);
+              background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 400% 400%;
             }
             100% {
-              transform: translateY(0) scale(1) rotate(-0.45deg);
+              background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+            }
+          }
+
+          @keyframes float-breathe {
+            0% {
+              transform: translateY(0) scale(1) rotate(0deg);
               box-shadow:
-                0 22px 40px var(--terminal-shadow-breathe-a),
-                0 12px 26px var(--terminal-shadow-breathe-b),
-                12px 12px 0 var(--terminal-shadow-breathe-offset);
+                0 28px 50px var(--terminal-shadow-breathe-a),
+                0 14px 28px var(--terminal-shadow-breathe-b),
+                14px 14px 0 var(--terminal-shadow-breathe-offset);
+            }
+            25% {
+              transform: translateY(-12px) scale(1.006) rotate(0.3deg);
+              box-shadow:
+                0 36px 64px var(--terminal-shadow-breathe-a-strong),
+                0 22px 40px var(--terminal-shadow-breathe-accent),
+                16px 16px 0 var(--terminal-shadow-breathe-offset-strong);
+            }
+            50% {
+              transform: translateY(-20px) scale(1.012) rotate(-0.2deg);
+              box-shadow:
+                0 48px 84px var(--terminal-shadow-breathe-max),
+                0 30px 52px var(--terminal-shadow-breathe-highlight),
+                20px 20px 0 var(--terminal-shadow-breathe-offset-max);
+            }
+            75% {
+              transform: translateY(-10px) scale(1.006) rotate(0.15deg);
+              box-shadow:
+                0 38px 68px var(--terminal-shadow-breathe-a-hover),
+                0 20px 36px var(--terminal-shadow-breathe-deep),
+                16px 16px 0 var(--terminal-shadow-breathe-offset-soft);
+            }
+            100% {
+              transform: translateY(0) scale(1) rotate(0deg);
+              box-shadow:
+                0 28px 50px var(--terminal-shadow-breathe-a),
+                0 14px 28px var(--terminal-shadow-breathe-b),
+                14px 14px 0 var(--terminal-shadow-breathe-offset);
             }
           }
 
@@ -463,6 +512,7 @@ export function TerminalDisplay({
               transform: translate3d(-0.5px, 0, 0);
             }
           }
+
 
           @keyframes aura-pulse {
             0%, 100% {
@@ -525,22 +575,42 @@ export function TerminalDisplay({
         class="px-4 sm:px-6 py-3 sm:py-4 border-b flex items-center justify-between terminal-header"
         style="background-color: rgba(0, 0, 0, 1); border-color: rgba(168, 85, 247, 0.45); position: relative; z-index: 20;"
       >
-        <div class="flex space-x-1.5 sm:space-x-2">
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-red-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Close (jk)"
-          >
-          </div>
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-yellow-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Minimize (nope)"
-          >
-          </div>
-          <div
-            class="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full hover:scale-125 transition-transform cursor-pointer"
-            title="Full screen (maybe)"
-          >
-          </div>
+        <div class="traffic-lights">
+          <style>
+            {`
+              .traffic-lights {
+                display: flex;
+                gap: 6px;
+              }
+
+              .traffic-light {
+                width: 8px;
+                height: 8px;
+                border-radius: 999px;
+                background: #ff5f57;
+                box-shadow: 0 0 6px rgba(255,95,87,0.7);
+              }
+
+              .traffic-light:nth-child(2) {
+                background: #ffbd2e;
+                box-shadow: 0 0 6px rgba(255,189,46,0.7);
+              }
+
+              .traffic-light:nth-child(3) {
+                background: #28c840;
+                box-shadow: 0 0 6px rgba(40,200,64,0.7);
+                animation: breathe 2.6s ease-in-out infinite;
+              }
+
+              @keyframes breathe {
+                0%, 100% { box-shadow: 0 0 4px rgba(40,200,64,0.3); }
+                50% { box-shadow: 0 0 14px rgba(40,200,64,0.9); }
+              }
+            `}
+          </style>
+          <div class="traffic-light" title="Close"></div>
+          <div class="traffic-light" title="Minimize"></div>
+          <div class="traffic-light" title="Maximize"></div>
         </div>
         <div class="flex items-center gap-2 sm:gap-4">
           {/* Only show terminal path when NOT in horoscope mode */}
@@ -555,38 +625,74 @@ export function TerminalDisplay({
 
           {/* Period toggle (horoscope mode) */}
           {onPeriodChange && currentPeriod && (
-            <div
-              class="flex items-center gap-2 sm:gap-3 font-mono text-[11px] sm:text-sm uppercase tracking-[0.28em]"
-              style="color: rgba(0, 255, 65, 0.7); font-weight: 800;"
-            >
-              {periodOptions.map(({ value, label }, index) => (
-                <span class="flex items-center gap-2" key={value}>
-                  <button
-                    type="button"
-                    class="hover:opacity-100 transition-all focus:outline-none active:scale-95"
-                    style={`background: transparent; border: none; padding: 0; margin: 0; color: ${
-                      value === currentPeriod ? "#1cff6b" : "rgba(0, 255, 65, 0.55)"
-                    }; font-weight: 900; letter-spacing: 0.3em; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35em;`}
-                    onClick={() => {
-                      if (value !== currentPeriod) {
-                        sounds.click();
-                        onPeriodChange(value);
-                      }
-                    }}
-                  >
-                    <span style="letter-spacing: inherit;">
-                      {label.toUpperCase()}
-                    </span>
-                  </button>
-                  {index < periodOptions.length - 1 && (
-                    <span
-                      class="opacity-40 text-[10px] sm:text-xs"
-                      style="color: rgba(0,255,65,0.4); letter-spacing: 0;"
-                    >
-                      •
-                    </span>
-                  )}
-                </span>
+            <div class="horoscope-nav">
+              <style>
+                {`
+                  .horoscope-nav {
+                    display: flex;
+                    gap: 1.5rem;
+                    font-family: var(--sans);
+                    font-size: 11px;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                  }
+
+                  .horoscope-nav button {
+                    position: relative;
+                    background: none;
+                    border: none;
+                    color: #3cff8f;
+                    padding: 0;
+                    cursor: pointer;
+                    opacity: 0.6;
+                    transition: opacity 160ms ease-out, transform 120ms ease-out;
+                  }
+
+                  .horoscope-nav button::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: -4px;
+                    height: 2px;
+                    background: linear-gradient(90deg, #3cff8f, #a3ffcf);
+                    transform-origin: center;
+                    transform: scaleX(0);
+                    transition: transform 160ms ease-out;
+                  }
+
+                  .horoscope-nav button:hover {
+                    opacity: 1;
+                    transform: translateY(-1px);
+                    text-shadow: 0 0 12px rgba(60, 255, 143, 0.8);
+                  }
+
+                  .horoscope-nav button:hover::after,
+                  .horoscope-nav button.is-active::after {
+                    transform: scaleX(1);
+                    box-shadow: 0 0 10px rgba(60, 255, 143, 0.6);
+                  }
+
+                  .horoscope-nav button.is-active {
+                    opacity: 1;
+                    text-shadow: 0 0 8px rgba(60, 255, 143, 0.5);
+                  }
+                `}
+              </style>
+              {periodOptions.map(({ value, label }) => (
+                <button
+                  key={value}
+                  type="button"
+                  class={value === currentPeriod ? "is-active" : ""}
+                  onClick={() => {
+                    if (value !== currentPeriod) {
+                      sounds.click();
+                      onPeriodChange(value);
+                    }
+                  }}
+                >
+                  {label.toUpperCase()}
+                </button>
               ))}
             </div>
           )}
@@ -618,14 +724,26 @@ export function TerminalDisplay({
               overflow-x: hidden;
               overflow-y: auto;
               padding: 20px !important;
-              border: 1px solid rgba(255, 255, 255, 0.08);
+              border: none;
               box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.55);
               backdrop-filter: blur(18px) saturate(140%);
               -webkit-backdrop-filter: blur(18px) saturate(140%);
               position: relative;
               min-height: 55vh;
               isolation: isolate;
-              border-radius: 0 !important;
+              border-radius: 0 0 0.75rem 0.75rem;
+            }
+
+            @media (min-width: 640px) {
+              .terminal-content {
+                border-radius: 0 0 1rem 1rem;
+              }
+            }
+
+            @media (min-width: 1024px) {
+              .terminal-content {
+                border-radius: 0 0 1.5rem 1.5rem;
+              }
             }
 
             .terminal-content::before {
@@ -699,7 +817,40 @@ export function TerminalDisplay({
               </pre>
             </div>
           )
-          : (htmlContent || content) && enableTypewriter && !typingComplete
+          : splitTypewriter
+          ? (
+            <div class="flex flex-col gap-6">
+              <div class="border-b border-[rgba(0,255,65,0.25)] pb-4">
+                <TypedWriter
+                  key={`header-${filename}`}
+                  text={headerPlainText!}
+                  htmlText={headerHtmlContent!}
+                  speed={fastHeaderSpeed}
+                  enabled={true}
+                  onComplete={() => setHeaderTypingComplete(true)}
+                  showCompletionCursor={false}
+                  className="ascii-display font-mono opacity-90"
+                  style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+                />
+              </div>
+              {headerTypingComplete && (
+                <div class="pt-2">
+                  <TypedWriter
+                    key={`body-${filename}`}
+                    text={bodyPlainText!}
+                    htmlText={bodyHtmlContent!}
+                    speed={typewriterSpeed}
+                    enabled={true}
+                    onComplete={() => setTypingComplete(true)}
+                    showCompletionCursor={true}
+                    className="ascii-display font-mono opacity-90"
+                    style={`${baseTextStyle}; ${getVisualEffectStyle(visualEffect)}`}
+                  />
+                </div>
+              )}
+            </div>
+          )
+          : (htmlContent || content) && enableTypewriter
           ? (
             // Typewriter mode
             <TypedWriter
