@@ -817,18 +817,16 @@ export function TerminalDisplay({
               </pre>
             </div>
           )
-          : splitTypewriter && !typingComplete
+          : splitTypewriter
           ? (
             <div class="flex flex-col gap-6">
-              <div
-                class="border-b border-[rgba(0,255,65,0.25)] pb-4"
-              >
+              <div class="border-b border-[rgba(0,255,65,0.25)] pb-4">
                 <TypedWriter
                   key={`header-${filename}`}
                   text={headerPlainText!}
                   htmlText={headerHtmlContent!}
                   speed={fastHeaderSpeed}
-                  enabled={!typingComplete}
+                  enabled={true}
                   onComplete={() => setHeaderTypingComplete(true)}
                   showCompletionCursor={false}
                   className="ascii-display font-mono opacity-90"
@@ -842,7 +840,7 @@ export function TerminalDisplay({
                     text={bodyPlainText!}
                     htmlText={bodyHtmlContent!}
                     speed={typewriterSpeed}
-                    enabled={!typingComplete}
+                    enabled={true}
                     onComplete={() => setTypingComplete(true)}
                     showCompletionCursor={true}
                     className="ascii-display font-mono opacity-90"
@@ -852,7 +850,7 @@ export function TerminalDisplay({
               )}
             </div>
           )
-          : (htmlContent || content) && enableTypewriter && !typingComplete
+          : (htmlContent || content) && enableTypewriter
           ? (
             // Typewriter mode
             <TypedWriter

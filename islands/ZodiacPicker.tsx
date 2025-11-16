@@ -68,15 +68,13 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
 
   const previewTarget = hoveredSign.value || selectedSign.value;
   const previewSign = previewTarget ? getSignData(previewTarget) : undefined;
-  const previewAscii = previewSign
-    ? getSignAscii(previewSign.name, 56)
-    : "";
+  const previewAscii = previewSign ? getSignAscii(previewSign.name, 56) : "";
 
   return (
     <div class="w-full min-h-[90dvh] flex items-center justify-center px-3 sm:px-6 py-12 md:py-16">
       <div
-        class="w-full max-w-6xl border-[3px] sm:border-4 rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden terminal-shell"
-        style={`background: rgba(2, 4, 12, 0.95); border-color: ${PRIMARY_TERMINAL_COLOR}DD; box-shadow: 0 0 60px ${PRIMARY_TERMINAL_COLOR}1f;`}
+        class="w-full max-w-6xl rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.8)] overflow-hidden terminal-shell"
+        style={`background: rgba(2, 4, 12, 0.95); box-shadow: 0 0 80px ${PRIMARY_TERMINAL_COLOR}20, 0 0 20px ${PRIMARY_TERMINAL_COLOR}25;`}
       >
         {/* Terminal title bar */}
         <div
@@ -119,13 +117,6 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                 </div>
               </div>
 
-              <p
-                class="font-mono text-xs sm:text-sm tracking-[0.2em] uppercase"
-                style={`color: ${PRIMARY_TERMINAL_COLOR}CC;`}
-              >
-                &gt; Tap a sign or use keyboard focus to preview :: press enter to lock selection
-              </p>
-
               <div
                 class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-3"
                 role="listbox"
@@ -133,6 +124,8 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
               >
                 {ZODIAC_SIGNS.map((zodiac) => {
                   const isSelected = selectedSign.value === zodiac.name;
+                  const isHovered = hoveredSign.value === zodiac.name;
+                  const cardTextColor = isHovered ? accentColor : PRIMARY_TERMINAL_COLOR;
 
                   return (
                     <button
@@ -148,10 +141,10 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       class="group w-full text-left font-mono rounded-2xl px-4 py-4 transition-all duration-150"
                       style={`
                         background: ${isSelected ? "#102512" : "rgba(0,0,0,0.4)"};
-                        color: ${PRIMARY_TERMINAL_COLOR};
+                        color: ${cardTextColor};
                         box-shadow: ${isSelected
-                        ? `0 0 25px ${PRIMARY_TERMINAL_COLOR}55`
-                        : "0 8px 20px rgba(0,0,0,0.55)"};
+                        ? `0 0 35px ${accentColor}44`
+                        : "0 12px 30px rgba(0,0,0,0.55)"};
                       `}
                     >
                       <div class="flex items-start gap-4">
@@ -164,13 +157,13 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
                       </div>
                       <div
                         class="mt-2 font-mono text-[11px] uppercase tracking-[0.28em]"
-                        style={`color: ${PRIMARY_TERMINAL_COLOR}C7;`}
+                        style={`color: ${cardTextColor};`}
                       >
                         {zodiac.dates}
                       </div>
                       <div
                         class="text-[10px] sm:text-xs uppercase tracking-[0.32em]"
-                        style={`color: ${PRIMARY_TERMINAL_COLOR}99; border-top: 1px solid ${PRIMARY_TERMINAL_COLOR}33; padding-top: 6px;`}
+                        style={`color: ${cardTextColor}; border-top: 1px solid ${cardTextColor}33; padding-top: 6px;`}
                       >
                         {zodiac.element.toUpperCase()}
                       </div>
@@ -183,12 +176,8 @@ export default function ZodiacPicker({ onSignSelected }: ZodiacPickerProps) {
             {/* Preview Pane */}
             <div
               class="w-full lg:w-[320px] xl:w-[360px] border-[3px] rounded-3xl p-5 bg-black/35 text-[#00ff41]"
-              style={`border-color: ${PRIMARY_TERMINAL_COLOR}5c; box-shadow: inset 0 0 32px ${PRIMARY_TERMINAL_COLOR}12;`}
+                      style={`border-color: ${PRIMARY_TERMINAL_COLOR}5c; box-shadow: inset 0 0 32px ${PRIMARY_TERMINAL_COLOR}12;`}
             >
-              <div class="text-xs uppercase tracking-[0.4em] text-[#00ff41]/80 mb-4">
-                {previewSign ? "COSMIC DOSSIER" : "SIGNAL STANDBY"}
-              </div>
-
               {previewSign && (
                 <>
                   <pre
