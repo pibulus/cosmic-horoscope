@@ -136,8 +136,10 @@ function generateHoroscopeAscii(
   });
 
   const sentinel = "═══════════════════════════════════════";
+  const starBreaker = "★ ═══════════════════════════════════════ ★";
 
   const header = `[HEADER_START]
+${starBreaker}
 ${figletTitle}
 ${metaLine}
 [HEADER_END]`;
@@ -433,7 +435,7 @@ export default function ZodiacPicker() {
             </div>
           </div>
 
-          <div class="p-5 sm:p-8 lg:p-12 terminal-content-wrapper">
+          <div class="p-5 sm:p-8 lg:p-12 terminal-content-wrapper" style="min-height: 600px;">
             {currentMode.value === "picker" ? (
               // PICKER MODE - Zodiac grid + dossier
               <div class="flex flex-col lg:flex-row gap-10 lg:gap-12">
