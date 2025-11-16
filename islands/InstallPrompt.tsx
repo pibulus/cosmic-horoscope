@@ -152,7 +152,7 @@ export default function InstallPrompt() {
                 style="background: rgba(0, 255, 65, 0.05); border: 1px solid rgba(0, 255, 65, 0.2);"
               >
                 <p class="font-bold" style="color: rgba(0, 255, 65, 0.9);">
-                  > HOW TO INSTALL:
+                  {'>'} HOW TO INSTALL:
                 </p>
                 <ol class="space-y-1 pl-4 list-decimal" style="color: rgba(0, 255, 65, 0.7);">
                   <li>
@@ -181,7 +181,7 @@ export default function InstallPrompt() {
                 class="w-full px-4 py-3 border-2 rounded-xl font-bold text-sm transition-all hover:scale-105 active:scale-95"
                 style="background: rgba(0, 255, 65, 0.1); color: #00FF41; border-color: #00FF41; box-shadow: 0 0 12px rgba(0, 255, 65, 0.3);"
               >
-                <span style="color: rgba(0, 255, 65, 0.7);">></span> INSTALL APP
+                <span style="color: rgba(0, 255, 65, 0.7);">{'>'}</span> INSTALL APP
               </button>
             )}
 

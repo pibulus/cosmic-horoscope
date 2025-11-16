@@ -147,13 +147,13 @@ export function WelcomeModal() {
                 {/* Features as terminal commands */}
                 <div class="space-y-2 text-xs sm:text-sm">
                   <p style="color: rgba(139, 92, 246, 0.7);">
-                    <span style="color: #00FF41;">></span> Pick your sign (daily/weekly/monthly)
+                    <span style="color: #00FF41;">{'>'}</span> Pick your sign (daily/weekly/monthly)
                   </p>
                   <p style="color: rgba(139, 92, 246, 0.7);">
-                    <span style="color: #00FF41;">></span> Watch cosmic typewriter effect
+                    <span style="color: #00FF41;">{'>'}</span> Watch cosmic typewriter effect
                   </p>
                   <p style="color: rgba(139, 92, 246, 0.7);">
-                    <span style="color: #00FF41;">></span> Get random lucky numbers + vibes
+                    <span style="color: #00FF41;">{'>'}</span> Get random lucky numbers + vibes
                   </p>
                 </div>
 
@@ -165,7 +165,7 @@ export function WelcomeModal() {
                   style="background: rgba(139, 92, 246, 0.2); color: #8B5CF6; border-color: #8B5CF6; box-shadow: 0 0 16px rgba(139, 92, 246, 0.4);"
                   aria-label="Start exploring horoscopes"
                 >
-                  <span style="color: #00FF41;">> </span>CHECK THE STARS
+                  <span style="color: #00FF41;">{'>'} </span>CHECK THE STARS
                 </button>
 
                 {/* Footer */}

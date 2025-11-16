@@ -782,7 +782,7 @@ export default function ZodiacPicker() {
                           style={`background: rgba(255, 192, 203, 0.05); border-color: rgba(255, 192, 203, 0.3); color: rgba(255, 192, 203, 0.9); box-shadow: 0 0 8px rgba(255, 192, 203, 0.2);`}
                           onClick={() => sounds.click()}
                         >
-                          <span style="opacity: 0.7;">> </span>☕ SUPPORT CREATOR
+                          <span style="opacity: 0.7;">{'>'} </span>☕ SUPPORT CREATOR
                         </a>
                       </div>
                     </div>
